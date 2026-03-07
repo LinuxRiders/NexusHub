@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verifica tu cuenta - CICASS</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+      }
+      .header {
+        padding: 30px 20px;
+        text-align: center;
+        border-bottom: 3px solid #2563eb;
+      }
+      .content {
+        padding: 40px 30px;
+        color: #333333;
+        line-height: 1.6;
+      }
+      .button {
+        display: inline-block;
+        padding: 14px 24px;
+        background-color: #2563eb;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 20px 0;
+      }
+      .footer {
+        padding: 20px;
+        text-align: center;
+        font-size: 12px;
+        color: #888888;
+        background-color: #f9f9f9;
+      }
+      .link-text {
+        color: #2563eb;
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <table
+      role="presentation"
+      width="100%"
+      border="0"
+      cellspacing="0"
+      cellpadding="0"
+      style="background-color: #f4f4f4"
+    >
+      <tr>
+        <td align="center" style="padding: 20px 0">
+          <table
+            role="presentation"
+            class="container"
+            width="600"
+            border="0"
+            cellspacing="0"
+            cellpadding="0"
+          >
+            <tr>
+              <td class="header">
+                <img
+                  src="https://via.placeholder.com/150x50/ffffff/2563EB?text=CICASS"
+                  alt="CICASS Logo"
+                  width="150"
+                  style="display: block; margin: 0 auto; border: 0"
+                />
+              </td>
+            </tr>
+
+            <tr>
+              <td class="content">
+                <h2 style="color: #111827; margin-top: 0">
+                  ¡Bienvenido a CICASS!
+                </h2>
+                <p>Hola <strong>{{nombre}}</strong>,</p>
+                <p>
+                  Gracias por registrarte en nuestra plataforma de capacitación
+                  médica. Para comenzar a explorar nuestros cursos certificados,
+                  necesitamos confirmar que este correo electrónico te
+                  pertenece.
+                </p>
+
+                <table
+                  role="presentation"
+                  border="0"
+                  cellspacing="0"
+                  cellpadding="0"
+                  width="100%"
+                >
+                  <tr>
+                    <td align="center">
+                      <a href="{{verify_url}}" class="button"
+                        >Verificar mi Cuenta</a
+                      >
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="font-size: 14px; color: #666">
+                  Si no creaste esta cuenta, puedes ignorar este mensaje de
+                  forma segura.
+                </p>
+
+                <hr
+                  style="
+                    border: 0;
+                    border-top: 1px solid #eeeeee;
+                    margin: 30px 0;
+                  "
+                />
+
+                <p style="font-size: 12px; color: #999">
+                  Si el botón no funciona, copia y pega el siguiente enlace en
+                  tu navegador:
+                </p>
+                <p style="font-size: 12px">
+                  <a href="{{verify_url}}" class="link-text">{{verify_url}}</a>
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="footer">
+                <p>
+                  &copy; {{anio}} Centro de Investigación y Consultoría. Todos
+                  los derechos reservados.
+                </p>
+                <p>
+                  Has recibido este correo porque te has registrado en CICASS.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

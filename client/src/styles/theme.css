@@ -1,0 +1,72 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  /* FUENTES (compartidas) */
+  --font-family: "Poppins", Arial, sans-serif;
+
+  /* VALORES BASE (compartidos) */
+  --essential-background-color: #ffffff;
+  --essential-background-color-300: color-mix(
+    in hsl,
+    var(--essential-background-color),
+    white 40%
+  );
+  --text-primary-color: #f9f0f0;
+  --text-primary-color-500: #e1e4e6;
+}
+
+/* TEMA AZUL (Subpáginas) */
+.theme {
+  --primary-color: #1f6ea4;
+  --secondary-color: #1f6fa3;
+
+  /* Escala generada dinámicamente */
+  --primary-color-100: color-mix(in hsl, var(--primary-color), white 80%);
+  --primary-color-200: color-mix(in hsl, var(--primary-color), white 60%);
+  --primary-color-300: color-mix(in hsl, var(--primary-color), white 40%);
+  --primary-color-400: color-mix(in hsl, var(--primary-color), white 15%);
+  --primary-color-500: var(--primary-color);
+  --primary-color-700: color-mix(in hsl, var(--primary-color), black 30%);
+  --primary-color-900: color-mix(in hsl, var(--primary-color), black 60%);
+  --primary-color-transparent: color-mix(
+    in hsl,
+    var(--primary-color),
+    transparent 40%
+  );
+  --primary-color-dark: color-mix(in hsl, var(--primary-color), black 50%);
+
+  --secondary-color-100: color-mix(in hsl, var(--secondary-color), white 80%);
+  --secondary-color-300: color-mix(in hsl, var(--secondary-color), white 40%);
+  --secondary-color-400: color-mix(in hsl, var(--secondary-color), white 15%);
+  --secondary-color-500: var(--secondary-color);
+  --secondary-color-600: color-mix(in hsl, var(--secondary-color), black 15%);
+  --secondary-color-700: color-mix(in hsl, var(--secondary-color), black 30%);
+  --secondary-color-900: color-mix(in hsl, var(--secondary-color), black 60%);
+  --secondary-color-shadow: color-mix(
+    in hsl,
+    var(--secondary-color),
+    black 40%
+  );
+
+  --text-secondary-color-100: #9aa5b1;
+  --text-secondary-color-300: #5f6c77;
+  --text-secondary-color: #2b2b2b;
+  --text-secondary-color-500: #5c5959;
+  --text-secondary-color-700: #3f3e3e;
+
+  --background-main: #ffffff;
+  --background-main-500: #f7f7f7;
+  --background-main-700: #e1e1e1;
+}
+
+/* APLICA FUENTE GLOBAL */
+body {
+  font-family: var(--font-family);
+  background-color: var(--essential-background-color);
+}

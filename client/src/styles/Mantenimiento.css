@@ -1,0 +1,56 @@
+/* Wave */
+/* https://codepen.io/zkreations/pen/VGWzYv */
+@keyframes wave {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.mainte {
+  display: flex;
+  width: 100vw;
+  max-height: 100vh;
+  background-color: var(--mt-bg, var(--secondary-color-100, #424242));
+}
+
+.wave {
+  --wave-size: 380rem;
+  --wave-color: var(--primary-color-700, #a3001b);
+  width: 100%;
+  position: absolute;
+  overflow: hidden;
+  min-height: 100vh;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.wave-item,
+.wave-item::after,
+.wave-item::before {
+  content: "";
+  position: absolute;
+  opacity: var(--wave-opacity);
+  width: var(--wave-size);
+  height: var(--wave-size);
+  background: var(--wave-color);
+  transform-origin: 48% 50%;
+  border-radius: 46%;
+  animation: wave var(--wave-duration, 15s) infinite linear;
+  pointer-events: none;
+}
+
+.wave-item {
+  top: 75%;
+  left: 50%;
+  margin-left: calc((var(--wave-size) / 2) * -1);
+}
+
+.wave-item::after {
+  --wave-duration: 28s;
+  --wave-opacity: 0.5;
+}
+
+.wave-item::before {
+  --wave-duration: 20s;
+  --wave-opacity: 0.1;
+}
