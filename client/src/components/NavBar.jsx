@@ -8,7 +8,7 @@ import { MenuOpen, Close, Person } from "@mui/icons-material";
 import { useEffect } from "react";
 import { useRef } from "react";
 
-import logo from "../assets/logos.png";
+// import logo from "../assets/logos.png";
 import { useActiveSection } from "./hooks/ActiveSection";
 
 const pages_base = [
@@ -190,7 +190,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
             flexShrink: 0,
           }}
         >
-          <img
+          {/* <img
             src={logo}
             alt="Logo"
             style={{
@@ -208,7 +208,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               `,
             }}
             onClick={() => goTo("/#home")}
-          />
+          /> */}
         </Box>
 
         {/* Menú para pantallas grandes */}
