@@ -1,0 +1,243 @@
+/* =========================
+HERO PRINCIPAL
+========================= */
+
+.hero {
+  background-size: cover;
+  background-position: center;
+
+  height: 130vh;
+
+  position: relative;
+
+  display: flex;
+  align-items: flex-start;
+
+  padding-top: 140px;
+
+  overflow: hidden;
+
+  /* COLOR QUE TINTA LA IMAGEN */
+  background-color: #1c4c4f;
+
+  /* mezcla color + imagen */
+  background-blend-mode: overlay;
+}
+
+/* =========================
+DEGRADADO INFERIOR
+========================= */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(32, 107, 111, 0) 0%,
+    rgba(32, 107, 111, 0) 70%,
+    rgba(32, 107, 111, 0.85) 85%,
+    rgba(32, 107, 111, 1) 100%
+  );
+
+  z-index: 1;
+}
+
+/* =========================
+CONTENEDOR
+========================= */
+
+.hero-container {
+  max-width: 1100px;
+  margin: auto;
+
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+
+  gap: 200px;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* =========================
+TEXTO IZQUIERDA
+========================= */
+
+.hero-left {
+  color: white;
+  max-width: 520px;
+
+  /* BAJA EL BLOQUE DE TEXTO */
+  margin-top: 18%;
+}
+
+.hero-title {
+  font-size: 64px;
+  letter-spacing: 6px;
+
+  margin-bottom: 6px;
+
+  /* MENOS INTERLINEADO */
+  line-height: 1.05;
+}
+
+.hero-subtitle {
+  font-style: italic;
+
+  margin-bottom: 12px;
+
+  line-height: 1.1;
+}
+
+/* =========================
+LISTA SERVICIOS
+========================= */
+
+.hero-list {
+  list-style: none;
+  padding: 0;
+}
+
+.hero-list li {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 8px;
+
+  font-size: 18px;
+
+  line-height: 1.2;
+}
+
+.hero-check-icon {
+  color: white;
+  flex-shrink: 0;
+}
+
+/* =========================
+FORMULARIO
+========================= */
+
+.hero-form-wrapper {
+  position: relative;
+}
+
+.hero-form-border {
+  position: absolute;
+
+  top: -25px;
+  right: -25px;
+
+  width: 100%;
+  height: 100%;
+
+  border: 5px solid white;
+
+  z-index: 1;
+}
+
+.hero-form {
+  position: relative;
+
+  z-index: 2;
+
+  background: #2f3338;
+
+  padding: 40px;
+
+  width: 370px;
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-form h2 {
+  margin-bottom: 6px;
+}
+
+.hero-form span {
+  font-style: italic;
+}
+
+.hero-contact {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+/* =========================
+INPUTS
+========================= */
+
+.hero-form label {
+  font-size: 13px;
+  margin-top: 15px;
+}
+
+/* INPUTS UN POCO MÁS BAJOS */
+
+.hero-form input {
+  width: 100%;
+
+  padding: 6px 9px;
+
+  margin-top: 4px;
+
+  border: none;
+
+  background: #ffffff;
+  height: 20px;
+}
+
+.hero-form textarea {
+  width: 100%;
+
+  padding: 9px;
+
+  margin-top: 4px;
+
+  border: none;
+
+  background: #ffffff;
+
+  resize: none;
+
+  height: 90px;
+}
+
+.hero-form input::placeholder,
+.hero-form textarea::placeholder {
+  font-style: italic;
+  color: #dfdfdf;
+}
+
+/* =========================
+BOTÓN
+========================= */
+
+.hero-form button {
+  margin-top: 16px;
+
+  align-self: flex-end;
+
+  padding: 6px 45px;
+
+  background: #206b6f;
+
+  border: none;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.hero-form button:hover {
+  background: #1b5a5e;
+}

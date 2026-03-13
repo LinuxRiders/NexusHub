@@ -1,0 +1,116 @@
+.unpaso-container {
+  height: 100vh;
+  background: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* TITULO */
+
+.unpaso-title {
+  color: #30343a;
+  font-size: 32px;
+  font-weight: 600;
+}
+
+.unpaso-divider {
+  width: 50px;
+  height: 3px;
+  background: #30343a;
+  margin: 12px 0 20px 0;
+}
+
+.unpaso-subtitle {
+  color: #8a8a8a;
+  margin-bottom: 70px;
+}
+
+/* OPCIONES */
+
+.unpaso-options {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* ITEM */
+
+.unpaso-item {
+  text-decoration: none;
+  color: #30343a;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+}
+
+/* ICONO */
+
+.icon-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+
+/* MARCO VERDE */
+
+.icon-frame {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 5px solid #206b6f;
+  top: 0;
+  left: 0;
+}
+
+/* CARTILLA OSCURA */
+
+.icon-card {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: #30343a;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  top: 20px;
+  left: 20px;
+}
+
+/* ICONOS MAS GRANDES */
+
+.icon {
+  color: white;
+  font-size: 52px;
+}
+
+/* LINEAS */
+
+.line {
+  width: 160px;
+  height: 1.5px;
+  background: #206b6f;
+
+  position: relative;
+  top: -30px;
+}
+
+/* TEXTOS */
+
+.unpaso-item h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.unpaso-item span {
+  font-size: 14px;
+  color: #7a7a7a;
+}

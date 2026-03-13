@@ -1,0 +1,175 @@
+/* =========================
+SECCION PRINCIPAL
+========================= */
+
+.valor-section {
+  background: #206b6f;
+
+  height: 90vh;
+
+  padding-top: 60px;
+
+  color: white;
+
+  text-align: center;
+
+  position: relative;
+}
+
+/* =========================
+TITULO
+========================= */
+
+.valor-title {
+  font-size: 30px;
+
+  font-weight: 500;
+
+  letter-spacing: 1px;
+}
+
+.valor-line {
+  width: 55px;
+  height: 4px;
+
+  background: white;
+
+  margin: 10px auto 20px auto;
+
+  border-radius: 3px;
+}
+
+/* =========================
+SUBTITULO
+========================= */
+
+.valor-subtitle {
+  max-width: 720px;
+
+  margin: auto;
+
+  font-size: 14px;
+
+  opacity: 0.9;
+}
+
+/* =========================
+CONTENEDOR GENERAL
+========================= */
+
+.valor-container {
+  margin-top: 45px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 40px;
+}
+
+/* =========================
+GRID
+========================= */
+
+.valor-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 420px);
+
+  gap: 24px;
+}
+
+/* =========================
+CARDS
+========================= */
+
+.valor-card {
+  background: #387b7f;
+
+  border: 1px solid rgba(255, 255, 255, 0.7);
+
+  padding: 18px 24px;
+
+  min-height: 100px;
+
+  text-align: left;
+}
+
+/* icono */
+
+.valor-card svg {
+  margin-bottom: 8px;
+}
+
+/* titulo */
+
+.valor-card h3 {
+  font-size: 17px;
+
+  margin-bottom: 3px;
+}
+
+/* texto */
+
+.valor-card p {
+  font-size: 13px;
+
+  line-height: 1.2;
+
+  opacity: 0.9;
+}
+
+/* =========================
+FLECHAS LATERALES
+========================= */
+
+.valor-arrow {
+  cursor: pointer;
+
+  opacity: 0.9;
+
+  transition: 0.2s;
+}
+
+.valor-arrow:hover {
+  transform: scale(1.1);
+}
+
+/* =========================
+PESTAÑA INFERIOR
+========================= */
+
+.valor-tab {
+  position: absolute;
+
+  bottom: -38px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 120px;
+
+  height: 50px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.valor-tab-bg {
+  position: absolute;
+
+  width: 120px;
+
+  height: 50px;
+}
+
+.valor-chevron {
+  position: relative;
+  margin-top: 0px; /* antes era ~6px */
+}

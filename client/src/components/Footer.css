@@ -1,0 +1,197 @@
+.footer {
+  background: #30343a;
+  height: 110vh;
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 80px 0 40px 0;
+  overflow: hidden;
+}
+
+.footer-container {
+  width: 1100px;
+  margin: auto;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* ======================
+LEFT SIDE
+====================== */
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+/* LOGO */
+
+.footer-brand {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.footer-brand img {
+  width: 160px;
+  margin-bottom: 12px;
+}
+
+.footer-brand h2 {
+  font-size: 48px;
+  letter-spacing: 6px;
+}
+
+/* LINKS */
+
+.footer-links {
+  display: flex;
+  gap: 80px;
+}
+
+.footer-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-column h3 {
+  margin-bottom: 10px;
+}
+
+.footer-column a {
+  color: white;
+  text-decoration: none;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.footer-column a:hover {
+  opacity: 0.7;
+}
+
+/* ======================
+FORM
+====================== */
+
+.footer-form-wrapper {
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer-form-border {
+  position: absolute;
+  top: -25px;
+  right: -25px;
+
+  width: 100%;
+  height: 100%;
+
+  border: 4px solid white;
+}
+
+.footer-form {
+  background: #206b6f;
+
+  width: 360px;
+
+  padding: 35px;
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+}
+
+.footer-form span {
+  font-style: italic;
+}
+
+.footer-contact {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.footer-form label {
+  margin-top: 14px;
+  font-size: 13px;
+}
+
+.footer-form input {
+  padding: 6px 8px;
+  border: none;
+  margin-top: 4px;
+}
+
+.footer-form textarea {
+  margin-top: 4px;
+  padding: 8px;
+
+  resize: none;
+
+  height: 80px;
+
+  border: none;
+}
+
+.footer-form button {
+  margin-top: 16px;
+
+  align-self: flex-end;
+
+  padding: 6px 40px;
+
+  border: none;
+
+  background: #30343a;
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.footer-form button:hover {
+  opacity: 0.8;
+}
+
+/* ======================
+DIVIDER
+====================== */
+
+.footer-divider {
+  width: 90%;
+  margin: auto;
+
+  height: 0.3px;
+
+  background: rgb(177, 177, 177);
+}
+
+/* ======================
+SOCIALS
+====================== */
+
+.footer-socials {
+  width: 1100px;
+  margin: auto;
+
+  display: flex;
+
+  justify-content: flex-start;
+
+  gap: 35px;
+
+  font-size: 26px;
+
+  margin-top: 30px;
+}
+
+.footer-socials a {
+  color: white;
+}

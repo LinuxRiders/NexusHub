@@ -1,0 +1,98 @@
+/* COMPONENTE */
+.servicios-container {
+  background: white;
+  height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* TITULO */
+.servicios-title {
+  font-size: 28px;
+  color: #30343a;
+  font-weight: 600;
+}
+
+/* LINEA */
+.servicios-divider {
+  width: 50px;
+  height: 3px;
+  background: #30343a;
+  margin: 10px 0 40px 0;
+  border-radius: 3px;
+}
+
+/* CONTENEDOR DE TARJETAS */
+.servicios-cards {
+  display: flex;
+  justify-content: center;
+  gap: 120px;
+}
+
+/* TARJETA */
+.servicio-card {
+  background: #30343a;
+
+  width: 480px;
+  height: 160px;
+
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  padding: 25px;
+
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* IMAGEN */
+.servicio-card img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+}
+
+/* CONTENIDO */
+.servicio-content {
+  color: white;
+  text-align: left;
+}
+
+/* TITULO */
+.servicio-content h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+/* TEXTO */
+.servicio-content p {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #d6d6d6;
+  max-width: 300px;
+}
+
+/* BOTON */
+.servicio-content button {
+  position: absolute;
+
+  bottom: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #206b6f;
+  color: white;
+  font-weight: bold;
+
+  border: none;
+  padding: 9px 20px;
+  font-size: 13px;
+
+  cursor: pointer;
+}
+.servicio-content button:hover {
+  background: #1a5a5d;
+}

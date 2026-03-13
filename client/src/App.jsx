@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import Layout from "./pages/Layout";
+// import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 
 function App() {
@@ -10,21 +10,21 @@ function App() {
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
-
+      <Route path="/" element={<Home />} />
       {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #
         ################################################################# 
       */}
-      <Route path="/" element={<Layout />}>
+      {/* <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
 
-        {/* <Route path="/" element={<LoginPage />}>
+        <Route path="/" element={<LoginPage />}>
           <Route path="login" element={<Login />} />
           <Route path="verify-account" element={<VerifyAccount />} />
           <Route path="reset-password" element={<ResetPassword />} />
-        </Route> */}
-      </Route>
+        </Route>
+      </Route> */}
 
       {/* 
         #################################################################
