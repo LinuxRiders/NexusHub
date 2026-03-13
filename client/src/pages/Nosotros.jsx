@@ -9,7 +9,7 @@ import NuestrasEspecialidades from "../components/Nosotros/NuestrasEspecialidade
 import MisionVision from "../components/Nosotros/MisionVision";
 import Footer from "../components/Footer";
 
-const Home = () => {
+const Nosotros = () => {
   return (
     <div>
       {/*---------------------------------------------- NosotrosHero ------------------------------------------*/}
@@ -45,4 +45,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Nosotros;

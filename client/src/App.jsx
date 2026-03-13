@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 // import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import Nosotros from "./pages/Nosotros";
+import Propiedades from "./pages/Propiedades";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       */}
       <Route path="/" element={<Home />} />
       <Route path="/nosotros" element={<Nosotros />} />
+      <Route path="/propiedades" element={<Propiedades />} />
       {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #

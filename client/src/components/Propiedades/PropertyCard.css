@@ -1,0 +1,144 @@
+/* PropertyCard.css */
+:root {
+  --primary-color: #1f6a6e;
+  --title-color: #227579;
+  --card-bg-color: #fefefe;
+  --icon-color: #808386;
+  --location-color: #666666;
+  --price-color: #000000;
+  --btn-bg-color: #1f6a6e;
+  --btn-text-color: #ffffff;
+}
+
+.property-card {
+  background-color: var(--card-bg-color);
+  width: 100%; /* Toma el 100% de la celda del Grid */
+  border-radius: 0;
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out;
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header {
+  position: relative;
+  width: 100%;
+  height: 200px; /* Reducido levemente para ajustarse al nuevo ancho */
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  padding: 0;
+}
+
+.favorite-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-body {
+  padding: 20px 15px;
+  flex-grow: 1;
+}
+
+.property-avenue {
+  margin: 0 0 5px 0;
+  font-size: 22px; /* Ajustado al nuevo tamaño de la tarjeta */
+  font-weight: bold;
+  color: var(--title-color);
+}
+
+.property-location {
+  margin: 0 0 12px 0;
+  color: var(--location-color);
+  font-size: 14px;
+}
+
+.property-price {
+  margin: 0 0 15px 0;
+  color: var(--price-color);
+  font-size: 20px; /* Ajustado al nuevo tamaño */
+  font-weight: bold;
+}
+
+.divider {
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.detail-item svg {
+  margin-bottom: 6px;
+}
+
+.detail-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-label {
+  margin: 0;
+  font-size: 10px;
+  color: var(--icon-color);
+  text-transform: capitalize;
+}
+
+.detail-value {
+  margin: 0;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.card-action-button {
+  background-color: var(--btn-bg-color);
+  color: var(--btn-text-color);
+  border: none;
+  border-radius: 0;
+  padding: 15px;
+  width: 100%;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+.card-action-button:hover {
+  filter: brightness(1.1);
+}
