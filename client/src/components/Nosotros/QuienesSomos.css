@@ -1,0 +1,172 @@
+.quienes {
+  height: 160vh;
+  background: #eef4f7;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+}
+
+/* CONTENEDOR */
+
+.quienes-container {
+  width: 100%;
+  max-width: 1600px;
+
+  padding: 0 260px; /* MÁS padding lateral */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  height: 100%;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* FILA SUPERIOR */
+
+.quienes-top {
+  display: flex;
+
+  margin-top: 180px; /* baja el bloque */
+}
+
+/* MITADES */
+
+.quienes-left {
+  width: 50%;
+}
+
+.quienes-right {
+  width: 50%;
+
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* TEXTO */
+
+.quienes-text {
+  width: 420px;
+  margin-top: 150px; /* baja el bloque */
+}
+
+.quienes-text h2 {
+  color: #1f6a6e;
+  font-size: 30px;
+}
+
+.quienes-line {
+  width: 45px;
+  height: 3px;
+
+  background: #1f6a6e;
+
+  margin: 10px 0 15px;
+}
+
+.quienes-text p {
+  color: #8a8a8a;
+  font-size: 14px;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.quienes-text strong {
+  color: #1f6a6e;
+}
+
+/* IMAGEN PARTIDA */
+
+.quienes-buildings {
+  display: flex;
+  gap: 35px;
+}
+
+/* BLOQUES */
+
+.building {
+  width: 220px;
+  height: 350px;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  border-radius: 8px;
+
+  /* SOMBRA MÁS FUERTE */
+
+  box-shadow: 12px 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* DESFASE */
+
+.building.left {
+  background-position: left center;
+
+  margin-top: 90px;
+}
+
+.building.right {
+  background-position: right center;
+}
+
+/* PARTE INFERIOR */
+
+.quienes-bottom {
+  display: flex;
+
+  align-items: flex-end;
+
+  margin-bottom: 0;
+}
+
+/* AGENTE */
+
+.quienes-agent {
+  height: 540px; /* MÁS GRANDE */
+
+  object-fit: contain;
+
+  position: relative;
+  bottom: -10px;
+}
+
+/* TEXTO */
+
+.quienes-bottom-text {
+  width: 420px;
+
+  margin-left: 70px;
+
+  margin-bottom: 200px;
+}
+
+.quienes-bottom-text p {
+  color: #8a8a8a;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.quienes-bottom-text strong {
+  color: #1f6a6e;
+}
+
+/* FONDO */
+
+.quienes-lines {
+  position: absolute;
+
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+
+  opacity: 0.2;
+
+  z-index: 1;
+}

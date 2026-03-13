@@ -1,0 +1,116 @@
+.especialidades {
+  height: 40vh;
+  background: #2f3339;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* CONTENEDOR */
+
+.especialidades-container {
+  width: 100%;
+  max-width: 1100px; /* centra todo el bloque */
+
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 40px;
+
+  color: white;
+}
+
+/* IZQUIERDA */
+
+.especialidades-left {
+  width: 240px;
+}
+
+.especialidades-left h2 {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.especialidades-line {
+  width: 40px;
+  height: 4px;
+
+  background: white;
+
+  margin: 14px 0 22px;
+
+  border-radius: 3px;
+}
+
+/* BOTON FLECHA */
+
+.especialidades-btn {
+  width: 110px;
+  height: 42px;
+
+  background: #fbfcfe;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+
+  color: #1f6a6e;
+}
+
+/* LINEA DIVISORIA */
+
+.especialidades-divider {
+  width: 2px;
+  height: 150px;
+
+  background: white;
+}
+
+/* ITEMS */
+
+.especialidades-items {
+  display: flex;
+
+  gap: 45px;
+}
+
+/* ITEM */
+
+.especialidad {
+  text-align: center;
+
+  width: 110px;
+}
+
+/* ICONO */
+
+.icon-box {
+  width: 68px;
+  height: 68px;
+
+  background: #fbfcfe;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 12px;
+
+  font-size: 28px;
+
+  color: #1f6a6e;
+}
+
+/* TEXTO */
+
+.especialidad p {
+  font-size: 13px;
+  line-height: 1.3;
+}
