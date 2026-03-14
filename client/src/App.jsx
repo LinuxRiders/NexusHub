@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Nosotros from "./pages/Nosotros";
 import Propiedades from "./pages/Propiedades";
+import User from "./pages/User";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/propiedades" element={<Propiedades />} />
+      <Route path="/User" element={<User />} />
       {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #

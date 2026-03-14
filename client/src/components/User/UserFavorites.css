@@ -1,0 +1,118 @@
+/* UserFavorites.css */
+
+.user-favorites-container {
+  width: 100%;
+  position: relative;
+}
+
+/* Cabecera siguiendo el estilo de Mis Alertas / Cambiar Contraseña */
+.favorites-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.favorites-icon {
+  font-size: 60px;
+  color: #1c6a6e;
+  margin-right: 20px;
+}
+
+.favorites-title {
+  margin: 0;
+  font-size: 38px;
+  color: #1c6a6e;
+  font-weight: bold;
+}
+
+.no-favorites-text {
+  font-size: 18px;
+  color: #2f3339;
+  font-weight: bold;
+}
+
+/* No añadimos estilos para .properties-container ni PropertyCard 
+   porque el componente ya importa sus propios CSS que nos pasaste 
+*/
+
+/* --- DISEÑO DE MODALES (Copiado exactamente de tus files) --- */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+}
+
+.custom-modal-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.modal-icon-wrapper {
+  margin-bottom: 20px;
+}
+.modal-icon {
+  font-size: 50px;
+}
+.confirm-icon {
+  color: #2f3339;
+}
+.success-icon {
+  color: #1c6a6e;
+}
+
+.modal-title {
+  color: #1c6a6e;
+  font-size: 22px;
+  margin: 0 0 15px 0;
+}
+
+.modal-message {
+  color: #666666;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-modal {
+  padding: 12px 25px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+.btn-cancel:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-accept {
+  background-color: #1c6a6e;
+  color: white;
+}
+.btn-accept:hover {
+  background-color: #154e52;
+}

@@ -1,0 +1,167 @@
+/* UserUnsubscribe.css */
+.unsubscribe-container {
+  width: 100%;
+}
+
+/* --- CABECERA (Alineación con Flexbox) --- */
+.unsubscribe-header {
+  display: flex;
+  justify-content: space-between; /* Envía el botón a la derecha */
+  align-items: center; /* Centra verticalmente */
+  margin-bottom: 40px; /* Un buen espacio hacia el contenido */
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-title-group {
+  display: flex;
+  align-items: center;
+}
+
+.unsubscribe-icon {
+  font-size: 55px;
+  color: #1c6a6e;
+  margin-right: 20px;
+}
+
+.unsubscribe-title {
+  margin: 0;
+  font-size: 38px;
+  color: #1c6a6e;
+  font-weight: bold;
+}
+
+.btn-unsubscribe-main {
+  background-color: #1c6a6e;
+  color: white;
+  border: none;
+  padding: 14px 40px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-unsubscribe-main:hover {
+  background-color: #154e52;
+}
+
+/* --- CONTENIDO DE OPCIONES --- */
+.unsubscribe-card {
+  max-width: 600px;
+}
+
+.section-question {
+  font-size: 22px;
+  color: #2f3339;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Checkboxes personalizados */
+.custom-checkbox-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding-left: 35px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #2f3339;
+  user-select: none;
+  min-height: 25px;
+}
+
+.custom-checkbox-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%); /* Centrado perfecto con el texto */
+  height: 22px;
+  width: 22px;
+  background-color: transparent;
+  border: 2px solid #1c6a6e;
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.custom-checkbox-container:hover input ~ .checkmark {
+  background-color: #f0f4f4;
+}
+
+.custom-checkbox-container input:checked ~ .checkmark {
+  background-color: #1c6a6e;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.custom-checkbox-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.custom-checkbox-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+
+/* --- ESTILOS DEL MODAL (Corregidos para no verse descuadrados) --- */
+.modal-input-container {
+  width: 100%;
+  margin-bottom: 25px;
+  display: flex;
+  justify-content: center;
+}
+
+.modal-verify-input {
+  width: 80%; /* No ocupa todo el borde, queda más elegante */
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box; /* Previene desbordamientos */
+  transition: border-color 0.3s;
+}
+
+.modal-verify-input:focus {
+  border-color: #1c6a6e;
+}
+
+/* Asegurar que el mensaje respire bien */
+.modal-message {
+  margin-bottom: 20px;
+}
+
+/* Responsividad para móviles */
+@media (max-width: 650px) {
+  .unsubscribe-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .btn-unsubscribe-main {
+    width: 100%;
+  }
+}

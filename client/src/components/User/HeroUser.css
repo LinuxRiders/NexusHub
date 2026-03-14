@@ -1,0 +1,57 @@
+.user-hero {
+  height: 75vh;
+
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 120px; /* espacio navbar */
+
+  text-align: center;
+
+  /* EFECTO TINTA (extraído del hero original) */
+  background-color: #1c4c4f;
+  background-blend-mode: overlay;
+}
+
+/* CONTENIDO */
+
+.user-hero-content {
+  color: white;
+
+  max-width: 900px;
+}
+
+/* TITULO */
+
+.user-hero h1 {
+  font-size: 56px;
+
+  margin-bottom: 10px;
+
+  letter-spacing: 2px;
+}
+
+/* LINEA */
+
+.user-line {
+  width: 60px;
+  height: 3px;
+
+  background: white;
+
+  margin: 10px auto 20px auto;
+}
+
+/* TEXTO */
+
+.user-hero p {
+  font-size: 18px;
+
+  opacity: 0.95;
+}

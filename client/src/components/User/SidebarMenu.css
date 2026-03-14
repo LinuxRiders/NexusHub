@@ -1,0 +1,74 @@
+/* src/components/User/SidebarMenu/SidebarMenu.css */
+.sidebar-menu-container {
+  width: 300px;
+  flex-shrink: 0;
+  position: relative; /* Clave para posicionar la línea vertical */
+}
+
+/* Línea vertical derecha con el doble de altura (200%) */
+.sidebar-menu-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 200%; /* El doble de altura solicitado */
+  background-color: #d1d5db;
+  z-index: 1;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative; /* Para la línea inferior */
+}
+
+/* Líneas horizontales separadas de la derecha (para que no choquen) */
+.sidebar-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - 15px); /* Deja un margen derecho sin línea */
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.sidebar-item:last-child::after {
+  display: none;
+}
+
+.sidebar-icon {
+  font-size: 20px;
+  color: #1c6a6e;
+  margin-right: 15px;
+  display: flex;
+}
+
+.sidebar-text {
+  font-size: 16px;
+  color: #2f3339;
+  font-weight: 600;
+}
+
+/* Estado Hover y Activo: Ahora el fondo llega hasta la línea vertical de la derecha */
+.sidebar-item:hover,
+.sidebar-item.active {
+  background-color: #1c6a6e;
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item.active .sidebar-icon,
+.sidebar-item:hover .sidebar-text,
+.sidebar-item.active .sidebar-text {
+  color: #ffffff;
+}

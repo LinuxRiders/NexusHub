@@ -1,0 +1,52 @@
+/* src/pages/User/User.css */
+.user-page {
+  width: 100%;
+  background-color: #ffffff;
+}
+
+.user-main-layout {
+  position: relative;
+  min-height: 200vh;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+/* --- NUEVO ESTILO PARA LA MARCA DE AGUA --- */
+.watermark-container {
+  position: absolute;
+  bottom: 0; /* Pegado abajo */
+  right: 0; /* Pegado a la derecha */
+  z-index: 1; /* Detrás del panel de usuario */
+  pointer-events: none; /* Para que no interfiera con los clicks */
+}
+
+.watermark-image {
+  height: 110vh; /* Ocupa aproximadamente la mitad inferior (100vh de los 200vh totales) */
+  width: auto; /* El ancho se ajusta proporcionalmente para no deformarse */
+  display: block;
+  opacity: 1; /* Opacidad normal según pediste */
+}
+
+/* --- EL RESTO SE MANTIENE IGUAL --- */
+.user-content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+}
+
+.user-dynamic-panel {
+  flex-grow: 1;
+  background-color: transparent;
+  min-height: 500px;
+}
+
+@media (max-width: 850px) {
+  .user-content-wrapper {
+    flex-direction: column;
+  }
+}
