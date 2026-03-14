@@ -126,13 +126,25 @@ const Footer = () => {
 
       {/* REDES */}
       <div className="footer-socials">
-        <a href="#">
+        <a
+          href="https://instagram.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaInstagram />
         </a>
-        <a href="#">
+        <a
+          href="https://facebook.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaFacebookF />
         </a>
-        <a href="#">
+        <a
+          href="https://linkedin.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <FaLinkedinIn />
         </a>
       </div>

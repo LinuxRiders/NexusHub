@@ -1,71 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
 .quienes {
   height: 160vh;
   background: #eef4f7;
-
   position: relative;
   overflow: hidden;
-
   display: flex;
   justify-content: center;
+  font-family: "Nunito", sans-serif;
 }
-
-/* CONTENEDOR */
 
 .quienes-container {
   width: 100%;
   max-width: 1600px;
-
-  padding: 0 260px; /* MÁS padding lateral */
-
+  padding: 0 260px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   height: 100%;
-
   position: relative;
   z-index: 2;
 }
 
-/* FILA SUPERIOR */
-
 .quienes-top {
   display: flex;
-
-  margin-top: 180px; /* baja el bloque */
+  margin-top: 100px;
 }
-
-/* MITADES */
 
 .quienes-left {
   width: 50%;
 }
-
 .quienes-right {
   width: 50%;
-
   display: flex;
   justify-content: flex-start;
 }
 
-/* TEXTO */
-
 .quienes-text {
   width: 420px;
-  margin-top: 150px; /* baja el bloque */
+  margin-top: 150px;
+  opacity: 0;
+}
+
+/* ACTIVACIÓN DE ANIMACIÓN POR SCROLL */
+.visible .quienes-text {
+  animation: fadeInUp 1s ease forwards 0.2s;
 }
 
 .quienes-text h2 {
   color: #1f6a6e;
   font-size: 30px;
+  font-weight: 700;
 }
 
 .quienes-line {
   width: 45px;
   height: 3px;
-
   background: #1f6a6e;
-
   margin: 10px 0 15px;
 }
 
@@ -75,75 +66,62 @@
   line-height: 1.2;
   margin-bottom: 12px;
 }
-
 .quienes-text strong {
   color: #1f6a6e;
 }
-
-/* IMAGEN PARTIDA */
 
 .quienes-buildings {
   display: flex;
   gap: 35px;
 }
 
-/* BLOQUES */
-
 .building {
   width: 220px;
   height: 350px;
-
   background-size: cover;
   background-repeat: no-repeat;
-
-  border-radius: 8px;
-
-  /* SOMBRA MÁS FUERTE */
-
+  /* border-radius: 8px; */
   box-shadow: 12px 12px 25px rgba(0, 0, 0, 0.25);
+  opacity: 0;
 }
 
-/* DESFASE */
-
-.building.left {
+.visible .building.left {
   background-position: left center;
-
   margin-top: 90px;
+  animation: fadeInUp 1s ease forwards 0.4s;
 }
 
-.building.right {
+.visible .building.right {
   background-position: right center;
+  animation: fadeInUp 1s ease forwards 0.6s;
 }
-
-/* PARTE INFERIOR */
 
 .quienes-bottom {
   display: flex;
-
   align-items: flex-end;
-
-  margin-bottom: 0;
 }
-
-/* AGENTE */
 
 .quienes-agent {
-  height: 540px; /* MÁS GRANDE */
-
+  height: 540px;
   object-fit: contain;
-
   position: relative;
   bottom: -10px;
+  opacity: 0;
 }
 
-/* TEXTO */
+.visible .quienes-agent {
+  animation: fadeInLeft 1s ease forwards 0.8s;
+}
 
 .quienes-bottom-text {
   width: 420px;
-
   margin-left: 70px;
-
   margin-bottom: 200px;
+  opacity: 0;
+}
+
+.visible .quienes-bottom-text {
+  animation: fadeInRight 1s ease forwards 1s;
 }
 
 .quienes-bottom-text p {
@@ -151,22 +129,86 @@
   font-size: 14px;
   line-height: 1.2;
 }
-
 .quienes-bottom-text strong {
   color: #1f6a6e;
 }
 
-/* FONDO */
+/* KEYFRAMES */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
 
-.quienes-lines {
-  position: absolute;
+/* RESPONSIVE SIN CAMBIAR TU LÓGICA */
+@media (max-width: 1200px) {
+  .quienes {
+    height: auto;
+  }
+  .quienes-container {
+    padding: 0 50px;
+    padding-bottom: 50px;
+  }
+  .quienes-text {
+    margin-top: 50px;
+    width: 100%;
+  }
+  .quienes-agent {
+    height: 400px;
+  }
+  .quienes-bottom-text {
+    margin-bottom: 50px;
+  }
+}
 
-  bottom: 0;
-  left: 0;
-
-  width: 100%;
-
-  opacity: 0.2;
-
-  z-index: 1;
+@media (max-width: 800px) {
+  .quienes-top {
+    flex-direction: column;
+    align-items: center;
+  }
+  .quienes-left,
+  .quienes-right {
+    width: 100%;
+    justify-content: center;
+  }
+  .quienes-bottom {
+    flex-direction: column;
+    align-items: center;
+  }
+  .quienes-text {
+    text-align: center;
+  }
+  .quienes-bottom-text {
+    margin-top: 20px;
+    margin-left: 0;
+    text-align: center;
+  }
+  .quienes-line {
+    margin: 10px 40% 15px;
+  }
 }

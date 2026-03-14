@@ -4,7 +4,7 @@ import "./QueEstasBuscando.css";
 /* IMPORTACIÓN DE IMÁGENES
    desde tu carpeta assets/img */
 import comprarImg from "../../assets/img/comprar.png";
-import venderImg from "../../assets/img/comprar.png";
+import venderImg from "../../assets/img/vender.jpg";
 import alquilarImg from "../../assets/img/alquilar.png";
 
 const QueEstasBuscando = () => {

@@ -1,172 +1,240 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
 .misionvision {
   height: 180vh;
-
   background: #f5f5f5;
-
   display: flex;
   justify-content: center;
+  /* AÑADIDO: Fuente */
+  font-family: "Nunito", sans-serif;
 }
 
 /* CONTENEDOR */
-
 .mv-container {
   width: 100%;
   max-width: 1100px; /* más compacto */
-
   padding: 120px 40px;
 }
 
 /* PARTE SUPERIOR */
-
 .mv-top {
   display: flex;
-
   justify-content: center;
   align-items: flex-start;
-
   gap: 90px; /* más compacto */
 }
 
 /* ITEMS */
-
 .mv-item {
   width: 260px;
-
   text-align: center;
+  /* AÑADIDO: Animación */
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.visible .mv-item:first-child {
+  animation: fadeInUp 0.8s ease forwards 0.2s;
+}
+.visible .mv-item:last-child {
+  animation: fadeInUp 0.8s ease forwards 0.6s;
 }
 
 .mv-item h3 {
   color: #2f3339;
-
   font-size: 20px;
-
   margin-top: 18px;
 }
 
 .mv-item p {
   color: #7a7a7a;
-
   font-size: 14px;
-
   line-height: 1.5;
-
   margin-top: 10px;
 }
 
 /* ICONOS */
-
 .mv-icon-wrapper {
   position: relative;
-
   width: 100px;
   height: 100px;
-
   margin: auto;
 }
 
 .mv-icon-border {
   position: absolute;
-
   width: 100px;
   height: 100px;
-
   border: 5px solid #1f6a6e;
-
   top: -20px;
   left: -20px;
+  /* AÑADIDO: Transición hover */
+  transition: all 0.4s ease;
+}
+
+.mv-item:hover .mv-icon-border {
+  top: 0;
+  left: 0;
 }
 
 .mv-icon {
   width: 100px;
   height: 100px;
-
   background: #1f6a6e;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   color: white;
-
   font-size: 36px;
+  position: relative;
+  z-index: 2;
 }
+
 .mv-top p {
   line-height: 1.2;
 }
 
 /* LINEA */
-
 .mv-line {
   width: 110px;
   height: 2px;
-
   background: #1f6a6e;
-
   margin-top: 40px;
+  /* AÑADIDO: Animación */
+  transform: scaleX(0);
+  transition: transform 1s ease 0.4s;
+}
+
+.visible .mv-line {
+  transform: scaleX(1);
 }
 
 /* PARTE INFERIOR */
-
 .mv-bottom {
   margin-top: 180px;
-
   position: relative;
-
   display: flex;
   justify-content: center;
 }
 
 /* IMAGEN */
-
 .mv-image {
   width: 530px;
   height: 620px;
   margin-left: 40%;
   object-fit: cover;
+  /* AÑADIDO: Animación */
+  opacity: 0;
+}
+
+.visible .mv-image {
+  animation: fadeInRight 1s ease forwards 0.8s;
 }
 
 /* CARD */
-
 .mv-card {
   position: absolute;
-
   left: 120px;
   top: 40px;
-
   width: 400px;
   height: 470px;
-
   background: #2f3339;
-
   color: white;
-
   padding: 55px 80px; /* padding grande para texto */
-
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.45); /* sombra más fuerte */
+  /* AÑADIDO: Animación */
+  opacity: 0;
+}
+
+.visible .mv-card {
+  animation: fadeInLeft 1s ease forwards 1s;
 }
 
 /* TEXTO CARD */
-
 .mv-card p {
   font-size: 14px;
-
   line-height: 1.2;
-
   margin-top: 30px;
 }
 
 .mv-card h4 {
   margin-top: 25px;
-
   font-size: 16px;
-
   font-weight: 600;
 }
 
 /* COMILLAS */
-
 .mv-quote {
   font-size: 70px;
-
   opacity: 0.9;
+  color: #1f6a6e;
+}
+
+/* KEYFRAMES */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .misionvision {
+    height: auto;
+    padding-bottom: 100px;
+  }
+  .mv-top {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+  .mv-line {
+    width: 2px;
+    height: 50px;
+  }
+  .mv-bottom {
+    margin-top: 100px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .mv-image {
+    margin-left: 0;
+    width: 90%;
+    height: 400px;
+  }
+  .mv-card {
+    position: relative;
+    left: 0;
+    top: -50px;
+    width: 85%;
+    height: auto;
+    padding: 40px;
+  }
 }

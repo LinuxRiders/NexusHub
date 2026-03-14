@@ -79,19 +79,19 @@ const Hero = () => {
             <p className="hero-contact">¡Contáctanos!</p>
 
             <label>Nombres*</label>
-            <input type="text" placeholder="Introduce tu nombre" />
+            <input type="text" placeholder="Introduce tu nombre" required />
 
             <label>Apellidos*</label>
-            <input type="text" placeholder="Introduce tu apellido" />
+            <input type="text" placeholder="Introduce tu apellido" required />
 
             <label>Email*</label>
-            <input type="email" placeholder="Introduce tu email" />
+            <input type="email" placeholder="Introduce tu email" required />
 
             <label>Número*</label>
-            <input type="text" placeholder="Introduce tu número" />
+            <input type="text" placeholder="Introduce tu número" required />
 
             <label>Mensaje*</label>
-            <textarea placeholder="Introduce tu mensaje"></textarea>
+            <textarea placeholder="Introduce tu mensaje" required></textarea>
 
             <button type="submit">Enviar</button>
           </form>

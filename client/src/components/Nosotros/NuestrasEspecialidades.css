@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
 .especialidades {
   height: 40vh;
   background: #2f3339;
@@ -5,6 +7,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* AÑADIDO: Fuente */
+  font-family: "Nunito", sans-serif;
 }
 
 /* CONTENEDOR */
@@ -28,6 +33,12 @@
 
 .especialidades-left {
   width: 240px;
+  /* AÑADIDO: Estado inicial animación */
+  opacity: 0;
+}
+
+.visible .especialidades-left {
+  animation: fadeInLeft 0.8s ease forwards;
 }
 
 .especialidades-left h2 {
@@ -62,6 +73,17 @@
   font-size: 24px;
 
   color: #1f6a6e;
+
+  /* AÑADIDO: Efecto hover */
+  cursor: pointer;
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.especialidades-btn:hover {
+  transform: scale(1.1);
+  background: #eef4f7;
 }
 
 /* LINEA DIVISORIA */
@@ -71,6 +93,14 @@
   height: 150px;
 
   background: white;
+
+  /* AÑADIDO: Animación */
+  transform: scaleY(0);
+  transition: transform 0.8s ease 0.2s;
+}
+
+.visible .especialidades-divider {
+  transform: scaleY(1);
 }
 
 /* ITEMS */
@@ -87,6 +117,23 @@
   text-align: center;
 
   width: 110px;
+
+  /* AÑADIDO: Estado inicial */
+  opacity: 0;
+}
+
+/* Animación escalonada */
+.visible .especialidad:nth-child(1) {
+  animation: fadeInUp 0.6s ease forwards 0.4s;
+}
+.visible .especialidad:nth-child(2) {
+  animation: fadeInUp 0.6s ease forwards 0.6s;
+}
+.visible .especialidad:nth-child(3) {
+  animation: fadeInUp 0.6s ease forwards 0.8s;
+}
+.visible .especialidad:nth-child(4) {
+  animation: fadeInUp 0.6s ease forwards 1s;
 }
 
 /* ICONO */
@@ -106,6 +153,13 @@
   font-size: 28px;
 
   color: #1f6a6e;
+
+  /* AÑADIDO: Efecto hover */
+  transition: transform 0.3s ease;
+}
+
+.especialidad:hover .icon-box {
+  transform: translateY(-5px);
 }
 
 /* TEXTO */
@@ -113,4 +167,50 @@
 .especialidad p {
   font-size: 13px;
   line-height: 1.3;
+}
+
+/* KEYFRAMES */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE SENCILLO (Sin cambiar estructura) */
+@media (max-width: 900px) {
+  .especialidades {
+    height: auto;
+    padding: 50px 0;
+  }
+  .especialidades-container {
+    flex-direction: column;
+  }
+  .especialidades-divider {
+    width: 150px;
+    height: 2px;
+    transform: scaleX(0);
+  }
+  .visible .especialidades-divider {
+    transform: scaleX(1);
+  }
+  .especialidades-items {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

@@ -1,175 +1,240 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
+
 /* =========================
 SECCION PRINCIPAL
 ========================= */
-
 .valor-section {
+  font-family: "Nunito", sans-serif; /* NUNITO EN TODO EL COMPONENTE */
   background: #206b6f;
-
-  height: 90vh;
-
+  min-height: 90vh; /* Cambiado de height a min-height para que crezca en celulares sin romper el diseño */
+  height: auto;
   padding-top: 60px;
-
+  padding-bottom: 60px; /* Margen inferior para que las cards no choquen con la pestaña en móvil */
   color: white;
-
   text-align: center;
-
   position: relative;
 }
 
 /* =========================
 TITULO
 ========================= */
-
 .valor-title {
   font-size: 30px;
-
-  font-weight: 500;
-
+  font-weight: 600; /* Ajustado para hacer match con Nunito */
   letter-spacing: 1px;
 }
 
 .valor-line {
   width: 55px;
   height: 4px;
-
   background: white;
-
   margin: 10px auto 20px auto;
-
   border-radius: 3px;
 }
 
 /* =========================
 SUBTITULO
 ========================= */
-
 .valor-subtitle {
   max-width: 720px;
-
   margin: auto;
-
-  font-size: 14px;
-
+  font-size: 15px; /* Un poco más grande para Nunito */
   opacity: 0.9;
 }
 
 /* =========================
 CONTENEDOR GENERAL
 ========================= */
-
 .valor-container {
   margin-top: 45px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   gap: 40px;
 }
 
 /* =========================
 GRID
 ========================= */
-
 .valor-grid {
   display: grid;
-
   grid-template-columns: repeat(2, 420px);
-
   gap: 24px;
 }
 
 /* =========================
-CARDS
+CARDS (Animaciones y Hover)
 ========================= */
-
 .valor-card {
   background: #387b7f;
-
   border: 1px solid rgba(255, 255, 255, 0.7);
-
   padding: 18px 24px;
-
   min-height: 100px;
-
   text-align: left;
+
+  /* Animación de aparición */
+  opacity: 0;
+  animation: fadeUpCard 0.6s ease forwards;
+
+  /* Transiciones para hover */
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
-/* icono */
+/* Retrasos escalonados para que aparezcan una por una */
+.valor-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.valor-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.valor-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.valor-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* Efecto Hover: Se eleva sin border-radius tal como pediste */
+.valor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes fadeUpCard {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .valor-card svg {
   margin-bottom: 8px;
 }
 
-/* titulo */
-
 .valor-card h3 {
   font-size: 17px;
-
   margin-bottom: 3px;
+  font-weight: 700;
 }
 
-/* texto */
-
 .valor-card p {
-  font-size: 13px;
-
-  line-height: 1.2;
-
+  font-size: 14px;
+  line-height: 1.3;
   opacity: 0.9;
 }
 
 /* =========================
 FLECHAS LATERALES
 ========================= */
-
 .valor-arrow {
   cursor: pointer;
-
   opacity: 0.9;
-
-  transition: 0.2s;
+  transition:
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .valor-arrow:hover {
-  transform: scale(1.1);
+  transform: scale(1.2);
+  opacity: 1;
 }
 
 /* =========================
-PESTAÑA INFERIOR
+PESTAÑA INFERIOR (Totalmente Intacta)
 ========================= */
-
 .valor-tab {
   position: absolute;
-
-  bottom: -38px;
-
+  bottom: -38px; /* Este valor negativo se respeta al 100% */
   left: 50%;
-
   transform: translateX(-50%);
-
   width: 120px;
-
   height: 50px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
+  z-index: 10;
 }
 
 .valor-tab-bg {
   position: absolute;
-
   width: 120px;
-
   height: 50px;
 }
 
 .valor-chevron {
   position: relative;
-  margin-top: 0px; /* antes era ~6px */
+  margin-top: 0px;
+}
+
+/* =========================
+MEDIA QUERIES (RESPONSIVE)
+========================= */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .valor-grid {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
+  .valor-container {
+    padding: 0 20px;
+    gap: 20px;
+  }
+}
+
+/* Móviles y Celulares */
+@media (max-width: 768px) {
+  .valor-container {
+    position: relative;
+    padding: 0 40px; /* Espacio lateral para las flechas */
+  }
+
+  .valor-grid {
+    grid-template-columns: 1fr; /* 1 Sola columna para celulares */
+    max-width: 450px;
+    margin: 0 auto;
+  }
+
+  /* Adaptación inteligente de flechas sin tocar el JSX */
+  .valor-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .valor-arrow:first-child {
+    left: 5px;
+  }
+  .valor-arrow:last-child {
+    right: 5px;
+  }
+
+  .valor-arrow:hover {
+    transform: translateY(-50%) scale(1.2);
+  }
+}
+
+/* Celulares muy pequeños */
+@media (max-width: 480px) {
+  .valor-title {
+    font-size: 24px;
+  }
+  .valor-subtitle {
+    padding: 0 15px;
+  }
+  .valor-container {
+    padding: 0 30px;
+  }
+  .valor-arrow:first-child {
+    left: 0px;
+  }
+  .valor-arrow:last-child {
+    right: 0px;
+  }
 }

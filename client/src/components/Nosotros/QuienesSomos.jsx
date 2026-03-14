@@ -1,16 +1,36 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./QuienesSomos.css";
 
 import building1 from "../../assets/img/torres.jpg";
 import building2 from "../../assets/img/torres.jpg";
 import agent from "../../assets/img/ejecutivo.png";
-// import linesBg from "../../assets/img/vectores.jpg";
 
 const QuienesSomos = () => {
-  return (
-    <section className="quienes">
-      {/* <img src={linesBg} alt="" className="quienes-lines" /> */}
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 }, // Se activa cuando se ve el 20% del componente
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <section
+      className={`quienes ${isVisible ? "visible" : ""}`}
+      ref={sectionRef}
+    >
       <div className="quienes-container">
         {/* FILA SUPERIOR */}
         <div className="quienes-top">

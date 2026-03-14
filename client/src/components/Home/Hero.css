@@ -1,37 +1,24 @@
-/* =========================
-HERO PRINCIPAL
-========================= */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
 
 .hero {
   background-size: cover;
   background-position: center;
-
   height: 130vh;
-
   position: relative;
-
   display: flex;
   align-items: flex-start;
-
   padding-top: 140px;
-
   overflow: hidden;
-
-  /* COLOR QUE TINTA LA IMAGEN */
   background-color: #1c4c4f;
-
-  /* mezcla color + imagen */
   background-blend-mode: overlay;
+  /* FUENTE AÑADIDA */
+  font-family: "Nunito", sans-serif;
 }
 
-/* =========================
-DEGRADADO INFERIOR
-========================= */
-
+/* DEGRADADO INFERIOR */
 .hero-overlay {
   position: absolute;
   inset: 0;
-
   background: linear-gradient(
     to bottom,
     rgba(32, 107, 111, 0) 0%,
@@ -39,62 +26,46 @@ DEGRADADO INFERIOR
     rgba(32, 107, 111, 0.85) 85%,
     rgba(32, 107, 111, 1) 100%
   );
-
   z-index: 1;
 }
 
-/* =========================
-CONTENEDOR
-========================= */
-
+/* CONTENEDOR */
 .hero-container {
+  width: 100%; /* Cambiado para permitir responsive */
   max-width: 1100px;
   margin: auto;
-
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
-
-  gap: 200px;
-
+  gap: 100px; /* Reducido un poco para que quepa mejor en pantallas medianas */
   position: relative;
   z-index: 2;
+  padding: 0 20px;
 }
 
-/* =========================
-TEXTO IZQUIERDA
-========================= */
-
+/* TEXTO IZQUIERDA */
 .hero-left {
   color: white;
   max-width: 520px;
-
-  /* BAJA EL BLOQUE DE TEXTO */
   margin-top: 18%;
 }
 
 .hero-title {
   font-size: 64px;
   letter-spacing: 6px;
-
   margin-bottom: 6px;
-
-  /* MENOS INTERLINEADO */
   line-height: 1.05;
+  font-weight: 800;
 }
 
 .hero-subtitle {
   font-style: italic;
-
   margin-bottom: 12px;
-
   line-height: 1.1;
+  font-size: 20px;
 }
 
-/* =========================
-LISTA SERVICIOS
-========================= */
-
+/* LISTA SERVICIOS */
 .hero-list {
   list-style: none;
   padding: 0;
@@ -103,13 +74,9 @@ LISTA SERVICIOS
 .hero-list li {
   display: flex;
   align-items: center;
-
   gap: 10px;
-
   margin-bottom: 8px;
-
   font-size: 18px;
-
   line-height: 1.2;
 }
 
@@ -118,51 +85,40 @@ LISTA SERVICIOS
   flex-shrink: 0;
 }
 
-/* =========================
-FORMULARIO
-========================= */
-
+/* FORMULARIO */
 .hero-form-wrapper {
   position: relative;
 }
 
 .hero-form-border {
   position: absolute;
-
   top: -25px;
   right: -25px;
-
   width: 100%;
   height: 100%;
-
   border: 5px solid white;
-
   z-index: 1;
 }
 
 .hero-form {
   position: relative;
-
   z-index: 2;
-
   background: #2f3338;
-
   padding: 40px;
-
   width: 370px;
-
   color: white;
-
   display: flex;
   flex-direction: column;
 }
 
 .hero-form h2 {
   margin-bottom: 6px;
+  font-weight: 700;
 }
 
 .hero-form span {
   font-style: italic;
+  color: #206b6f; /* Color para resaltar el 'aquí' */
 }
 
 .hero-contact {
@@ -170,74 +126,99 @@ FORMULARIO
   margin-bottom: 8px;
 }
 
-/* =========================
-INPUTS
-========================= */
-
+/* INPUTS */
 .hero-form label {
   font-size: 13px;
   margin-top: 15px;
+  font-weight: 600;
 }
-
-/* INPUTS UN POCO MÁS BAJOS */
 
 .hero-form input {
   width: 100%;
-
   padding: 6px 9px;
-
   margin-top: 4px;
-
   border: none;
-
   background: #ffffff;
-  height: 20px;
+  height: 30px; /* Ajustado para mejor visibilidad */
+  box-sizing: border-box;
+  font-family: "Nunito", sans-serif;
 }
 
 .hero-form textarea {
   width: 100%;
-
   padding: 9px;
-
   margin-top: 4px;
-
   border: none;
-
   background: #ffffff;
-
   resize: none;
-
   height: 90px;
+  box-sizing: border-box;
+  font-family: "Nunito", sans-serif;
 }
 
 .hero-form input::placeholder,
 .hero-form textarea::placeholder {
   font-style: italic;
-  color: #dfdfdf;
+  color: #a0a0a0;
 }
 
-/* =========================
-BOTÓN
-========================= */
-
+/* BOTÓN */
 .hero-form button {
   margin-top: 16px;
-
   align-self: flex-end;
-
-  padding: 6px 45px;
-
+  padding: 8px 45px;
   background: #206b6f;
-
   border: none;
-
   color: white;
-
   cursor: pointer;
-
   transition: 0.3s;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
 }
 
 .hero-form button:hover {
   background: #1b5a5e;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .hero {
+    height: auto;
+    padding: 120px 0 80px 0;
+  }
+  .hero-container {
+    gap: 40px;
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-left {
+    margin-top: 0;
+    text-align: center;
+    max-width: 100%;
+  }
+  .hero-list {
+    display: inline-block;
+    text-align: left;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: 42px;
+    letter-spacing: 3px;
+  }
+  .hero-form {
+    width: 100%;
+    padding: 25px;
+    box-sizing: border-box;
+  }
+  .hero-form-border {
+    display: none;
+  } /* Quitamos borde en móvil para evitar desborde lateral */
+  .hero-form-wrapper {
+    width: 90%;
+  }
 }

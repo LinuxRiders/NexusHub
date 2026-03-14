@@ -1,15 +1,35 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./NuestrasEspecialidades.css";
 
-import { FaBuilding } from "react-icons/fa";
-import { FaHandshake } from "react-icons/fa";
-import { FaGavel } from "react-icons/fa";
-import { FaFileAlt } from "react-icons/fa";
+import { FaBuilding, FaHandshake, FaGavel, FaFileAlt } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
 
 const NuestrasEspecialidades = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    if (sectionRef.current) {
+      observer.observe(sectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section className="especialidades">
+    <section
+      className={`especialidades ${isVisible ? "visible" : ""}`}
+      ref={sectionRef}
+    >
       <div className="especialidades-container">
         {/* IZQUIERDA */}
         <div className="especialidades-left">

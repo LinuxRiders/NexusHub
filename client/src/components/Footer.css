@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
 .footer {
   background: #30343a;
   height: 110vh;
@@ -9,6 +11,8 @@
 
   padding: 80px 0 40px 0;
   overflow: hidden;
+  /* AÑADIDO: Fuente */
+  font-family: "Nunito", sans-serif;
 }
 
 .footer-container {
@@ -20,17 +24,12 @@
   align-items: flex-start;
 }
 
-/* ======================
-LEFT SIDE
-====================== */
-
+/* LEFT SIDE */
 .footer-left {
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
-
-/* LOGO */
 
 .footer-brand {
   text-align: center;
@@ -48,7 +47,6 @@ LEFT SIDE
 }
 
 /* LINKS */
-
 .footer-links {
   display: flex;
   gap: 80px;
@@ -74,10 +72,7 @@ LEFT SIDE
   opacity: 0.7;
 }
 
-/* ======================
-FORM
-====================== */
-
+/* FORM */
 .footer-form-wrapper {
   position: relative;
   padding-bottom: 10px;
@@ -96,15 +91,19 @@ FORM
 
 .footer-form {
   background: #206b6f;
-
   width: 360px;
-
   padding: 35px;
 
   display: flex;
   flex-direction: column;
-
   position: relative;
+}
+
+/* Estilo para el h2 dentro del form que pusiste en el JSX */
+.footer-form h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+  font-weight: 600;
 }
 
 .footer-form span {
@@ -125,34 +124,26 @@ FORM
   padding: 6px 8px;
   border: none;
   margin-top: 4px;
+  font-family: "Nunito", sans-serif;
 }
 
 .footer-form textarea {
   margin-top: 4px;
   padding: 8px;
-
   resize: none;
-
   height: 80px;
-
   border: none;
+  font-family: "Nunito", sans-serif;
 }
 
 .footer-form button {
   margin-top: 16px;
-
   align-self: flex-end;
-
   padding: 6px 40px;
-
   border: none;
-
   background: #30343a;
-
   color: white;
-
   cursor: pointer;
-
   transition: 0.3s;
 }
 
@@ -160,38 +151,62 @@ FORM
   opacity: 0.8;
 }
 
-/* ======================
-DIVIDER
-====================== */
-
+/* DIVIDER */
 .footer-divider {
   width: 90%;
   margin: auto;
-
   height: 0.3px;
-
   background: rgb(177, 177, 177);
 }
 
-/* ======================
-SOCIALS
-====================== */
-
+/* SOCIALS */
 .footer-socials {
   width: 1100px;
   margin: auto;
-
   display: flex;
-
   justify-content: flex-start;
-
   gap: 35px;
-
   font-size: 26px;
-
   margin-top: 30px;
 }
 
 .footer-socials a {
   color: white;
+  transition: transform 0.3s;
+}
+
+.footer-socials a:hover {
+  transform: translateY(-3px);
+}
+
+/* RESPONSIVE SIN CAMBIAR ESTRUCTURA PC */
+@media (max-width: 1150px) {
+  .footer {
+    height: auto;
+    padding-bottom: 40px;
+  }
+  .footer-container,
+  .footer-socials {
+    width: 95%;
+    max-width: 1100px;
+  }
+}
+
+@media (max-width: 900px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+  .footer-left {
+    align-items: center;
+    text-align: center;
+  }
+  .footer-socials {
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .footer-form-border {
+    display: none;
+  } /* Evita desborde en móvil */
 }
