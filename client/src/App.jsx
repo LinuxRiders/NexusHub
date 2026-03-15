@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Nosotros from "./pages/Nosotros";
 import Propiedades from "./pages/Propiedades";
 import User from "./pages/User";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
   return (
@@ -16,7 +17,8 @@ function App() {
       <Route path="/" element={<Home />} />
       <Route path="/nosotros" element={<Nosotros />} />
       <Route path="/propiedades" element={<Propiedades />} />
-      <Route path="/User" element={<User />} />
+      <Route path="/user" element={<User />} />
+      <Route path="/login" element={<LoginPage />} />
       {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #

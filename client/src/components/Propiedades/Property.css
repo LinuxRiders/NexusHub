@@ -1,14 +1,13 @@
-/* Property.css */
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f0f2f5;
-}
+/* src/components/Properties/Property.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
 
 .properties-page {
   padding: 40px 5vw;
-  max-width: 1200px; /* Reducido un poco para que las 3 columnas se vean compactas */
+  max-width: 1200px;
   margin: 0 auto;
+  font-family:
+    "Nunito", sans-serif; /* Aplicación global de la fuente a la página */
+  background-color: transparent;
 }
 
 /* --- ESTILOS DE FILTROS --- */
@@ -19,7 +18,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); /* Sombra un poco más suave y moderna */
 }
 
 .filter-group {
@@ -32,18 +31,22 @@ body {
 .filter-group label {
   font-size: 13px;
   color: #1f6a6e;
-  font-weight: bold;
+  font-weight: 800;
   margin-bottom: 8px;
   text-transform: uppercase;
+  font-family: "Nunito", sans-serif;
 }
 
 .filter-group select,
 .filter-group input {
-  padding: 10px;
+  padding: 12px 10px; /* Un poco más de padding para mejor clic en móviles */
   border: 1px solid #ccc;
   outline: none;
   color: #666666;
   font-size: 14px;
+  font-family: "Nunito", sans-serif;
+  background-color: #fff;
+  transition: border-color 0.3s;
 }
 
 .filter-group select:focus,
@@ -56,20 +59,24 @@ body {
   text-align: center;
   color: #666666;
   font-size: 18px;
+  font-weight: 600;
   padding: 40px;
 }
 
-/* --- CONTENEDOR DE TARJETAS (Grid para 3 columnas exactas) --- */
+/* --- CONTENEDOR DE TARJETAS --- */
 .properties-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Exactamente 3 columnas */
-  gap: 30px; /* Espaciado entre tarjetas */
+  /* Usar auto-fill hace que el grid sea fluido automáticamente */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
 }
 
-/* Responsividad del Grid */
+/* =========================================
+   RESPONSIVIDAD ESPECÍFICA
+   ========================================= */
 @media (max-width: 1024px) {
-  .properties-container {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+  .properties-page {
+    padding: 30px 20px;
   }
 }
 
@@ -77,7 +84,14 @@ body {
   .properties-container {
     grid-template-columns: 1fr; /* 1 columna en móviles */
   }
+
   .filters-container {
-    flex-direction: column;
+    flex-direction: column; /* Apila los filtros verticalmente */
+    padding: 20px 15px;
+    gap: 15px;
+  }
+
+  .filter-group {
+    min-width: 100%; /* Cada filtro ocupa todo el ancho */
   }
 }

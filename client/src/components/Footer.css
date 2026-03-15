@@ -2,16 +2,15 @@
 
 .footer {
   background: #30343a;
-  height: 110vh;
   color: white;
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
-  padding: 80px 0 40px 0;
+  padding: 80px 0 40px;
   overflow: hidden;
-  /* AÑADIDO: Fuente */
+
   font-family: "Nunito", sans-serif;
 }
 
@@ -25,6 +24,7 @@
 }
 
 /* LEFT SIDE */
+
 .footer-left {
   display: flex;
   flex-direction: column;
@@ -32,21 +32,19 @@
 }
 
 .footer-brand {
-  text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .footer-brand img {
-  width: 160px;
-  margin-bottom: 12px;
-}
-
-.footer-brand h2 {
-  font-size: 48px;
-  letter-spacing: 6px;
+  width: 360px; /* logo más grande */
 }
 
 /* LINKS */
+
 .footer-links {
   display: flex;
   gap: 80px;
@@ -58,7 +56,7 @@
 }
 
 .footer-column h3 {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .footer-column a {
@@ -73,6 +71,7 @@
 }
 
 /* FORM */
+
 .footer-form-wrapper {
   position: relative;
   padding-bottom: 10px;
@@ -99,7 +98,6 @@
   position: relative;
 }
 
-/* Estilo para el h2 dentro del form que pusiste en el JSX */
 .footer-form h2 {
   font-size: 24px;
   margin-bottom: 10px;
@@ -121,7 +119,7 @@
 }
 
 .footer-form input {
-  padding: 6px 8px;
+  padding: 7px 10px;
   border: none;
   margin-top: 4px;
   font-family: "Nunito", sans-serif;
@@ -137,9 +135,9 @@
 }
 
 .footer-form button {
-  margin-top: 16px;
+  margin-top: 18px;
   align-self: flex-end;
-  padding: 6px 40px;
+  padding: 7px 40px;
   border: none;
   background: #30343a;
   color: white;
@@ -152,39 +150,37 @@
 }
 
 /* DIVIDER */
+
 .footer-divider {
   width: 90%;
-  margin: auto;
+  margin: 40px auto;
   height: 0.3px;
   background: rgb(177, 177, 177);
 }
 
 /* SOCIALS */
+
 .footer-socials {
   width: 1100px;
-  margin: auto;
+  margin: 3px auto 0;
+
   display: flex;
   justify-content: flex-start;
-  gap: 35px;
-  font-size: 26px;
-  margin-top: 30px;
+  gap: 30px;
 }
 
-.footer-socials a {
-  color: white;
+.footer-socials img {
+  width: 28px;
   transition: transform 0.3s;
 }
 
-.footer-socials a:hover {
-  transform: translateY(-3px);
+.footer-socials img:hover {
+  transform: translateY(-4px);
 }
 
-/* RESPONSIVE SIN CAMBIAR ESTRUCTURA PC */
+/* RESPONSIVE */
+
 @media (max-width: 1150px) {
-  .footer {
-    height: auto;
-    padding-bottom: 40px;
-  }
   .footer-container,
   .footer-socials {
     width: 95%;
@@ -198,15 +194,37 @@
     align-items: center;
     gap: 60px;
   }
+
   .footer-left {
     align-items: center;
     text-align: center;
   }
+
+  .footer-links {
+    justify-content: center;
+    gap: 60px;
+  }
+
   .footer-socials {
     justify-content: center;
-    margin-top: 40px;
   }
+
   .footer-form-border {
     display: none;
-  } /* Evita desborde en móvil */
+  }
+}
+
+@media (max-width: 500px) {
+  .footer-links {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .footer-form {
+    width: 90%;
+  }
+
+  .footer-brand img {
+    width: 180px;
+  }
 }

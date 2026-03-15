@@ -1,14 +1,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
 .especialidades {
-  height: 40vh;
+  min-height: 40vh;
   background: #2f3339;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  /* AÑADIDO: Fuente */
+  padding: 60px 0;
+
   font-family: "Nunito", sans-serif;
 }
 
@@ -16,7 +17,7 @@
 
 .especialidades-container {
   width: 100%;
-  max-width: 1100px; /* centra todo el bloque */
+  max-width: 1200px;
 
   margin: auto;
 
@@ -24,7 +25,7 @@
   align-items: center;
   justify-content: center;
 
-  gap: 40px;
+  gap: 50px;
 
   color: white;
 }
@@ -32,8 +33,7 @@
 /* IZQUIERDA */
 
 .especialidades-left {
-  width: 240px;
-  /* AÑADIDO: Estado inicial animación */
+  width: 260px;
   opacity: 0;
 }
 
@@ -42,7 +42,7 @@
 }
 
 .especialidades-left h2 {
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1.2;
 }
@@ -58,7 +58,7 @@
   border-radius: 3px;
 }
 
-/* BOTON FLECHA */
+/* BOTON */
 
 .especialidades-btn {
   width: 110px;
@@ -74,15 +74,15 @@
 
   color: #1f6a6e;
 
-  /* AÑADIDO: Efecto hover */
   cursor: pointer;
+
   transition:
     transform 0.3s ease,
     background 0.3s ease;
 }
 
 .especialidades-btn:hover {
-  transform: scale(1.1);
+  transform: scale(1.08);
   background: #eef4f7;
 }
 
@@ -90,11 +90,10 @@
 
 .especialidades-divider {
   width: 2px;
-  height: 150px;
+  height: 250px;
 
   background: white;
 
-  /* AÑADIDO: Animación */
   transform: scaleY(0);
   transition: transform 0.8s ease 0.2s;
 }
@@ -107,31 +106,31 @@
 
 .especialidades-items {
   display: flex;
-
-  gap: 45px;
+  gap: 50px;
 }
 
 /* ITEM */
 
 .especialidad {
   text-align: center;
-
-  width: 110px;
-
-  /* AÑADIDO: Estado inicial */
+  width: 120px;
   opacity: 0;
 }
 
 /* Animación escalonada */
+
 .visible .especialidad:nth-child(1) {
   animation: fadeInUp 0.6s ease forwards 0.4s;
 }
+
 .visible .especialidad:nth-child(2) {
   animation: fadeInUp 0.6s ease forwards 0.6s;
 }
+
 .visible .especialidad:nth-child(3) {
   animation: fadeInUp 0.6s ease forwards 0.8s;
 }
+
 .visible .especialidad:nth-child(4) {
   animation: fadeInUp 0.6s ease forwards 1s;
 }
@@ -139,8 +138,8 @@
 /* ICONO */
 
 .icon-box {
-  width: 68px;
-  height: 68px;
+  width: 70px;
+  height: 70px;
 
   background: #fbfcfe;
 
@@ -150,16 +149,17 @@
 
   margin: 0 auto 12px;
 
-  font-size: 28px;
-
-  color: #1f6a6e;
-
-  /* AÑADIDO: Efecto hover */
   transition: transform 0.3s ease;
 }
 
+.icon-box img {
+  width: 43px;
+  height: 43px;
+  object-fit: contain;
+}
+
 .especialidad:hover .icon-box {
-  transform: translateY(-5px);
+  transform: translateY(-6px);
 }
 
 /* TEXTO */
@@ -169,7 +169,8 @@
   line-height: 1.3;
 }
 
-/* KEYFRAMES */
+/* ANIMACIONES */
+
 @keyframes fadeInLeft {
   from {
     opacity: 0;
@@ -192,25 +193,73 @@
   }
 }
 
-/* RESPONSIVE SENCILLO (Sin cambiar estructura) */
-@media (max-width: 900px) {
-  .especialidades {
-    height: auto;
-    padding: 50px 0;
+/* ======================
+RESPONSIVE
+====================== */
+
+@media (max-width: 1100px) {
+  .especialidades-container {
+    padding: 0 40px;
   }
+
+  .especialidades-items {
+    gap: 35px;
+  }
+}
+
+@media (max-width: 900px) {
   .especialidades-container {
     flex-direction: column;
+    text-align: center;
+    gap: 35px;
   }
+
+  .especialidades-left {
+    width: 100%;
+  }
+
+  .especialidades-line {
+    margin: 14px auto 22px;
+  }
+
   .especialidades-divider {
     width: 150px;
     height: 2px;
+
     transform: scaleX(0);
   }
+
   .visible .especialidades-divider {
     transform: scaleX(1);
   }
+
   .especialidades-items {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 30px;
+  }
+
+  .especialidad {
+    width: 140px;
+  }
+}
+
+@media (max-width: 500px) {
+  .especialidades-items {
+    gap: 20px;
+  }
+
+  .icon-box {
+    width: 60px;
+    height: 60px;
+  }
+
+  .icon-box img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .especialidad p {
+    font-size: 12px;
   }
 }

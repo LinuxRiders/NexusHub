@@ -14,11 +14,6 @@ const HeroUser = () => {
         <h1>Mi cuenta</h1>
 
         <div className="user-line"></div>
-
-        {/* <p>
-          Bienvenido a Nexus Hub Corporation, tu aliado en soluciones
-          inmobiliarias integrales en Trujillo
-        </p> */}
       </div>
     </section>
   );

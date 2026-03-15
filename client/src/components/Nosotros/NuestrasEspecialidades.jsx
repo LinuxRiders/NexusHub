@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./NuestrasEspecialidades.css";
 
-import { FaBuilding, FaHandshake, FaGavel, FaFileAlt } from "react-icons/fa";
 import { FiArrowRight } from "react-icons/fi";
+
+import inmueble from "../../assets/img/icons/nuestrasEsp/inmueble.png";
+import martillo from "../../assets/img/icons/nuestrasEsp/martillo.png";
+import papel from "../../assets/img/icons/nuestrasEsp/papel.png";
+import trato from "../../assets/img/icons/nuestrasEsp/trato.png";
 
 const NuestrasEspecialidades = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -53,7 +57,7 @@ const NuestrasEspecialidades = () => {
         <div className="especialidades-items">
           <div className="especialidad">
             <div className="icon-box">
-              <FaBuilding />
+              <img src={inmueble} alt="Renta de Inmuebles" />
             </div>
             <p>
               Renta de
@@ -64,7 +68,7 @@ const NuestrasEspecialidades = () => {
 
           <div className="especialidad">
             <div className="icon-box">
-              <FaHandshake />
+              <img src={trato} alt="Intermediación en Compraventa" />
             </div>
             <p>
               Intermediación
@@ -75,7 +79,7 @@ const NuestrasEspecialidades = () => {
 
           <div className="especialidad">
             <div className="icon-box">
-              <FaGavel />
+              <img src={martillo} alt="Saneamiento Físico Legal" />
             </div>
             <p>
               Saneamiento
@@ -86,7 +90,7 @@ const NuestrasEspecialidades = () => {
 
           <div className="especialidad">
             <div className="icon-box">
-              <FaFileAlt />
+              <img src={papel} alt="Trámites y Documentos" />
             </div>
             <p>
               Trámites y Documentos

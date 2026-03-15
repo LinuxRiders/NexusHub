@@ -1,7 +1,6 @@
 // src/components/User/UserAlerts/UserAlerts.jsx
 import React, { useState } from "react";
 import {
-  FaBell,
   FaTimes,
   FaEdit,
   FaTrashAlt,
@@ -9,7 +8,8 @@ import {
   FaCheckCircle,
 } from "react-icons/fa";
 
-// 1. IMPORTACIÓN DE IMAGEN CORREGIDA
+// IMÁGENES CORREGIDAS
+import alerta from "../../assets/img/icons/userCuenta/alerta.png";
 import marcaAgua from "../../assets/img/MarcaAgua.png";
 
 import "./UserAlerts.css";
@@ -45,8 +45,8 @@ const initialAlertState = {
   superficieMin: "",
   superficieMax: "",
   conFotografias: false,
-  ubicacion: "", // Ahora guardará el valor seleccionado
-  tipoInmuebleTags: [], // NUEVO: Guardará array de strings ['Casa', 'Dpto']
+  ubicacion: "",
+  tipoInmuebleTags: [],
   enviarNuevos: false,
 };
 
@@ -61,7 +61,6 @@ const UserAlerts = () => {
     action: null,
   });
 
-  // Estado para controlar la visibilidad del selector rápido de "Añadir tipo"
   const [showTypeSelector, setShowTypeSelector] = useState(false);
 
   const handleInputChange = (e) => {
@@ -72,7 +71,6 @@ const UserAlerts = () => {
     }));
   };
 
-  // --- LÓGICA FUNCIONAL PARA "AÑADIR TIPO" (TAGS) ---
   const addPropertyTypeTag = (type) => {
     if (type && !formData.tipoInmuebleTags.includes(type)) {
       setFormData((prev) => ({
@@ -80,7 +78,7 @@ const UserAlerts = () => {
         tipoInmuebleTags: [...prev.tipoInmuebleTags, type],
       }));
     }
-    setShowTypeSelector(false); // Cierra el selector tras añadir
+    setShowTypeSelector(false);
   };
 
   const removePropertyTypeTag = (typeToRemove) => {
@@ -91,7 +89,6 @@ const UserAlerts = () => {
       ),
     }));
   };
-  // --------------------------------------------------
 
   const openNewAlertModal = () => {
     setFormData(initialAlertState);
@@ -209,9 +206,6 @@ const UserAlerts = () => {
       {isFormModalOpen && (
         <div className="dark-modal-overlay">
           <div className="dark-modal-content portrait-mode">
-            {" "}
-            {/* NUEVA CLASE PARA ALTURA */}
-            {/* 2. IMAGEN DE FONDO AJUSTADA EN CSS */}
             <img
               src={marcaAgua}
               alt="Fondo"
@@ -224,11 +218,12 @@ const UserAlerts = () => {
               <FaTimes />
             </button>
             <div className="dark-modal-header">
-              <FaBell className="dark-modal-icon" />
+              {/* CAMBIADO A LA IMAGEN DE ALERTA */}
+              <img src={alerta} alt="Alerta" className="dark-modal-icon-img" />
               <h2>{formData.id ? "Editar alerta" : "Crear alerta"}</h2>
             </div>
+
             <form className="dark-modal-form" onSubmit={handleSaveForm}>
-              {/* Filas 1, 2 y 3 mantienen posición, solo cambia ubicación a SELECT */}
               <div className="form-row row-3-cols">
                 <div className="dark-input-group">
                   <label>Título de la alerta</label>
@@ -348,7 +343,6 @@ const UserAlerts = () => {
               <div className="form-row row-2-cols">
                 <div className="dark-input-group">
                   <label>Ubicación</label>
-                  {/* MODIFICADO: AHORA ES UN SELECT PARA "SELECCIONAR" */}
                   <select
                     name="ubicacion"
                     value={formData.ubicacion}
@@ -363,11 +357,9 @@ const UserAlerts = () => {
                   </select>
                 </div>
 
-                {/* MODIFICADO TOTALMENTE: PROPUESTA FUNCIONAL DE TAGS */}
                 <div className="dark-input-group property-tags-group">
                   <div className="label-with-action">
                     <label>Tipo de inmueble</label>
-                    {/* Acción para mostrar/ocultar el selector */}
                     <span
                       className="add-action"
                       onClick={() => setShowTypeSelector(!showTypeSelector)}
@@ -376,7 +368,6 @@ const UserAlerts = () => {
                     </span>
                   </div>
 
-                  {/* Contenedor estilo "línea inferior" que alberga los tags */}
                   <div className="tags-underline-container">
                     {formData.tipoInmuebleTags.length === 0 && (
                       <span className="placeholder-text">
@@ -393,7 +384,6 @@ const UserAlerts = () => {
                       </span>
                     ))}
 
-                    {/* Selector rápido absoluto que aparece al pulsar "+ Añadir tipo" */}
                     {showTypeSelector && (
                       <div className="quick-type-selector">
                         {propertyTypesOptions.map((option) => (
@@ -411,10 +401,7 @@ const UserAlerts = () => {
                 </div>
               </div>
 
-              {/* Fila 4 (Footer) */}
               <div className="dark-form-footer pushed-down">
-                {" "}
-                {/* CLASE PARA BAJAR EL BOTÓN */}
                 <label className="main-checkbox">
                   <input
                     type="checkbox"
@@ -436,7 +423,12 @@ const UserAlerts = () => {
       {/* --- PANEL PRINCIPAL --- */}
       <div className="alerts-header">
         <div className="alerts-title-area">
-          <FaBell className="alerts-icon" />
+          {/* CAMBIADO A LA IMAGEN DE ALERTA */}
+          <img
+            src={alerta}
+            alt="Mis Alertas"
+            className="alerts-title-icon-img"
+          />
           <h1 className="alerts-title">Mis alertas</h1>
         </div>
         <button className="btn-create-alert" onClick={openNewAlertModal}>
@@ -450,7 +442,7 @@ const UserAlerts = () => {
         ) : (
           <div className="alerts-grid">
             {alertsList.map((alert) => (
-              <div key={alert.id} className="alert-card">
+              <div key={alert.id} className="alert-card pro-design">
                 <div className="alert-card-header">
                   <h3>{alert.titulo}</h3>
                   <div className="alert-card-actions">
@@ -468,25 +460,50 @@ const UserAlerts = () => {
                     </button>
                   </div>
                 </div>
+
+                {/* DISEÑO PROFESIONAL PARA LOS DATOS DE LA ALERTA */}
                 <div className="alert-card-body">
-                  <p>
-                    <strong>Ubicación:</strong>{" "}
-                    {alert.ubicacion || "Cualquiera"}
-                  </p>
-                  <p>
-                    <strong>Operación:</strong>{" "}
-                    {[alert.compra && "Compra", alert.alquiler && "Alquiler"]
-                      .filter(Boolean)
-                      .join(" / ") || "Cualquiera"}
-                  </p>
-                  <p>
-                    <strong>Tipos:</strong>{" "}
-                    {alert.tipoInmuebleTags.join(", ") || "Cualquiera"}
-                  </p>
-                  <p>
-                    <strong>Precio:</strong> {alert.precioMin || "0"} -{" "}
-                    {alert.precioMax || "Sin límite"}
-                  </p>
+                  <div className="alert-detail-row">
+                    <span className="alert-label">Ubicación</span>
+                    <span className="alert-value">
+                      {alert.ubicacion || "Cualquiera"}
+                    </span>
+                  </div>
+
+                  <div className="alert-detail-row">
+                    <span className="alert-label">Operación</span>
+                    <span className="alert-value">
+                      {[alert.compra && "Compra", alert.alquiler && "Alquiler"]
+                        .filter(Boolean)
+                        .map((op, i) => (
+                          <span key={i} className="alert-badge highlight">
+                            {op}
+                          </span>
+                        ))}
+                      {!alert.compra && !alert.alquiler && "Cualquiera"}
+                    </span>
+                  </div>
+
+                  <div className="alert-detail-row">
+                    <span className="alert-label">Inmueble</span>
+                    <span className="alert-value">
+                      {alert.tipoInmuebleTags.length > 0
+                        ? alert.tipoInmuebleTags.map((tag) => (
+                            <span key={tag} className="alert-badge">
+                              {tag}
+                            </span>
+                          ))
+                        : "Cualquiera"}
+                    </span>
+                  </div>
+
+                  <div className="alert-detail-row">
+                    <span className="alert-label">Precio</span>
+                    <span className="alert-value price">
+                      {alert.precioMin || "0"} -{" "}
+                      {alert.precioMax || "Sin límite"}
+                    </span>
+                  </div>
                 </div>
               </div>
             ))}

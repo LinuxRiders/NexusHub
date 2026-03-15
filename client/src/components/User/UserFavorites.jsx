@@ -1,13 +1,16 @@
 // src/components/User/UserFavorites/UserFavorites.jsx
 import React, { useState } from "react";
 import {
-  FaHeart,
   FaExclamationTriangle,
   FaCheckCircle,
-  FaTimesCircle,
+  FaTimesCircle, // Mantenido por si lo usas en el futuro
 } from "react-icons/fa";
+
+// IMAGEN IMPORTADA PARA REEMPLAZAR FaHeart
+import favorito from "../../assets/img/icons/userCuenta/favorito.png";
+
 import PropertyCard from "../Propiedades/PropertyCard";
-import { propertiesData as initialData } from "../Propiedades/propertiesData"; //
+import { propertiesData as initialData } from "../Propiedades/propertiesData";
 import "./UserFavorites.css";
 
 const UserFavorites = () => {
@@ -100,11 +103,16 @@ const UserFavorites = () => {
 
       {/* --- CABECERA --- */}
       <div className="favorites-header">
-        <FaHeart className="favorites-icon" />
+        {/* REEMPLAZO DE FABELL POR LA IMAGEN */}
+        <img
+          src={favorito}
+          alt="Mis favoritos"
+          className="favorites-title-icon-img"
+        />
         <h1 className="favorites-title">Mis favoritos</h1>
       </div>
 
-      {/* --- GRID DE PROPIEDADES (Reutilizando tus clases de Property.css) --- */}
+      {/* --- GRID DE PROPIEDADES --- */}
       <div className="properties-container">
         {properties.length > 0 ? (
           properties.map((property) => (

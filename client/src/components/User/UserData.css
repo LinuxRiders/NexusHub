@@ -1,32 +1,37 @@
-/* src/components/User/UserData/UserData.css */
 .userdata-container {
   width: 100%;
   position: relative;
 }
 
-/* Cabecera y Títulos */
+/* HEADER */
+
 .userdata-header {
   display: flex;
   align-items: center;
   margin-bottom: 40px;
 }
+
 .userdata-avatar {
-  font-size: 80px;
-  color: #1c6a6e;
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
   margin-right: 20px;
 }
+
 .userdata-welcome {
   margin: 0;
   font-size: 32px;
   color: #1c6a6e;
   font-weight: bold;
 }
+
 .userdata-name {
   margin: 0;
   font-size: 26px;
   color: #a0a0a0;
   font-weight: normal;
 }
+
 .section-subtitle {
   font-size: 18px;
   color: #2f3339;
@@ -34,7 +39,8 @@
   margin-bottom: 15px;
 }
 
-/* Grid de Formulario */
+/* GRID */
+
 .userdata-form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -42,7 +48,8 @@
   margin-bottom: 40px;
 }
 
-/* Cajas de Input Personalizadas */
+/* INPUTS */
+
 .input-box {
   border: 1px solid #c0c0c0;
   padding: 8px 15px;
@@ -62,43 +69,37 @@
   font-size: 16px;
   font-weight: bold;
   background-color: transparent;
-  padding: 5px 0 0 0;
+  padding-top: 5px;
   width: 100%;
-  transition: color 0.3s ease;
 }
 
-/* LÓGICA VISUAL: Bloqueado vs Editable */
+/* LOCKED */
+
 .input-box.locked {
-  background-color: rgba(
-    245,
-    245,
-    245,
-    0.5
-  ); /* Fondo ligeramente oscuro/apagado */
+  background-color: rgba(245, 245, 245, 0.5);
   border-color: #e0e0e0;
 }
 
 .input-box.locked input {
-  color: #a0a0a0; /* Letras oscurecidas/apagadas indicando bloqueo */
+  color: #a0a0a0;
   cursor: not-allowed;
 }
 
+/* EDITABLE */
+
 .input-box.editable {
   background-color: #ffffff;
-  border-color: #1c6a6e; /* Resalta el borde con tu color principal */
-  box-shadow: 0 2px 6px rgba(28, 106, 110, 0.1); /* Sombra sutil al editar */
+  border-color: #1c6a6e;
+  box-shadow: 0 2px 6px rgba(28, 106, 110, 0.1);
 }
 
-.input-box.editable input {
-  color: #2f3339; /* Letras fuertes y claras */
-  cursor: text;
-}
+/* BOTON EDITAR */
 
-/* Botón Editar */
 .edit-button-container {
   display: flex;
   align-items: flex-end;
 }
+
 .btn-edit {
   background-color: #1c6a6e;
   color: white;
@@ -106,43 +107,44 @@
   padding: 15px 30px;
   font-size: 16px;
   font-weight: bold;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
+
   cursor: pointer;
   width: 100%;
-  height: 100%;
-  transition:
-    opacity 0.3s ease,
-    background-color 0.3s ease;
+}
+
+.btn-icon {
+  font-size: 22px; /* icono editar más grande */
 }
 
 .btn-edit.active-edit {
-  background-color: #154e52; /* Se oscurece cuando ya se hizo click */
+  background-color: #154e52;
   cursor: default;
 }
 
-/* Checkbox */
+/* CHECKBOX */
+
 .settings-section {
   margin-bottom: 40px;
 }
+
 .checkbox-container {
   display: flex;
   align-items: center;
   gap: 10px;
-  cursor: pointer;
 }
-.checkbox-container.locked-checkbox {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
+
 .checkbox-text {
   color: #888;
   font-size: 14px;
 }
 
-/* Botón Guardar */
+/* BOTON GUARDAR */
+
 .btn-save {
   background-color: #1c6a6e;
   color: white;
@@ -151,125 +153,46 @@
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
-  transition: all 0.3s ease;
 }
 
 .btn-save.disabled {
   background-color: #a0a0a0;
   cursor: not-allowed;
-  opacity: 0.7;
 }
 
-.btn-save:not(.disabled):hover,
-.btn-edit:hover {
-  opacity: 0.9;
-}
+/* RESPONSIVE */
 
-/* =========================================
-   ESTILOS DEL MODAL DE ALERTA PERSONALIZADO 
-   ========================================= */
-.custom-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(47, 51, 57, 0.6); /* Color 2f3339 con transparencia */
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(3px); /* Efecto difuminado profesional */
-}
-
-.custom-modal-box {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  animation: modalFadeIn 0.3s ease;
-}
-
-.modal-icon-wrapper {
-  margin-bottom: 20px;
-}
-
-.modal-icon {
-  font-size: 50px;
-}
-
-.confirm-icon {
-  color: #2f3339;
-}
-.success-icon {
-  color: #1c6a6e;
-}
-
-.modal-title {
-  color: #1c6a6e;
-  font-size: 22px;
-  margin: 0 0 15px 0;
-}
-
-.modal-message {
-  color: #666666;
-  font-size: 15px;
-  line-height: 1.5;
-  margin-bottom: 30px;
-}
-
-.modal-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
-
-.btn-modal {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  border-radius: 4px;
-  transition: opacity 0.3s ease;
-}
-
-.btn-modal:hover {
-  opacity: 0.8;
-}
-
-.btn-cancel {
-  background-color: #e0e0e0;
-  color: #2f3339;
-}
-
-.btn-accept {
-  background-color: #1c6a6e;
-  color: #ffffff;
-}
-
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Responsividad */
 @media (max-width: 1024px) {
   .userdata-form-grid {
     grid-template-columns: 1fr 1fr;
   }
 }
-@media (max-width: 600px) {
+
+@media (max-width: 700px) {
+  .userdata-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .userdata-avatar {
+    margin-right: 0;
+    margin-bottom: 15px;
+    width: 70px;
+  }
+
+  .userdata-welcome {
+    font-size: 26px;
+  }
+
+  .userdata-name {
+    font-size: 20px;
+  }
+
   .userdata-form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .btn-edit {
+    padding: 14px;
   }
 }

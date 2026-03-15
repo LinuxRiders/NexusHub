@@ -6,7 +6,8 @@ SECCION PRINCIPAL
 .valor-section {
   font-family: "Nunito", sans-serif; /* NUNITO EN TODO EL COMPONENTE */
   background: #206b6f;
-  min-height: 90vh; /* Cambiado de height a min-height para que crezca en celulares sin romper el diseño */
+  /* min-height: 90vh; */
+  height: 90vh;
   height: auto;
   padding-top: 60px;
   padding-bottom: 60px; /* Margen inferior para que las cards no choquen con la pestaña en móvil */
@@ -81,7 +82,12 @@ CARDS (Animaciones y Hover)
     transform 0.3s ease,
     box-shadow 0.3s ease;
 }
-
+.valor-icon {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
 /* Retrasos escalonados para que aparezcan una por una */
 .valor-card:nth-child(1) {
   animation-delay: 0.1s;

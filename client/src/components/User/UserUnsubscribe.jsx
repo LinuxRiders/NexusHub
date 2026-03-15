@@ -1,11 +1,14 @@
 // src/components/User/UserUnsubscribe/UserUnsubscribe.jsx
 import React, { useState } from "react";
 import {
-  FaUserTimes,
   FaExclamationTriangle,
   FaCheckCircle,
   FaExclamationCircle,
 } from "react-icons/fa";
+
+// IMAGEN IMPORTADA PARA REEMPLAZAR FaUserTimes
+import eliminar from "../../assets/img/icons/userCuenta/eliminar.png";
+
 import "./UserUnsubscribe.css";
 
 const UserUnsubscribe = () => {
@@ -27,7 +30,6 @@ const UserUnsubscribe = () => {
     setSecciones((prev) => ({ ...prev, [name]: checked }));
   };
 
-  // En lugar de un onSubmit de form, usamos un onClick en el botón superior
   const handleActionClick = () => {
     // 1. Validar que al menos haya una opción marcada
     if (!secciones.alertas && !secciones.anuncios && !secciones.cuenta) {
@@ -162,7 +164,12 @@ const UserUnsubscribe = () => {
       {/* --- CABECERA CON EL BOTÓN A LA DERECHA --- */}
       <div className="unsubscribe-header">
         <div className="header-title-group">
-          <FaUserTimes className="unsubscribe-icon" />
+          {/* REEMPLAZO DEL ICONO POR LA IMAGEN IMPORTADA */}
+          <img
+            src={eliminar}
+            alt="Dar de baja"
+            className="unsubscribe-title-icon-img"
+          />
           <h1 className="unsubscribe-title">Darme de baja</h1>
         </div>
 

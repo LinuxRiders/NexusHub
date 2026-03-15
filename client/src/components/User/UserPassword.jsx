@@ -1,29 +1,27 @@
 // src/components/User/UserPassword/UserPassword.jsx
 import React, { useState } from "react";
 import {
-  FaLock,
   FaCheckCircle,
   FaExclamationTriangle,
   FaTimesCircle,
 } from "react-icons/fa";
+import candado from "../../assets/img/icons/userCuenta/candado.png";
+
 import "./UserPassword.css";
 
 const UserPassword = () => {
-  // 1. Estado para los inputs de contraseña
   const [passwords, setPasswords] = useState({
     actual: "",
     nueva: "",
     repetir: "",
   });
 
-  // 2. Estado para manejar las alertas modales
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
-    type: "", // 'confirm', 'success', o 'error'
+    type: "",
     message: "",
   });
 
-  // Manejador de cambios en los inputs
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setPasswords((prev) => ({
@@ -32,11 +30,9 @@ const UserPassword = () => {
     }));
   };
 
-  // Validación y confirmación antes de guardar
   const handleSaveClick = (e) => {
     e.preventDefault();
 
-    // Validación 1: Campos vacíos
     if (!passwords.actual || !passwords.nueva || !passwords.repetir) {
       setModalConfig({
         isOpen: true,
@@ -46,7 +42,6 @@ const UserPassword = () => {
       return;
     }
 
-    // Validación 2: Las contraseñas nuevas deben coincidir
     if (passwords.nueva !== passwords.repetir) {
       setModalConfig({
         isOpen: true,
@@ -56,7 +51,6 @@ const UserPassword = () => {
       return;
     }
 
-    // Si todo está bien, mostramos la confirmación
     setModalConfig({
       isOpen: true,
       type: "confirm",
@@ -64,23 +58,19 @@ const UserPassword = () => {
     });
   };
 
-  // Simulación de envío al backend y éxito
   const confirmSave = () => {
-    // AQUÍ VA TU LÓGICA DE BACKEND (ej. axios.post('/api/change-password', passwords))
-
     setModalConfig({
       isOpen: true,
       type: "success",
       message: "Tu contraseña se ha actualizado correctamente.",
     });
 
-    // Limpiamos los campos después de un guardado exitoso
     setPasswords({ actual: "", nueva: "", repetir: "" });
   };
 
   return (
     <div className="user-password-container">
-      {/* --- MODAL DE ALERTA --- */}
+      {/* MODAL */}
       {modalConfig.isOpen && (
         <div className="custom-modal-overlay">
           <div className="custom-modal-box">
@@ -95,11 +85,13 @@ const UserPassword = () => {
                 <FaTimesCircle className="modal-icon error-icon" />
               )}
             </div>
+
             <h3 className="modal-title">
               {modalConfig.type === "confirm" && "Confirmar Cambio"}
               {modalConfig.type === "success" && "¡Éxito!"}
               {modalConfig.type === "error" && "Error"}
             </h3>
+
             <p className="modal-message">{modalConfig.message}</p>
 
             <div className="modal-actions">
@@ -113,6 +105,7 @@ const UserPassword = () => {
                   Cancelar
                 </button>
               )}
+
               <button
                 className="btn-modal btn-accept"
                 onClick={
@@ -128,14 +121,14 @@ const UserPassword = () => {
         </div>
       )}
 
-      {/* --- CONTENIDO DEL PANEL --- */}
+      {/* HEADER */}
       <div className="password-header">
-        <FaLock className="password-icon" />
+        <img src={candado} alt="candado" className="password-icon" />
         <h1 className="password-title">Cambiar contraseña</h1>
       </div>
 
+      {/* FORM */}
       <form className="password-form" onSubmit={handleSaveClick}>
-        {/* Contraseña Actual */}
         <div className="form-group full-width">
           <label className="form-label">Contraseña actual</label>
           <input
@@ -147,7 +140,6 @@ const UserPassword = () => {
           />
         </div>
 
-        {/* Fila con las contraseñas nuevas */}
         <div className="password-row">
           <div className="form-group half-width">
             <label className="form-label">Contraseña nueva</label>

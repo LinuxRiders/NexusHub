@@ -5,12 +5,12 @@
 .servicios-container {
   font-family: "Nunito", sans-serif;
   background: white;
-  min-height: 50vh;
+  min-height: 30vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 80px 20px;
+  /* padding: 80px 20px; */
   box-sizing: border-box;
   animation: fadeIn 1s ease-out;
 }

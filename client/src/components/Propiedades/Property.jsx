@@ -1,4 +1,4 @@
-// Property.jsx
+// src/components/Properties/Property.jsx
 import React, { useState, useEffect } from "react";
 import PropertyCard from "./PropertyCard";
 import { propertiesData as initialData } from "./propertiesData";

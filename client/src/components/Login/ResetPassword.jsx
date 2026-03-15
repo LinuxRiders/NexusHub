@@ -1,21 +1,46 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import api from "../../api/api";
+// import api from "../../api/api";
 import {
   Box,
   Button,
   TextField,
   Typography,
-  Paper,
   Container,
   Alert,
   CircularProgress,
   IconButton,
   InputAdornment,
+  Divider,
 } from "@mui/material";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import LockResetIcon from "@mui/icons-material/LockReset";
+
+// Nuevas rutas solicitadas
+import logo from "../../assets/img/logo2.png";
+import bgBottom from "../../assets/img/MarcaAgua2.png";
+
+const darkTextFieldStyle = {
+  "& .MuiOutlinedInput-root": {
+    color: "white",
+    borderRadius: 0,
+    fontFamily: "'Nunito', sans-serif",
+    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.5)" },
+    "&:hover fieldset": { borderColor: "white" },
+    "&.Mui-focused fieldset": { borderColor: "white", borderWidth: "2px" },
+  },
+  "& .MuiInputLabel-root": {
+    color: "rgba(255, 255, 255, 0.7)",
+    fontFamily: "'Nunito', sans-serif",
+  },
+  "& .MuiInputLabel-root.Mui-focused": { color: "white" },
+  "& .MuiIconButton-root": { color: "white" },
+  "& .MuiFormHelperText-root": {
+    color: "#ff8a80",
+    fontFamily: "'Nunito', sans-serif",
+  },
+};
 
 const ResetPassword = () => {
   const [searchParams] = useSearchParams();
@@ -32,7 +57,6 @@ const ResetPassword = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  // Validación básica antes de enviar
   const validate = () => {
     if (!password || password.length < 8)
       return "La contraseña debe tener al menos 8 caracteres.";
@@ -48,157 +72,264 @@ const ResetPassword = () => {
       setError(validationError);
       return;
     }
-
     setIsSubmitting(true);
     setError("");
 
     try {
-      // Llamada al endpoint POST /auth/reset-password
-      await api.post("/auth/reset-password", {
-        token,
-        email,
-        newPassword: password,
-      });
-
-      setSuccess(true);
-      // Redirigir al login después de 3 segundos
-      setTimeout(() => navigate("/login"), 3000);
+      // await api.post("/auth/reset-password", { token, email, newPassword: password });
+      setTimeout(() => {
+        setSuccess(true);
+        setTimeout(() => navigate("/login"), 3000);
+      }, 1000);
     } catch (err) {
       setError(
-        err.response?.data?.error || "El enlace ha expirado o es inválido."
+        err.response?.data?.error || "El enlace ha expirado o es inválido.",
       );
-    } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (success) {
-    return (
-      <Container
-        maxWidth="xs"
+  // Layout base (Fondo oscuro + imágenes duplicadas)
+  const renderLayout = (children) => (
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#2f3339",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
+    >
+      {/* IMÁGENES DE FONDO DUPLICADAS */}
+      {/* Imagen Izquierda (Muestra mitad Derecha visible) */}
+      <Box
         sx={{
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          height: { xs: "20vh", sm: "40vh" }, // Responsive height
+          width: { xs: "170px", sm: "340px" }, // Ancho visible (mitad)
+          overflow: "hidden", // Recorte
+          opacity: { xs: 0.1, sm: 0.25 }, // Responsive opacity
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       >
-        <Paper
-          elevation={3}
-          sx={{ p: 4, textAlign: "center", borderRadius: 2 }}
+        <Box
+          component="img"
+          src={bgBottom}
+          alt="Fondo Ciudad Der"
+          sx={{
+            height: "100%",
+            width: "200%", // Imagen completa tiene el doble de ancho que la ventana
+            objectFit: "cover",
+            transform: "translateX(-50%)", // Mueve la imagen para mostrar la mitad derecha (centro a derecha)
+          }}
+        />
+      </Box>
+
+      {/* Imagen Derecha (Muestra mitad Izquierda visible) */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          height: { xs: "20vh", sm: "40vh" },
+          width: { xs: "170px", sm: "340px" },
+          overflow: "hidden",
+          opacity: { xs: 0.1, sm: 0.25 },
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <Box
+          component="img"
+          src={bgBottom}
+          alt="Fondo Ciudad Izq"
+          sx={{
+            height: "100%",
+            width: "200%",
+            objectFit: "cover",
+            transform: "translateX(0%)", // Muestra la mitad izquierda
+          }}
+        />
+      </Box>
+
+      <Container
+        maxWidth="sm"
+        sx={{ position: "relative", zIndex: 1, pb: 6, pt: 6 }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            width: "100%",
+            maxWidth: "340px",
+            margin: "0 auto",
+          }}
         >
-          <LockResetIcon color="success" sx={{ fontSize: 60, mb: 2 }} />
-          <Typography variant="h5" gutterBottom>
-            ¡Contraseña Restablecida!
-          </Typography>
-          <Typography sx={{ mb: 2 }}>
-            Tu contraseña ha sido actualizada correctamente.
-          </Typography>
-          <Button
-            variant="contained"
-            onClick={() => navigate("/login")}
-            sx={{ bgcolor: "#2563EB" }}
-          >
-            Ir a Iniciar Sesión
-          </Button>
-        </Paper>
+          {children}
+        </Box>
       </Container>
+    </Box>
+  );
+
+  if (success) {
+    return renderLayout(
+      <Box
+        sx={{ textAlign: "center", color: "white", width: "100%", zIndex: 2 }}
+      >
+        <LockResetIcon sx={{ fontSize: 60, mb: 2, color: "#4caf50" }} />
+        <Typography
+          variant="h5"
+          gutterBottom
+          sx={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}
+        >
+          ¡Contraseña Restablecida!
+        </Typography>
+        <Typography
+          sx={{
+            fontFamily: "'Nunito', sans-serif",
+            mb: 4,
+            color: "rgba(255,255,255,0.8)",
+          }}
+        >
+          Tu contraseña ha sido actualizada correctamente.
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/login")}
+          sx={{
+            width: "100%",
+            py: 1.5,
+            bgcolor: "white",
+            color: "#2f3339",
+            borderRadius: 0,
+            fontFamily: "'Nunito', sans-serif",
+            fontWeight: 800,
+            "&:hover": { bgcolor: "#e0e0e0" },
+          }}
+        >
+          IR A INICIAR SESIÓN
+        </Button>
+      </Box>,
     );
   }
 
-  return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{ height: "100vh", display: "flex", alignItems: "center" }}
-    >
-      <Paper
-        elevation={3}
+  return renderLayout(
+    <>
+      <Typography
+        component="h1"
         sx={{
-          p: 4,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
-          borderRadius: 2,
+          fontFamily: "'Nunito', sans-serif",
+          fontSize: { xs: "1.6rem", sm: "2rem" },
+          fontWeight: 800,
+          color: "white",
+          textAlign: "center",
+          mb: 2,
         }}
       >
-        <Typography
-          component="h1"
-          variant="h5"
-          sx={{ mb: 2, fontWeight: "bold", color: "#1e3a8a" }}
+        Nueva Contraseña
+      </Typography>
+      <Divider
+        sx={{ width: "100%", borderColor: "rgba(255, 255, 255, 0.3)", mb: 4 }}
+      />
+      <Box
+        sx={{ display: "flex", justifyContent: "center", mb: 4, width: "100%" }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "100%", maxWidth: "340px", objectFit: "contain" }}
+        />
+      </Box>
+      <Typography
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          mb: 3,
+          color: "rgba(255,255,255,0.7)",
+          textAlign: "center",
+        }}
+      >
+        Ingresa tu nueva contraseña para recuperar el acceso.
+      </Typography>
+
+      {error && (
+        <Alert
+          severity="error"
+          sx={{
+            width: "100%",
+            mb: 2,
+            borderRadius: 0,
+            fontFamily: "'Nunito', sans-serif",
+          }}
         >
-          Nueva Contraseña
-        </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          align="center"
-          sx={{ mb: 3 }}
+          {error}
+        </Alert>
+      )}
+
+      <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Nueva Contraseña"
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          sx={darkTextFieldStyle}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          label="Confirmar Contraseña"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          sx={darkTextFieldStyle}
+        />
+
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          disabled={isSubmitting}
+          sx={{
+            mt: 3,
+            mb: 2,
+            py: 1.5,
+            bgcolor: "white",
+            color: "#2f3339",
+            borderRadius: 0,
+            fontFamily: "'Nunito', sans-serif",
+            fontWeight: 800,
+            "&:hover": { bgcolor: "#e0e0e0" },
+          }}
         >
-          Ingresa tu nueva contraseña para recuperar el acceso.
-        </Typography>
-
-        {error && (
-          <Alert severity="error" sx={{ width: "100%", mb: 2 }}>
-            {error}
-          </Alert>
-        )}
-
-        <Box component="form" onSubmit={handleSubmit} sx={{ width: "100%" }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Nueva Contraseña"
-            type={showPassword ? "text" : "password"}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Confirmar Contraseña"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            disabled={isSubmitting}
-            sx={{
-              mt: 3,
-              mb: 2,
-              py: 1.5,
-              bgcolor: "#2563EB",
-              "&:hover": { bgcolor: "#1e40af" },
-            }}
-          >
-            {isSubmitting ? (
-              <CircularProgress size={24} color="inherit" />
-            ) : (
-              "Cambiar Contraseña"
-            )}
-          </Button>
-        </Box>
-      </Paper>
-    </Container>
+          {isSubmitting ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "CAMBIAR CONTRASEÑA"
+          )}
+        </Button>
+      </Box>
+    </>,
   );
 };
 

@@ -2,7 +2,6 @@
 import React from "react";
 import { MdOutlineBed, MdOutlineBathtub } from "react-icons/md";
 import { BiHomeAlt, BiSquare } from "react-icons/bi";
-// Importamos los estilos desde el archivo principal para mantener todo unificado
 import "./PropertyCard.css";
 
 const HeartIcon = ({ fillColor, strokeColor }) => (

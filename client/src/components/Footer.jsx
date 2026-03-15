@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import "./Footer.css";
 
 import logo from "../assets/img/logo.png";
-
-import { FaInstagram, FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import facebook from "../assets/img/icons/redes/facebook.png";
+import instagram from "../assets/img/icons/redes/instagram.png";
+import linkedin from "../assets/img/icons/redes/linkedin.png";
 
 const Footer = () => {
   const [formData, setFormData] = useState({
@@ -35,7 +36,6 @@ const Footer = () => {
         <div className="footer-left">
           <div className="footer-brand">
             <img src={logo} alt="Nexus Hub" />
-            <h2>NEXUS HUB</h2>
           </div>
 
           <div className="footer-links">
@@ -131,21 +131,23 @@ const Footer = () => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FaInstagram />
+          <img src={instagram} alt="Instagram" />
         </a>
+
         <a
           href="https://facebook.com"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FaFacebookF />
+          <img src={facebook} alt="Facebook" />
         </a>
+
         <a
           href="https://linkedin.com"
           target="_blank"
           rel="noopener noreferrer"
         >
-          <FaLinkedinIn />
+          <img src={linkedin} alt="LinkedIn" />
         </a>
       </div>
     </footer>

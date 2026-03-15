@@ -1,8 +1,9 @@
-/* IMPORTACIÓN DE FUENTE NUNITO (Añadido peso 800 para negrita extra) */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
 
 .unpaso-container {
-  height: 100vh;
+  min-height: 80vh;
+  padding: 80px 20px;
+
   background: white;
 
   display: flex;
@@ -13,25 +14,26 @@
   font-family: "Nunito", sans-serif;
 }
 
-/* TITULO - AHORA EN NEGRITA */
+/* TITULO */
 .unpaso-title {
   color: #30343a;
   font-size: 32px;
-  font-weight: 700; /* Negrita pronunciada */
+  font-weight: 700;
+  text-align: center;
 }
 
-/* LINEA PEQUEÑA CON BORDER RADIUS */
 .unpaso-divider {
   width: 50px;
   height: 3px;
   background: #30343a;
   margin: 12px 0 20px 0;
-  border-radius: 4px; /* <--- Borde redondeado aplicado aquí */
+  border-radius: 4px;
 }
 
 .unpaso-subtitle {
   color: #8a8a8a;
   margin-bottom: 70px;
+  text-align: center;
 }
 
 /* OPCIONES */
@@ -49,27 +51,26 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-
   text-align: center;
 
-  /* Animación de entrada y transición para hover */
   opacity: 0;
   animation: fadeInUp 0.8s ease forwards;
+
   transition: transform 0.3s ease;
 }
 
-/* Efecto hover (se eleva ligeramente) */
 .unpaso-item:hover {
   transform: translateY(-8px);
 }
 
-/* Efecto hover en colores */
 .unpaso-item:hover .icon-card {
   background: #206b6f;
 }
+
 .unpaso-item:hover .icon-frame {
   border-color: #30343a;
 }
+
 .unpaso-item:hover h3 {
   color: #206b6f;
 }
@@ -82,7 +83,6 @@
   margin-bottom: 20px;
 }
 
-/* MARCO VERDE */
 .icon-frame {
   position: absolute;
   width: 100px;
@@ -90,11 +90,9 @@
   border: 5px solid #206b6f;
   top: 0;
   left: 0;
-
   transition: border-color 0.3s ease;
 }
 
-/* CARTILLA OSCURA */
 .icon-card {
   position: absolute;
   width: 100px;
@@ -111,13 +109,13 @@
   transition: background-color 0.3s ease;
 }
 
-/* ICONOS MAS GRANDES */
-.icon {
-  color: white;
-  font-size: 52px;
+.icon-img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
 }
 
-/* LINEAS */
+/* LINEA */
 .line {
   width: 160px;
   height: 1.5px;
@@ -143,13 +141,11 @@
   color: #7a7a7a;
 }
 
-/* =========================================
-   ANIMACIONES (Cascada)
-   ========================================= */
+/* ANIMACION */
 @keyframes fadeInUp {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px);
   }
   to {
     opacity: 1;
@@ -173,111 +169,104 @@
   animation-delay: 0.9s;
 }
 
-/* =========================================
-   MEDIA QUERIES (RESPONSIVE)
-   ========================================= */
+/* ============================
+TABLETS
+============================ */
 
-/* Laptops y Tablets (Max 1024px) */
 @media (max-width: 1024px) {
   .unpaso-options {
-    gap: 20px;
+    gap: 30px;
   }
+
   .line {
-    width: 80px;
+    width: 100px;
   }
+
   .icon-wrapper {
     width: 100px;
     height: 100px;
   }
+
   .icon-frame,
   .icon-card {
     width: 80px;
     height: 80px;
   }
+
   .icon-card {
     top: 15px;
     left: 15px;
   }
-  .icon {
-    font-size: 40px;
-  }
-}
 
-/* Celulares (Max 768px) */
-@media (max-width: 768px) {
-  .unpaso-title {
-    font-size: 24px;
-    text-align: center;
-  }
-  .unpaso-subtitle {
-    font-size: 14px;
-    text-align: center;
-    padding: 0 15px;
-    margin-bottom: 40px;
-  }
-
-  .unpaso-options {
-    gap: 10px;
-  }
-  .line {
-    width: 30px;
-    top: -15px;
-  }
-
-  .icon-wrapper {
-    width: 65px;
-    height: 65px;
-    margin-bottom: 10px;
-  }
-  .icon-frame {
-    width: 50px;
-    height: 50px;
-    border-width: 3px;
-  }
-  .icon-card {
-    width: 50px;
-    height: 50px;
-    top: 10px;
-    left: 10px;
-  }
-  .icon {
-    font-size: 24px;
-  }
-
-  .unpaso-item h3 {
-    font-size: 13px;
-    margin-bottom: 3px;
-  }
-  .unpaso-item span {
-    font-size: 10px;
-  }
-}
-
-/* Celulares muy pequeños (Max 400px) */
-@media (max-width: 400px) {
-  .line {
-    width: 15px;
-  }
-  .unpaso-options {
-    gap: 5px;
-  }
-  .icon-wrapper {
-    width: 55px;
-    height: 55px;
-  }
-  .icon-frame,
-  .icon-card {
+  .icon-img {
     width: 40px;
     height: 40px;
   }
+}
+
+/* ============================
+CELULARES
+============================ */
+
+@media (max-width: 768px) {
+  .unpaso-container {
+    padding: 70px 20px;
+  }
+
+  .unpaso-title {
+    font-size: 24px;
+  }
+
+  .unpaso-subtitle {
+    margin-bottom: 50px;
+    font-size: 14px;
+  }
+
+  /* cambia a vertical */
+  .unpaso-options {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* linea horizontal entre items */
+  .line {
+    width: 120px;
+    height: 1px;
+    top: 0;
+  }
+}
+
+/* ============================
+CELULARES PEQUEÑOS
+============================ */
+
+@media (max-width: 480px) {
+  .icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .icon-frame,
   .icon-card {
-    top: 8px;
-    left: 8px;
+    width: 65px;
+    height: 65px;
   }
-  .icon {
-    font-size: 18px;
+
+  .icon-card {
+    top: 12px;
+    left: 12px;
   }
+
+  .icon-img {
+    width: 32px;
+    height: 32px;
+  }
+
   .unpaso-item h3 {
-    font-size: 11px;
+    font-size: 15px;
+  }
+
+  .unpaso-item span {
+    font-size: 12px;
   }
 }

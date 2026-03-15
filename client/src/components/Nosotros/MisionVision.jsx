@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./MisionVision.css";
 
-import { FiTarget, FiEye } from "react-icons/fi";
-import { FaQuoteLeft } from "react-icons/fa";
-
 import building from "../../assets/img/proyecto.jpg";
+
+import mision from "../../assets/img/icons/mision.png";
+import vision from "../../assets/img/icons/vision.png";
+import comillas from "../../assets/img/icons/comillas.png";
 
 const MisionVision = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -33,16 +34,20 @@ const MisionVision = () => {
       ref={sectionRef}
     >
       <div className="mv-container">
-        {/* MISION / VISION */}
+        {/* PARTE SUPERIOR */}
         <div className="mv-top">
+          {/* MISION */}
           <div className="mv-item">
             <div className="mv-icon-wrapper">
               <div className="mv-icon-border"></div>
+
               <div className="mv-icon">
-                <FiTarget />
+                <img src={mision} alt="Misión" />
               </div>
             </div>
+
             <h3>Misión</h3>
+
             <p>
               Nuestra misión es hacerte la vida más fácil en tus gestiones
               inmobiliarias, convirtiéndonos en tu socio de confianza. Creemos
@@ -53,14 +58,18 @@ const MisionVision = () => {
 
           <div className="mv-line"></div>
 
+          {/* VISION */}
           <div className="mv-item">
             <div className="mv-icon-wrapper">
               <div className="mv-icon-border"></div>
+
               <div className="mv-icon">
-                <FiEye />
+                <img src={vision} alt="Visión" />
               </div>
             </div>
+
             <h3>Visión</h3>
+
             <p>
               Nuestro enfoque profesional se refleja en cada asesoría: desde la
               valuación justa de un inmueble hasta la negociación efectiva,
@@ -74,13 +83,15 @@ const MisionVision = () => {
           <img src={building} alt="edificio" className="mv-image" />
 
           <div className="mv-card">
-            <FaQuoteLeft className="mv-quote" />
+            <img src={comillas} alt="comillas" className="mv-quote" />
+
             <p>
               En <strong>Nexus Hub</strong> encontrarás un aliado comprometido.
               Confía en nosotros: te brindaremos la orientación experta y el
               apoyo necesario para que logres el mejor resultado en cada
               operación.
             </p>
+
             <h4>
               ¡Estamos listos para asesorarte en tu próxima aventura
               inmobiliaria!

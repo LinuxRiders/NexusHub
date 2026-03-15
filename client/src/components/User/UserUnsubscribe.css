@@ -1,14 +1,18 @@
 /* UserUnsubscribe.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
 .unsubscribe-container {
   width: 100%;
+  /* FUENTE NUNITO APLICADA */
+  font-family: "Nunito", sans-serif;
 }
 
 /* --- CABECERA (Alineación con Flexbox) --- */
 .unsubscribe-header {
   display: flex;
-  justify-content: space-between; /* Envía el botón a la derecha */
-  align-items: center; /* Centra verticalmente */
-  margin-bottom: 40px; /* Un buen espacio hacia el contenido */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
   flex-wrap: wrap;
   gap: 20px;
 }
@@ -18,9 +22,11 @@
   align-items: center;
 }
 
-.unsubscribe-icon {
-  font-size: 55px;
-  color: #1c6a6e;
+/* NUEVA CLASE PARA LA IMAGEN DE CABECERA */
+.unsubscribe-title-icon-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
   margin-right: 20px;
 }
 
@@ -28,7 +34,7 @@
   margin: 0;
   font-size: 38px;
   color: #1c6a6e;
-  font-weight: bold;
+  font-weight: 800; /* Negrita pronunciada */
 }
 
 .btn-unsubscribe-main {
@@ -37,9 +43,10 @@
   border: none;
   padding: 14px 40px;
   font-size: 16px;
-  font-weight: bold;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-family: "Nunito", sans-serif;
 }
 
 .btn-unsubscribe-main:hover {
@@ -54,7 +61,7 @@
 .section-question {
   font-size: 22px;
   color: #2f3339;
-  font-weight: bold;
+  font-weight: 800;
   margin-bottom: 25px;
 }
 
@@ -73,6 +80,7 @@
   cursor: pointer;
   font-size: 16px;
   color: #2f3339;
+  font-weight: 600;
   user-select: none;
   min-height: 25px;
 }
@@ -89,17 +97,18 @@
   position: absolute;
   top: 50%;
   left: 0;
-  transform: translateY(-50%); /* Centrado perfecto con el texto */
+  transform: translateY(-50%);
   height: 22px;
   width: 22px;
   background-color: transparent;
   border: 2px solid #1c6a6e;
-  border-radius: 2px;
+  border-radius: 4px; /* Un poco de borde redondeado */
   box-sizing: border-box;
+  transition: background-color 0.2s;
 }
 
 .custom-checkbox-container:hover input ~ .checkmark {
-  background-color: #f0f4f4;
+  background-color: #eef4f7;
 }
 
 .custom-checkbox-container input:checked ~ .checkmark {
@@ -135,33 +144,77 @@
 }
 
 .modal-verify-input {
-  width: 80%; /* No ocupa todo el borde, queda más elegante */
+  width: 80%;
   padding: 12px;
   border: 1px solid #ccc;
   border-radius: 4px;
   text-align: center;
   font-size: 16px;
   outline: none;
-  box-sizing: border-box; /* Previene desbordamientos */
+  box-sizing: border-box;
   transition: border-color 0.3s;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
 }
 
 .modal-verify-input:focus {
   border-color: #1c6a6e;
+  box-shadow: 0 0 5px rgba(28, 106, 110, 0.2);
 }
 
-/* Asegurar que el mensaje respire bien */
 .modal-message {
   margin-bottom: 20px;
+  font-family: "Nunito", sans-serif;
 }
 
-/* Responsividad para móviles */
-@media (max-width: 650px) {
+/* =========================================
+   RESPONSIVE PARA MÓVILES Y TABLETS
+   ========================================= */
+@media (max-width: 768px) {
   .unsubscribe-header {
     flex-direction: column;
     align-items: flex-start;
+    gap: 15px;
   }
+
+  .header-title-group {
+    margin-bottom: 10px;
+  }
+
+  .unsubscribe-title-icon-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 15px;
+  }
+
+  .unsubscribe-title {
+    font-size: 30px;
+  }
+
   .btn-unsubscribe-main {
     width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* En celulares pequeños aseguramos que el input de ELIMINAR no se rompa */
+  .modal-verify-input {
+    width: 100%;
+  }
+
+  /* Si el usuario ha puesto estilos del modal de forma global, 
+     aquí aseguramos que los botones se apilen si no entran */
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-modal {
+    width: 100%;
+  }
+
+  .section-question {
+    font-size: 20px;
   }
 }

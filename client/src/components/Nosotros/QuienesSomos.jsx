@@ -4,6 +4,7 @@ import "./QuienesSomos.css";
 import building1 from "../../assets/img/torres.jpg";
 import building2 from "../../assets/img/torres.jpg";
 import agent from "../../assets/img/ejecutivo.png";
+import vectores from "../../assets/img/vectores.png";
 
 const QuienesSomos = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -16,7 +17,7 @@ const QuienesSomos = () => {
           setIsVisible(true);
         }
       },
-      { threshold: 0.2 }, // Se activa cuando se ve el 20% del componente
+      { threshold: 0.2 },
     );
 
     if (sectionRef.current) {
@@ -30,6 +31,7 @@ const QuienesSomos = () => {
     <section
       className={`quienes ${isVisible ? "visible" : ""}`}
       ref={sectionRef}
+      style={{ "--bg-vectores": `url(${vectores})` }}
     >
       <div className="quienes-container">
         {/* FILA SUPERIOR */}
@@ -46,11 +48,12 @@ const QuienesSomos = () => {
                 compraventa de propiedades y el saneamiento legal de
                 propiedades.
               </p>
+
               <p>
-                En Nexus Hub facilitamos cada paso del proceso inmobiliario:{" "}
+                En Nexus Hub facilitamos cada paso del proceso inmobiliario:
                 <strong>
                   alquilar una vivienda, comprar la casa de tus sueños o
-                  regularizar la documentación{" "}
+                  regularizar la documentación
                 </strong>
                 de tu propiedad, nuestro equipo profesional te acompañará de
                 principio a fin
@@ -58,7 +61,6 @@ const QuienesSomos = () => {
             </div>
           </div>
 
-          {/* MITAD DERECHA */}
           <div className="quienes-right">
             <div className="quienes-buildings">
               <div

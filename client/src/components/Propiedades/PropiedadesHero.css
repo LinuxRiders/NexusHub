@@ -1,5 +1,7 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap");
+
 .propiedades-hero {
-  height: 75vh;
+  min-height: 75vh;
 
   background-size: cover;
   background-position: center;
@@ -10,18 +12,49 @@
   align-items: center;
   justify-content: center;
 
-  padding-top: 120px; /* espacio navbar */
+  padding: 140px 20px 80px;
 
   text-align: center;
 
-  /* EFECTO TINTA (extraído del hero original) */
+  font-family: "Nunito", sans-serif;
+
+  overflow: hidden;
+
+  /* EFECTO TINTA ORIGINAL */
   background-color: #1c4c4f;
   background-blend-mode: overlay;
+}
+
+/* DEGRADADO SUPERIOR */
+
+.propiedades-hero::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(31, 106, 110, 0.95) 0%,
+    rgba(31, 106, 110, 0.8) 30%,
+    rgba(31, 106, 110, 0.5) 60%,
+    rgba(31, 106, 110, 0.2) 85%,
+    rgba(31, 106, 110, 0.05) 100%
+  );
+
+  z-index: 1;
 }
 
 /* CONTENIDO */
 
 .propiedades-hero-content {
+  position: relative;
+  z-index: 2;
+
   color: white;
 
   max-width: 900px;
@@ -30,7 +63,9 @@
 /* TITULO */
 
 .propiedades-hero h1 {
-  font-size: 56px;
+  font-size: 64px;
+
+  font-weight: 900;
 
   margin-bottom: 10px;
 
@@ -45,7 +80,7 @@
 
   background: white;
 
-  margin: 10px auto 20px auto;
+  margin: 14px auto 24px;
 }
 
 /* TEXTO */
@@ -53,5 +88,63 @@
 .propiedades-hero p {
   font-size: 18px;
 
+  line-height: 1.5;
+
   opacity: 0.95;
+}
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1200px) {
+  .propiedades-hero h1 {
+    font-size: 54px;
+  }
+
+  .propiedades-hero p {
+    font-size: 17px;
+  }
+}
+
+@media (max-width: 900px) {
+  .propiedades-hero {
+    min-height: 65vh;
+    padding: 120px 30px 70px;
+  }
+
+  .propiedades-hero h1 {
+    font-size: 42px;
+  }
+
+  .propiedades-hero p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .propiedades-hero {
+    min-height: 60vh;
+    padding: 110px 25px 60px;
+  }
+
+  .propiedades-hero h1 {
+    font-size: 34px;
+  }
+
+  .propiedades-line {
+    width: 50px;
+  }
+
+  .propiedades-hero p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .propiedades-hero h1 {
+    font-size: 28px;
+  }
+
+  .propiedades-hero p {
+    font-size: 14px;
+  }
 }

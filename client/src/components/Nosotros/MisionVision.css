@@ -1,34 +1,40 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
 
 .misionvision {
-  height: 180vh;
+  min-height: 100vh;
   background: #f5f5f5;
   display: flex;
   justify-content: center;
-  /* AÑADIDO: Fuente */
+  padding: 120px 0;
   font-family: "Nunito", sans-serif;
 }
 
 /* CONTENEDOR */
+
 .mv-container {
   width: 100%;
-  max-width: 1100px; /* más compacto */
-  padding: 120px 40px;
+  max-width: 1200px;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* PARTE SUPERIOR */
+/* TOP */
+
 .mv-top {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  gap: 90px; /* más compacto */
+
+  gap: 90px;
 }
 
 /* ITEMS */
+
 .mv-item {
-  width: 260px;
+  width: 280px;
   text-align: center;
-  /* AÑADIDO: Animación */
+
   opacity: 0;
   transform: translateY(30px);
 }
@@ -36,6 +42,7 @@
 .visible .mv-item:first-child {
   animation: fadeInUp 0.8s ease forwards 0.2s;
 }
+
 .visible .mv-item:last-child {
   animation: fadeInUp 0.8s ease forwards 0.6s;
 }
@@ -54,6 +61,7 @@
 }
 
 /* ICONOS */
+
 .mv-icon-wrapper {
   position: relative;
   width: 100px;
@@ -68,8 +76,7 @@
   border: 5px solid #1f6a6e;
   top: -20px;
   left: -20px;
-  /* AÑADIDO: Transición hover */
-  transition: all 0.4s ease;
+  transition: 0.4s;
 }
 
 .mv-item:hover .mv-icon-border {
@@ -84,23 +91,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: 36px;
   position: relative;
   z-index: 2;
 }
 
-.mv-top p {
-  line-height: 1.2;
+.mv-icon img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
 }
 
 /* LINEA */
+
 .mv-line {
   width: 110px;
   height: 2px;
   background: #1f6a6e;
   margin-top: 40px;
-  /* AÑADIDO: Animación */
   transform: scaleX(0);
   transition: transform 1s ease 0.4s;
 }
@@ -109,21 +116,22 @@
   transform: scaleX(1);
 }
 
-/* PARTE INFERIOR */
+/* BOTTOM */
+
 .mv-bottom {
-  margin-top: 180px;
+  margin-top: 160px;
   position: relative;
   display: flex;
   justify-content: center;
 }
 
 /* IMAGEN */
+
 .mv-image {
-  width: 530px;
+  width: 540px;
   height: 620px;
   margin-left: 40%;
   object-fit: cover;
-  /* AÑADIDO: Animación */
   opacity: 0;
 }
 
@@ -132,17 +140,17 @@
 }
 
 /* CARD */
+
 .mv-card {
   position: absolute;
   left: 120px;
   top: 40px;
-  width: 400px;
-  height: 470px;
+  width: 420px;
+  height: 500px;
   background: #2f3339;
   color: white;
-  padding: 55px 80px; /* padding grande para texto */
-  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.45); /* sombra más fuerte */
-  /* AÑADIDO: Animación */
+  padding: 55px 90px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.45);
   opacity: 0;
 }
 
@@ -151,10 +159,11 @@
 }
 
 /* TEXTO CARD */
+
 .mv-card p {
   font-size: 14px;
-  line-height: 1.2;
-  margin-top: 30px;
+  line-height: 1.4;
+  margin-top: 20px;
 }
 
 .mv-card h4 {
@@ -164,13 +173,14 @@
 }
 
 /* COMILLAS */
+
 .mv-quote {
-  font-size: 70px;
+  width: 105px;
   opacity: 0.9;
-  color: #1f6a6e;
 }
 
-/* KEYFRAMES */
+/* ANIMACIONES */
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -204,37 +214,84 @@
   }
 }
 
-/* RESPONSIVE */
-@media (max-width: 1024px) {
-  .misionvision {
-    height: auto;
-    padding-bottom: 100px;
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1100px) {
+  .mv-top {
+    gap: 50px;
   }
+
+  .mv-image {
+    width: 450px;
+    height: 520px;
+  }
+
+  .mv-card {
+    left: 60px;
+    width: 380px;
+  }
+}
+
+@media (max-width: 900px) {
   .mv-top {
     flex-direction: column;
     align-items: center;
     gap: 40px;
   }
+
   .mv-line {
     width: 2px;
-    height: 50px;
+    height: 60px;
   }
+
   .mv-bottom {
     margin-top: 100px;
     flex-direction: column;
     align-items: center;
   }
+
   .mv-image {
     margin-left: 0;
-    width: 90%;
-    height: 400px;
+    width: 100%;
+    max-width: 500px;
+    height: 380px;
   }
+
   .mv-card {
     position: relative;
     left: 0;
-    top: -50px;
-    width: 85%;
-    height: auto;
+    top: -60px;
+
+    width: 90%;
     padding: 40px;
+  }
+}
+
+@media (max-width: 500px) {
+  .mv-icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mv-icon-border {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mv-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mv-icon img {
+    width: 34px;
+  }
+
+  .mv-card {
+    padding: 30px;
+  }
+
+  .mv-card p {
+    font-size: 13px;
   }
 }

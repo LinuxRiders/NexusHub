@@ -1,9 +1,9 @@
 import React from "react";
 import "./UnPaso.css";
 
-import { FaPhoneAlt } from "react-icons/fa";
-import { MdLocationOn } from "react-icons/md";
-import { HiMail } from "react-icons/hi";
+import llamada from "../../assets/img/icons/unPaso/llamada.png";
+import ubicacion from "../../assets/img/icons/unPaso/ubicacion.png";
+import email from "../../assets/img/icons/unPaso/email.png";
 
 const UnPaso = () => {
   return (
@@ -22,7 +22,7 @@ const UnPaso = () => {
             <div className="icon-frame"></div>
 
             <div className="icon-card">
-              <FaPhoneAlt className="icon" />
+              <img src={llamada} alt="Llamada" className="icon-img" />
             </div>
           </div>
 
@@ -43,7 +43,7 @@ const UnPaso = () => {
             <div className="icon-frame"></div>
 
             <div className="icon-card">
-              <MdLocationOn className="icon" />
+              <img src={ubicacion} alt="Ubicación" className="icon-img" />
             </div>
           </div>
 
@@ -59,7 +59,7 @@ const UnPaso = () => {
             <div className="icon-frame"></div>
 
             <div className="icon-card">
-              <HiMail className="icon" />
+              <img src={email} alt="Email" className="icon-img" />
             </div>
           </div>
 

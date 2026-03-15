@@ -1,27 +1,89 @@
-/* Wave */
+/* src/styles/Mantenimiento.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.mainte {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #2f3339; /* Color de fondo oscuro solicitado */
+  font-family: "Nunito", sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* --- TEXTO DE MANTENIMIENTO --- */
+.mainte-content {
+  position: relative;
+  z-index: 10; /* Para que quede por encima de las olas y los hexágonos */
+  text-align: center;
+  color: white;
+  padding: 0 20px;
+}
+
+.mainte-content h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.mainte-content p {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+}
+
+/* --- FONDO DE HEXÁGONOS --- */
+.hexa-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0.15; /* Opacidad sutil */
+  -webkit-mask-image: linear-gradient(
+    to top,
+    transparent 0%,
+    #000 30%,
+    #000 50%,
+    transparent 80%
+  );
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: cover;
+  mask-image: linear-gradient(
+    to top,
+    transparent 0%,
+    #000 30%,
+    #000 50%,
+    transparent 80%
+  );
+  mask-repeat: no-repeat;
+  mask-size: cover;
+}
+
+/* --- ANIMACIÓN WAVE --- */
 /* https://codepen.io/zkreations/pen/VGWzYv */
 @keyframes wave {
   to {
     transform: rotate(360deg);
   }
 }
-.mainte {
-  display: flex;
-  width: 100vw;
-  max-height: 100vh;
-  background-color: var(--mt-bg, var(--secondary-color-100, #424242));
-}
 
 .wave {
-  --wave-size: 380rem;
-  --wave-color: var(--primary-color-700, #a3001b);
+  /* Hacemos el tamaño de la ola dinámico (vw) para que sea responsive */
+  --wave-size: max(200vw, 1200px);
+  --wave-color: #227579; /* Color solicitado para la ola */
+
   width: 100%;
   position: absolute;
   overflow: hidden;
   min-height: 100vh;
   inset: 0;
   pointer-events: none;
-  z-index: -1;
+  z-index: 1;
 }
 
 .wave-item,
@@ -29,7 +91,7 @@
 .wave-item::before {
   content: "";
   position: absolute;
-  opacity: var(--wave-opacity);
+  opacity: var(--wave-opacity, 1);
   width: var(--wave-size);
   height: var(--wave-size);
   background: var(--wave-color);
@@ -47,10 +109,37 @@
 
 .wave-item::after {
   --wave-duration: 28s;
-  --wave-opacity: 0.5;
+  --wave-opacity: 0.6; /* Un poco más de opacidad para que el color #227579 resalte */
 }
 
 .wave-item::before {
   --wave-duration: 20s;
-  --wave-opacity: 0.1;
+  --wave-opacity: 0.3;
+}
+
+/* =========================================
+   RESPONSIVE (Móviles y Tablets)
+   ========================================= */
+@media (max-width: 768px) {
+  .mainte-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .mainte-content p {
+    font-size: 1rem;
+  }
+
+  .wave-item {
+    top: 80%; /* Baja la ola un poco en celulares para dar más espacio al texto */
+  }
+}
+
+@media (max-width: 480px) {
+  .mainte-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .wave-item {
+    top: 85%;
+  }
 }
