@@ -1,6 +1,7 @@
 import React from "react";
 import "./Hero.css";
 import heroImage from "../../assets/img/hero.jpg";
+import logo from "../../assets/img/logoLetra.png"; // Importamos el logo
 
 const Hero = () => {
   return (
@@ -15,7 +16,10 @@ const Hero = () => {
       <div className="hero-container">
         {/* TEXTO IZQUIERDA */}
         <div className="hero-left">
-          <h1 className="hero-title">NEXUS HUB</h1>
+          {/* CAMBIO AQUÍ: Imagen en lugar del texto */}
+          <h1 className="hero-title">
+            <img src={logo} alt="NEXUS HUB" className="hero-logo-img" />
+          </h1>
 
           <p className="hero-subtitle">Servicios Completos</p>
 

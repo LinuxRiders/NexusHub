@@ -11,7 +11,6 @@
   overflow: hidden;
   background-color: #1c4c4f;
   background-blend-mode: overlay;
-  /* FUENTE AÑADIDA */
   font-family: "Nunito", sans-serif;
 }
 
@@ -31,13 +30,13 @@
 
 /* CONTENEDOR */
 .hero-container {
-  width: 100%; /* Cambiado para permitir responsive */
+  width: 100%;
   max-width: 1100px;
   margin: auto;
   display: flex;
   justify-content: space-evenly;
   align-items: flex-start;
-  gap: 100px; /* Reducido un poco para que quepa mejor en pantallas medianas */
+  gap: 100px;
   position: relative;
   z-index: 2;
   padding: 0 20px;
@@ -51,11 +50,15 @@
 }
 
 .hero-title {
-  font-size: 64px;
-  letter-spacing: 6px;
   margin-bottom: 6px;
   line-height: 1.05;
-  font-weight: 800;
+}
+
+/* CLASE AÑADIDA PARA SIMULAR EL TAMAÑO DE LA LETRA */
+.hero-logo-img {
+  height: 56px; /* Equivalente al font-size original */
+  width: auto;
+  object-fit: contain;
 }
 
 .hero-subtitle {
@@ -118,7 +121,6 @@
 
 .hero-form span {
   font-style: italic;
-  color: #206b6f; /* Color para resaltar el 'aquí' */
 }
 
 .hero-contact {
@@ -139,7 +141,7 @@
   margin-top: 4px;
   border: none;
   background: #ffffff;
-  height: 30px; /* Ajustado para mejor visibilidad */
+  height: 30px;
   box-sizing: border-box;
   font-family: "Nunito", sans-serif;
 }
@@ -206,9 +208,8 @@
 }
 
 @media (max-width: 600px) {
-  .hero-title {
-    font-size: 42px;
-    letter-spacing: 3px;
+  .hero-logo-img {
+    height: 42px; /* Equivalente al font-size: 42px original en móvil */
   }
   .hero-form {
     width: 100%;
@@ -217,7 +218,7 @@
   }
   .hero-form-border {
     display: none;
-  } /* Quitamos borde en móvil para evitar desborde lateral */
+  }
   .hero-form-wrapper {
     width: 90%;
   }

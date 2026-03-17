@@ -50,13 +50,13 @@ const QuienesSomos = () => {
               </p>
 
               <p>
-                En Nexus Hub facilitamos cada paso del proceso inmobiliario:
+                En Nexus Hub facilitamos cada paso del proceso inmobiliario:{" "}
                 <strong>
                   alquilar una vivienda, comprar la casa de tus sueños o
-                  regularizar la documentación
+                  regularizar la documentación{" "}
                 </strong>
                 de tu propiedad, nuestro equipo profesional te acompañará de
-                principio a fin
+                principio a fin.
               </p>
             </div>
           </div>
@@ -90,7 +90,7 @@ const QuienesSomos = () => {
             </p>
 
             <p>
-              Nos enorgullece combinar
+              Nos enorgullece combinar{" "}
               <strong>
                 conocimiento del mercado local de Trujillo con asesoría legal
                 especializada
