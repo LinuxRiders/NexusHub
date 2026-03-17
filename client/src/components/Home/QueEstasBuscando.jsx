@@ -11,20 +11,22 @@ const QueEstasBuscando = () => {
   return (
     <section className="qeb-container">
       {/* TÍTULO */}
-      <h2 className="qeb-title">¿Qué estás buscando?</h2>
+      <h2 className="qeb-title" data-aos="fade-down">
+        ¿Qué estás buscando?
+      </h2>
 
       {/* LINEA DECORATIVA */}
       <div className="qeb-divider"></div>
 
       {/* SUBTITULO */}
-      <p className="qeb-subtitle">
+      <p className="qeb-subtitle" data-aos="fade-up" data-aos-delay="200">
         Ofrecemos soluciones integrales para cada necesidad, ¿Cuál es la tuya?
       </p>
 
       {/* GRID DE CARDS */}
       <div className="qeb-cards">
         {/* CARD 1 */}
-        <div className="qeb-card">
+        <div className="qeb-card" data-aos="fade-up" data-aos-delay="200">
           <img src={comprarImg} alt="Comprar" />
 
           {/* OVERLAY INFERIOR */}
@@ -34,7 +36,7 @@ const QueEstasBuscando = () => {
         </div>
 
         {/* CARD 2 */}
-        <div className="qeb-card">
+        <div className="qeb-card" data-aos="fade-up" data-aos-delay="400">
           <img src={venderImg} alt="Vender" />
 
           <div className="qeb-overlay">
@@ -43,7 +45,7 @@ const QueEstasBuscando = () => {
         </div>
 
         {/* CARD 3 */}
-        <div className="qeb-card">
+        <div className="qeb-card" data-aos="fade-up" data-aos-delay="600">
           <img src={alquilarImg} alt="Alquilar" />
 
           <div className="qeb-overlay">

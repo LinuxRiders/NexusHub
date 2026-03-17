@@ -24,7 +24,7 @@
 /* TEMA AZUL (Subpáginas) */
 .theme {
   --primary-color: #1f6ea4;
-  --secondary-color: #1f6fa3;
+  --secondary-color: #206b6f;
 
   /* Escala generada dinámicamente */
   --primary-color-100: color-mix(in hsl, var(--primary-color), white 80%);

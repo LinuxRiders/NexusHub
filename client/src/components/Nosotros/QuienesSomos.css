@@ -69,16 +69,11 @@
 .quienes-text {
   width: 420px;
   margin-top: 80px;
-  opacity: 0;
-}
-
-.visible .quienes-text {
-  animation: fadeInUp 1s ease forwards 0.2s;
 }
 
 .quienes-text h2 {
   color: #1f6a6e;
-  font-size: 30px;
+  font-size: clamp(26px, 2.5vw, 36px);
   font-weight: 700;
 }
 
@@ -91,8 +86,8 @@
 
 .quienes-text p {
   color: #8a8a8a;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.5;
   margin-bottom: 12px;
 }
 
@@ -103,28 +98,36 @@
 /* BUILDINGS */
 
 .quienes-buildings {
+  --b-width: 200px;
+  --b-gap: 30px;
+  --b-offset-y: 100px;
+
   display: flex;
-  gap: 35px;
+  gap: var(--b-gap);
 }
 
 .building {
-  width: 220px;
-  height: 350px;
-  background-size: cover;
+  width: var(--b-width);
+  height: 380px;
+  /* Hacemos la imagen más grande proporcionalmente (ancho * 1.5) 
+     para que al adoptar el alto mayor no se vea estirada, 
+     y usamos el alto calculado. */
+  background-size: calc(((var(--b-width) * 2) + var(--b-gap)) * 1.5) calc(100% + var(--b-offset-y)); 
   background-repeat: no-repeat;
   box-shadow: 12px 12px 25px rgba(0, 0, 0, 0.25);
-  opacity: 0;
 }
 
-.visible .building.left {
-  background-position: left center;
-  margin-top: 90px;
-  animation: fadeInUp 1s ease forwards 0.4s;
+.building.left {
+  margin-top: var(--b-offset-y);
+  /* Al hacer la imagen un 50% más ancha (*1.5), el centro se mueve. 
+     Movemos el origen X hacia la izquierda un 25% del ancho original
+     para volver a centrar visualmente las torres. */
+  background-position: calc(var(--b-width) * -0.5) calc(var(--b-offset-y) * -1);
 }
 
-.visible .building.right {
-  background-position: right center;
-  animation: fadeInUp 1s ease forwards 0.6s;
+.building.right {
+  /* Análogamente, para la derecha sumamos el desfase del origen + el salto de caja (width+gap) */
+  background-position: calc((var(--b-width) * 1.5 + var(--b-gap)) * -1) 0px;
 }
 
 /* BOTTOM */
@@ -139,68 +142,25 @@
   object-fit: contain;
   position: relative;
   bottom: -10px;
-  opacity: 0;
-}
-
-.visible .quienes-agent {
-  animation: fadeInLeft 1s ease forwards 0.8s;
 }
 
 .quienes-bottom-text {
   width: 420px;
   margin-left: 70px;
   margin-bottom: 120px;
-  opacity: 0;
-}
-
-.visible .quienes-bottom-text {
-  animation: fadeInRight 1s ease forwards 1s;
 }
 
 .quienes-bottom-text p {
   color: #8a8a8a;
-  font-size: 14px;
-  line-height: 1.4;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.5;
 }
 
 .quienes-bottom-text strong {
   color: #1f6a6e;
 }
 
-/* ANIMACIONES */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+/* ANIMACIONES (Manejadas por AOS) */
 
 /* ======================
 RESPONSIVE
@@ -216,8 +176,11 @@ RESPONSIVE
     width: 100%;
   }
 
+  .quienes-buildings {
+    --b-width: 180px;
+  }
+
   .building {
-    width: 180px;
     height: 300px;
   }
 
@@ -277,8 +240,11 @@ RESPONSIVE
     padding: 0 25px;
   }
 
+  .quienes-buildings {
+    --b-width: 140px;
+  }
+
   .building {
-    width: 140px;
     height: 220px;
   }
 

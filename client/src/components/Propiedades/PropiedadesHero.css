@@ -63,7 +63,7 @@
 /* TITULO */
 
 .propiedades-hero h1 {
-  font-size: 64px;
+  font-size: clamp(42px, 5vw, 64px);
 
   font-weight: 900;
 
@@ -86,7 +86,7 @@
 /* TEXTO */
 
 .propiedades-hero p {
-  font-size: 18px;
+  font-size: clamp(16px, 1.4vw, 22px);
 
   line-height: 1.5;
 

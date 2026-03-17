@@ -7,7 +7,6 @@ import NosotrosHero from "../components/Nosotros/NosotrosHero";
 import QuienesSomos from "../components/Nosotros/QuienesSomos";
 import NuestrasEspecialidades from "../components/Nosotros/NuestrasEspecialidades";
 import MisionVision from "../components/Nosotros/MisionVision";
-import Footer from "../components/Footer";
 
 const Nosotros = () => {
   return (
@@ -33,12 +32,6 @@ const Nosotros = () => {
       <div id="MisionVision" className="MisionVision">
         <div>
           <MisionVision />
-        </div>
-      </div>
-      {/*----------------------------------------------   Footer prueba  ------------------------------------------*/}
-      <div id="Footer" className="Footer">
-        <div>
-          <Footer />
         </div>
       </div>
     </div>

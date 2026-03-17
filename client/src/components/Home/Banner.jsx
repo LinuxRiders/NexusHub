@@ -1,30 +1,41 @@
 import React from "react";
-import "./Hero.css";
+import "./Banner.css";
 import heroImage from "../../assets/img/hero.jpg";
 import logo from "../../assets/img/logoLetra.png"; // Importamos el logo
+import { Box } from "@mui/material";
 
-const Hero = () => {
+const Banner = ({ sx = {} }) => {
   return (
     <section
       className="hero"
       style={{
         backgroundImage: `url(${heroImage})`,
+        maxWidth: "100vw",
+        width: "100%",
+        minHeight: "100dvh",
+        overflow: "hidden",
       }}
     >
       <div className="hero-overlay"></div>
 
-      <div className="hero-container">
+      <Box className="hero-container" sx={sx}>
         {/* TEXTO IZQUIERDA */}
         <div className="hero-left">
           {/* CAMBIO AQUÍ: Imagen en lugar del texto */}
-          <h1 className="hero-title">
+          <h1 className="hero-title" data-aos="fade-right">
             <img src={logo} alt="NEXUS HUB" className="hero-logo-img" />
           </h1>
 
-          <p className="hero-subtitle">Servicios Completos</p>
+          <p
+            className="hero-subtitle"
+            data-aos="fade-right"
+            data-aos-delay="150"
+          >
+            Servicios Completos
+          </p>
 
           <ul className="hero-list">
-            <li>
+            <li data-aos="fade-up" data-aos-delay="300">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -39,7 +50,7 @@ const Hero = () => {
               Renta de Inmuebles
             </li>
 
-            <li>
+            <li data-aos="fade-up" data-aos-delay="450">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -54,7 +65,7 @@ const Hero = () => {
               Compra y Venta de propiedades
             </li>
 
-            <li>
+            <li data-aos="fade-up" data-aos-delay="600">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -72,7 +83,11 @@ const Hero = () => {
         </div>
 
         {/* FORMULARIO */}
-        <div className="hero-form-wrapper">
+        <div
+          className="hero-form-wrapper"
+          data-aos="fade-left"
+          data-aos-delay="300"
+        >
           <div className="hero-form-border"></div>
 
           <form className="hero-form">
@@ -100,9 +115,9 @@ const Hero = () => {
             <button type="submit">Enviar</button>
           </form>
         </div>
-      </div>
+      </Box>
     </section>
   );
 };
 
-export default Hero;
+export default Banner;

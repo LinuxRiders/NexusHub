@@ -62,7 +62,7 @@ const Property = () => {
   return (
     <div className="properties-page">
       {/* Sección de Filtros */}
-      <div className="filters-container">
+      <div className="filters-container" data-aos="fade-up">
         <div className="filter-group">
           <label>Operación</label>
           <select

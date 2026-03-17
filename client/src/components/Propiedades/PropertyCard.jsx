@@ -41,7 +41,7 @@ const PropertyCard = ({ property, onToggleFavorite }) => {
   const detailValueColor = "#1f6a6e";
 
   return (
-    <div className="property-card">
+    <div className="property-card" data-aos="fade-up">
       <div className="card-header">
         <img src={imageUrl} alt={`Vista de ${avenue}`} className="card-image" />
         <button

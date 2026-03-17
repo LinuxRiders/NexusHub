@@ -10,9 +10,9 @@ import UserUnsubscribe from "../components/User/UserUnsubscribe";
 // Importamos la imagen de la marca de agua
 import marcaAgua from "../assets/img/MarcaAgua.png";
 
-import "./User.css";
+import "./Perfil.css";
 
-const User = () => {
+const Perfil = () => {
   const [activeTab, setActiveTab] = useState("datos");
 
   const renderContent = () => {
@@ -55,4 +55,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default Perfil;

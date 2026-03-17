@@ -7,12 +7,18 @@ import saneamientoImg from "../../assets/img/saneamiento.jpg";
 const ServiciosAdicionales = () => {
   return (
     <section className="servicios-container">
-      <h2 className="servicios-title">Servicios adicionales</h2>
+      <h2 className="servicios-title" data-aos="fade-down">
+        Servicios adicionales
+      </h2>
       <div className="servicios-divider"></div>
 
       <div className="servicios-cards">
         {/* CARD 1 */}
-        <div className="servicio-card">
+        <div
+          className="servicio-card"
+          data-aos="fade-right"
+          data-aos-delay="150"
+        >
           <img src={proyectoImg} alt="Proyecto" />
 
           <div className="servicio-content">
@@ -28,7 +34,11 @@ const ServiciosAdicionales = () => {
         </div>
 
         {/* CARD 2 */}
-        <div className="servicio-card">
+        <div
+          className="servicio-card"
+          data-aos="fade-left"
+          data-aos-delay="300"
+        >
           <img src={saneamientoImg} alt="Saneamiento" />
 
           <div className="servicio-content">

@@ -7,36 +7,15 @@ import agent from "../../assets/img/ejecutivo.png";
 import vectores from "../../assets/img/vectores.png";
 
 const QuienesSomos = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.2 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
     <section
-      className={`quienes ${isVisible ? "visible" : ""}`}
-      ref={sectionRef}
+      className="quienes"
       style={{ "--bg-vectores": `url(${vectores})` }}
     >
       <div className="quienes-container">
         {/* FILA SUPERIOR */}
         <div className="quienes-top">
-          <div className="quienes-left">
+          <div className="quienes-left" data-aos="fade-right">
             <div className="quienes-text">
               <h2>¿Quienes Somos?</h2>
               <div className="quienes-line"></div>
@@ -61,7 +40,11 @@ const QuienesSomos = () => {
             </div>
           </div>
 
-          <div className="quienes-right">
+          <div
+            className="quienes-right"
+            data-aos="fade-left"
+            data-aos-delay="200"
+          >
             <div className="quienes-buildings">
               <div
                 className="building left"
@@ -77,7 +60,7 @@ const QuienesSomos = () => {
         </div>
 
         {/* FILA INFERIOR */}
-        <div className="quienes-bottom">
+        <div className="quienes-bottom" data-aos="fade-up" data-aos-delay="400">
           <img src={agent} alt="Ejecutivo" className="quienes-agent" />
 
           <div className="quienes-bottom-text">

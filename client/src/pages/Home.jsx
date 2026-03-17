@@ -1,21 +1,16 @@
 // import Countdown from "../componentes/Home/Countdown";
-
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-
-import Hero from "../components/Home/Hero";
+import Banner from "../components/Home/Banner";
 import PropuestasValor from "../components/Home/PropuestasValor";
 import QueEstasBuscando from "../components/Home/QueEstasBuscando";
 import ServiciosAdicionales from "../components/Home/ServiciosAdicionales";
 import UnPaso from "../components/Home/UnPaso";
-import Footer from "../components/Footer";
 
 const Home = () => {
   return (
     <div>
       {/*---------------------------------------------- BANNER------------------------------------------*/}
       <header className="Home">
-        <Hero />
+        <Banner sx={{ px: { xs: 1, md: "15.2%" }, paddingTop: "8dvh" }} />
       </header>
 
       {/*----------------------------------------------   PropuestasValor  ------------------------------------------*/}
@@ -25,7 +20,7 @@ const Home = () => {
         </div>
       </div>
       {/*----------------------------------------------   QueEstasBuscando  ------------------------------------------*/}
-      <div id="QueEstasBuscando" className="QueEstasBuscando">
+      <div id="servicios" className="QueEstasBuscando">
         <div>
           <QueEstasBuscando />
         </div>
@@ -40,12 +35,6 @@ const Home = () => {
       <div id="UnPaso" className="UnPaso">
         <div>
           <UnPaso />
-        </div>
-      </div>
-      {/*----------------------------------------------   Footer prueba  ------------------------------------------*/}
-      <div id="Footer" className="Footer">
-        <div>
-          <Footer />
         </div>
       </div>
     </div>

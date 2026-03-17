@@ -84,13 +84,15 @@ const PropuestasValor = () => {
   return (
     <section className="valor-section">
       {/* TITULO */}
-      <h2 className="valor-title">Propuestas de Valor</h2>
+      <h2 className="valor-title" data-aos="fade-top">
+        Propuestas de Valor
+      </h2>
 
       {/* LINEA DECORATIVA */}
       <div className="valor-line"></div>
 
       {/* DESCRIPCION */}
-      <p className="valor-subtitle">
+      <p className="valor-subtitle" data-aos="fade-top" data-aos-delay="100">
         Nexus Hub Corporation, un aliado confiable, orientado a generar valor
         real y sostenible para sus clientes
       </p>
@@ -111,11 +113,13 @@ const PropuestasValor = () => {
 
         {/* GRID DE CARDS */}
         <div className="valor-grid">
-          {visibleCards.map((card) => (
+          {visibleCards.map((card, index) => (
             <div
               className="valor-card"
-              // Al combinar el index con el id, forzamos a react a volver a montar la tarjeta, reactivando la animación CSS
+              // Al combinar el currentIndex con el id, forzamos a react a volver a montar la tarjeta, reactivando la animación CSS
               key={`${currentIndex}-${card.id}`}
+              data-aos={index < itemsPerPage / 2 ? "fade-right" : "fade-left"}
+              data-aos-delay={"200"}
             >
               <img src={card.img} alt={card.title} className="valor-icon" />
               <h3>{card.title}</h3>

@@ -29,7 +29,7 @@
 }
 
 .filter-group label {
-  font-size: 13px;
+  font-size: clamp(12px, 1vw, 14px);
   color: #1f6a6e;
   font-weight: 800;
   margin-bottom: 8px;
@@ -43,7 +43,7 @@
   border: 1px solid #ccc;
   outline: none;
   color: #666666;
-  font-size: 14px;
+  font-size: clamp(13px, 1.1vw, 16px);
   font-family: "Nunito", sans-serif;
   background-color: #fff;
   transition: border-color 0.3s;
@@ -58,7 +58,7 @@
   grid-column: 1 / -1;
   text-align: center;
   color: #666666;
-  font-size: 18px;
+  font-size: clamp(16px, 1.4vw, 20px);
   font-weight: 600;
   padding: 40px;
 }

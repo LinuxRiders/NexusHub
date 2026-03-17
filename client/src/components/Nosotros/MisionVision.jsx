@@ -8,36 +8,13 @@ import vision from "../../assets/img/icons/vision.png";
 import comillas from "../../assets/img/icons/comillas.png";
 
 const MisionVision = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      className={`misionvision ${isVisible ? "visible" : ""}`}
-      ref={sectionRef}
-    >
+    <section className="misionvision">
       <div className="mv-container">
         {/* PARTE SUPERIOR */}
         <div className="mv-top">
           {/* MISION */}
-          <div className="mv-item">
+          <div className="mv-item" data-aos="fade-up">
             <div className="mv-icon-wrapper">
               <div className="mv-icon-border"></div>
 
@@ -59,7 +36,7 @@ const MisionVision = () => {
           <div className="mv-line"></div>
 
           {/* VISION */}
-          <div className="mv-item">
+          <div className="mv-item" data-aos="fade-up" data-aos-delay="200">
             <div className="mv-icon-wrapper">
               <div className="mv-icon-border"></div>
 
@@ -80,9 +57,14 @@ const MisionVision = () => {
 
         {/* PARTE INFERIOR */}
         <div className="mv-bottom">
-          <img src={building} alt="edificio" className="mv-image" />
+          <img
+            src={building}
+            alt="edificio"
+            className="mv-image"
+            data-aos="fade-right"
+          />
 
-          <div className="mv-card">
+          <div className="mv-card" data-aos="fade-left" data-aos-delay="200">
             <img src={comillas} alt="comillas" className="mv-quote" />
 
             <p>

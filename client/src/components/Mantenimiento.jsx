@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/Mantenimiento.css"; // Asegúrate de que la ruta sea correcta
-import hexa from "../assets/hexa.png";
+// import hexa from "../assets/hexa.png";
 
 const Mantenimiento = () => {
   return (
@@ -14,7 +14,11 @@ const Mantenimiento = () => {
       {/* https://codepen.io/zkreations/pen/VGWzYv */}
       <div className="wave">
         {/* Fondo Hexagonos */}
-        <img src={hexa} alt="hexagonos" className="hexa-bg" />
+        <img
+          // src={hexa}
+          alt="hexagonos"
+          className="hexa-bg"
+        />
         <div className="wave-item"></div>
       </div>
     </div>

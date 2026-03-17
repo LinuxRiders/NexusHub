@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 
 import PropiedadesHero from "../components/Propiedades/PropiedadesHero";
 import Property from "../components/Propiedades/Property";
-import Footer from "../components/Footer";
 
 const Propiedades = () => {
   return (
@@ -19,12 +18,6 @@ const Propiedades = () => {
       <div id="Property" className="Property">
         <div>
           <Property />
-        </div>
-      </div>
-      {/*----------------------------------------------   Footer prueba  ------------------------------------------*/}
-      <div id="Footer" className="Footer">
-        <div>
-          <Footer />
         </div>
       </div>
     </div>

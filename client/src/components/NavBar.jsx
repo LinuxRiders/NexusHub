@@ -4,11 +4,16 @@ import Button from "@mui/material/Button";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { IconButton, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { MenuOpen, Close, Person } from "@mui/icons-material";
+import {
+  MenuOpen,
+  Close,
+  Person,
+  AccountCircleOutlined,
+} from "@mui/icons-material";
 import { useEffect } from "react";
 import { useRef } from "react";
 
-// import logo from "../assets/logos.png";
+import logo from "../assets/img/logo2.png";
 import { useActiveSection } from "./hooks/ActiveSection";
 
 const pages_base = [
@@ -47,7 +52,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
       ([entry]) => {
         setSticky(!entry.isIntersecting);
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (stickyRef.current) observer.observe(stickyRef.current);
@@ -174,9 +179,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
           alignItems: "center",
           px: { xs: "15px", sm: "25px", md: "40px" },
           transition: "all 0.3s ease-in-out",
-          backgroundColor: sticky
-            ? "var(--essential-background-color)"
-            : "transparent",
+          backgroundColor: sticky ? "var(--secondary-color)" : "transparent",
           boxShadow: sticky ? "0 3px 10px rgba(0,0,0,0.1)" : "none",
           ...sx,
         }}
@@ -184,13 +187,13 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
         {/* Logo */}
         <Box
           sx={{
-            height: { xs: "50px", md: "70%" },
+            height: { xs: "50px", md: "86%" },
             display: "flex",
             alignItems: "center",
             flexShrink: 0,
           }}
         >
-          {/* <img
+          <img
             src={logo}
             alt="Logo"
             style={{
@@ -198,29 +201,27 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               width: "auto",
               objectFit: "contain",
               cursor: "pointer",
-              filter: `
-                invert(32%)
-                sepia(88%)
-                saturate(1020%)
-                hue-rotate(178deg)
-                brightness(72%)
-                contrast(96%)
-              `,
             }}
-            onClick={() => goTo("/#home")}
-          /> */}
+            onClick={(e) => {
+              goTo("/");
+              handleInicioClick(e, "/");
+            }}
+          />
         </Box>
 
         {/* Menú para pantallas grandes */}
         <Box
           component="nav"
           sx={{
-            height: "fit-content",
+            width: "74%",
+            height: "100%",
             display: { xs: "none", md: "flex" },
-            justifyContent: "center",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: { md: 2, lg: 3 },
+            // gap: { md: 2, lg: 3 },
             flexGrow: 0,
+            borderBottom: "2px solid #fdfdfda6",
+            px: "1.5%",
           }}
         >
           {pages.map((page, index) => (
@@ -231,35 +232,20 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               to={page.to || ""}
               onClick={(e) => handleInicioClick(e, page.to)}
               sx={{
-                textTransform: "uppercase",
-                fontSize: { md: "0.85rem", lg: "0.95rem" },
-                fontWeight: "600",
+                textTransform: "capitalize",
+                fontSize: "1.1vw",
+                fontWeight: "500",
                 transition: "all .3s ease",
                 color:
                   activeRoute === page?.to
-                    ? "var(--secondary-color)"
-                    : "var(--text-secondary-color)",
+                    ? "var(--text-primary-color)"
+                    : "color-mix(in hsl, var(--text-primary-color), transparent 10%);",
                 position: "relative",
                 "&:hover": {
                   ...(activeRoute !== page?.to && {
-                    color: "var(--secondary-color)",
+                    color: "var(--text-primary-color)",
                   }),
                   backgroundColor: "transparent",
-                },
-                // Indicador de página activa
-                "&::after": {
-                  content: '""',
-                  position: "absolute",
-                  bottom: 0,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: activeRoute === page?.to ? "80%" : "0%",
-                  height: "2px",
-                  backgroundColor: "var(--secondary-color)",
-                  transition: "width 0.3s ease",
-                },
-                "&:hover::after": {
-                  width: "80%",
                 },
               }}
             >
@@ -268,23 +254,64 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
           ))}
 
           {/* Botón de perfil/login */}
-          <IconButton
+          <Button
             component={Link}
             to={"/login"}
+            disableRipple
             sx={{
-              ml: 2,
-              p: "8px",
-              backgroundColor: "var(--primary-color)",
+              height: "fit-content",
+              width: "16%",
+              py: 0.2,
+              px: "1.2%",
+              backgroundColor: "transparent",
               color: "var(--text-primary-color)",
               transition: "all .3s ease-in-out",
               "&:hover": {
-                backgroundColor: "var(--secondary-color)",
-                transform: "scale(1.05)",
+                backgroundColor: "var(--essential-background-color)",
+                color: "#256f8a",
+
+                ".nvlogin-divider": {
+                  backgroundColor: "#256f8a",
+                },
               },
+              border: "2px solid #fdfdfda6",
+              borderRadius: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              textTransform: "none",
             }}
           >
-            <Person sx={{ fontSize: 20 }} />
-          </IconButton>
+            <AccountCircleOutlined sx={{ fontSize: { md: 24, lg: 28 } }} />
+            <Box
+              sx={{
+                width: "2px",
+                alignSelf: "stretch",
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                className="nvlogin-divider"
+                sx={{
+                  height: "50%",
+                  width: "100%",
+                  backgroundColor: "#fdfdfda6",
+                  transition: "all .3s ease-in-out",
+                }}
+              />
+            </Box>
+            <Typography
+              sx={{
+                fontSize: { md: "1.1rem", lg: "1.25rem" },
+                fontWeight: 400,
+                fontFamily: "inherit",
+              }}
+            >
+              Login
+            </Typography>
+          </Button>
         </Box>
 
         {/* Botón de menú hamburguesa para móviles */}

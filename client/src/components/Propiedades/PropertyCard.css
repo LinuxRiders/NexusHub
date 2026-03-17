@@ -17,9 +17,7 @@
   box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.2); /* Sombra ajustada para no ser tan oscura */
   display: flex;
   flex-direction: column;
-  transition:
-    transform 0.2s ease-in-out,
-    box-shadow 0.2s ease-in-out;
+  transition: all 0.3s ease-in-out;
   font-family: "Nunito", sans-serif; /* Forzamos Nunito en la tarjeta */
 }
 
@@ -74,7 +72,7 @@
 
 .property-avenue {
   margin: 0 0 5px 0;
-  font-size: 20px;
+  font-size: clamp(18px, 1.6vw, 22px);
   font-weight: 800; /* Nunito extra bold */
   color: var(--title-color);
   line-height: 1.2;
@@ -83,14 +81,14 @@
 .property-location {
   margin: 0 0 12px 0;
   color: var(--location-color);
-  font-size: 14px;
+  font-size: clamp(13px, 1.1vw, 16px);
   font-weight: 600;
 }
 
 .property-price {
   margin: 0 0 15px 0;
   color: var(--price-color);
-  font-size: 22px;
+  font-size: clamp(18px, 1.8vw, 26px);
   font-weight: 800;
 }
 
@@ -126,7 +124,7 @@
 
 .detail-label {
   margin: 0;
-  font-size: 11px; /* Ligeramente más grande para legibilidad */
+  font-size: clamp(10px, 0.9vw, 13px); /* Ligeramente más grande para legibilidad */
   color: var(--icon-color);
   font-weight: 700;
   text-transform: capitalize;
@@ -134,7 +132,7 @@
 
 .detail-value {
   margin: 0;
-  font-size: 14px;
+  font-size: clamp(12px, 1vw, 16px);
   font-weight: 800;
 }
 
@@ -145,7 +143,7 @@
   border-radius: 0;
   padding: 15px;
   width: 100%;
-  font-size: 16px;
+  font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 800;
   cursor: pointer;
   text-transform: uppercase;

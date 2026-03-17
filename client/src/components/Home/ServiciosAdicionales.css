@@ -17,7 +17,7 @@
 
 /* TITULO */
 .servicios-title {
-  font-size: 32px;
+  font-size: clamp(24px, 2.22vw, 32px);
   color: #30343a;
   font-weight: 700;
   text-align: center;
@@ -60,15 +60,6 @@
   transition:
     transform 0.3s ease,
     box-shadow 0.3s ease;
-  opacity: 0;
-  animation: fadeUpCard 0.8s ease forwards;
-}
-
-.servicio-card:nth-child(1) {
-  animation-delay: 0.2s;
-}
-.servicio-card:nth-child(2) {
-  animation-delay: 0.4s;
 }
 
 .servicio-card:hover {
@@ -101,7 +92,7 @@
 }
 
 .servicio-content h3 {
-  font-size: 18px;
+  font-size: clamp(15px, 1.25vw, 18px);
   margin: 0 0 8px 0;
   color: #ffffff;
   font-weight: 700;
@@ -109,7 +100,7 @@
 }
 
 .servicio-content p {
-  font-size: 13px;
+  font-size: clamp(12px, 0.9vw, 13px);
   margin: 0;
   color: #d1d5db;
   line-height: 1.4;
@@ -127,7 +118,7 @@
   border: none;
   padding: 12px 24px;
   font-family: "Nunito", sans-serif;
-  font-size: 14px;
+  font-size: clamp(13px, 0.97vw, 14px);
   font-weight: 600;
   cursor: pointer;
   border-radius: 0 !important;
@@ -153,17 +144,6 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-@keyframes fadeUpCard {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }
 

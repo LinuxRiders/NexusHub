@@ -1,14 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
 
 .hero {
+  width: 100%;
+    height: 100dvh;
   background-size: cover;
   background-position: center;
-  height: 130vh;
   position: relative;
   display: flex;
-  align-items: flex-start;
-  padding-top: 140px;
-  overflow: hidden;
+  align-items: center;
   background-color: #1c4c4f;
   background-blend-mode: overlay;
   font-family: "Nunito", sans-serif;
@@ -31,22 +30,21 @@
 /* CONTENEDOR */
 .hero-container {
   width: 100%;
-  max-width: 1100px;
-  margin: auto;
+  height: 100%;
+  /* max-width: 1100px; */
   display: flex;
-  justify-content: space-evenly;
-  align-items: flex-start;
+  justify-content: space-between;
+  align-items: center;
   gap: 100px;
   position: relative;
   z-index: 2;
-  padding: 0 20px;
+  /* padding: 0 20px; */
 }
 
 /* TEXTO IZQUIERDA */
 .hero-left {
   color: white;
   max-width: 520px;
-  margin-top: 18%;
 }
 
 .hero-title {
@@ -56,7 +54,7 @@
 
 /* CLASE AÑADIDA PARA SIMULAR EL TAMAÑO DE LA LETRA */
 .hero-logo-img {
-  height: 56px; /* Equivalente al font-size original */
+  height: clamp(42px, 3.9vw, 56px); /* Equivalente al font-size original */
   width: auto;
   object-fit: contain;
 }
@@ -65,7 +63,7 @@
   font-style: italic;
   margin-bottom: 12px;
   line-height: 1.1;
-  font-size: 20px;
+  font-size: clamp(16px, 1.4vw, 20px);
 }
 
 /* LISTA SERVICIOS */
@@ -79,7 +77,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
-  font-size: 18px;
+  font-size: clamp(15px, 1.25vw, 18px);
   line-height: 1.2;
 }
 
@@ -124,13 +122,13 @@
 }
 
 .hero-contact {
-  font-size: 14px;
+  font-size: clamp(12px, 1vw, 14px);
   margin-bottom: 8px;
 }
 
 /* INPUTS */
 .hero-form label {
-  font-size: 13px;
+  font-size: clamp(12px, 0.9vw, 13px);
   margin-top: 15px;
   font-weight: 600;
 }

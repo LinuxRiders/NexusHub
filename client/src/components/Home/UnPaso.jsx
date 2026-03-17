@@ -8,16 +8,23 @@ import email from "../../assets/img/icons/unPaso/email.png";
 const UnPaso = () => {
   return (
     <section className="unpaso-container">
-      <h2 className="unpaso-title">¡Estás a un paso de lograrlo!</h2>
+      <h2 className="unpaso-title" data-aos="fade-down">
+        ¡Estás a un paso de lograrlo!
+      </h2>
       <div className="unpaso-divider"></div>
 
-      <p className="unpaso-subtitle">
+      <p className="unpaso-subtitle" data-aos="fade-up" data-aos-delay="100">
         Conoce nuestros canales de contacto más frecuentes
       </p>
 
       <div className="unpaso-options">
         {/* TELEFONO */}
-        <a href="tel:+51900000000" className="unpaso-item">
+        <a
+          href="tel:+51900000000"
+          className="unpaso-item"
+          data-aos="fade-up"
+          data-aos-delay="200"
+        >
           <div className="icon-wrapper">
             <div className="icon-frame"></div>
 
@@ -38,6 +45,8 @@ const UnPaso = () => {
           target="_blank"
           rel="noopener noreferrer"
           className="unpaso-item"
+          data-aos="fade-up"
+          data-aos-delay="400"
         >
           <div className="icon-wrapper">
             <div className="icon-frame"></div>
@@ -54,7 +63,12 @@ const UnPaso = () => {
         <div className="line"></div>
 
         {/* EMAIL */}
-        <a href="mailto:correo@nexus.pe" className="unpaso-item">
+        <a
+          href="mailto:correo@nexus.pe"
+          className="unpaso-item"
+          data-aos="fade-up"
+          data-aos-delay="600"
+        >
           <div className="icon-wrapper">
             <div className="icon-frame"></div>
 

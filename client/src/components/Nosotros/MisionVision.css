@@ -34,28 +34,17 @@
 .mv-item {
   width: 280px;
   text-align: center;
-
-  opacity: 0;
-  transform: translateY(30px);
-}
-
-.visible .mv-item:first-child {
-  animation: fadeInUp 0.8s ease forwards 0.2s;
-}
-
-.visible .mv-item:last-child {
-  animation: fadeInUp 0.8s ease forwards 0.6s;
 }
 
 .mv-item h3 {
   color: #2f3339;
-  font-size: 20px;
+  font-size: clamp(20px, 1.8vw, 26px);
   margin-top: 18px;
 }
 
 .mv-item p {
   color: #7a7a7a;
-  font-size: 14px;
+  font-size: clamp(15px, 1.2vw, 18px);
   line-height: 1.5;
   margin-top: 10px;
 }
@@ -108,12 +97,6 @@
   height: 2px;
   background: #1f6a6e;
   margin-top: 40px;
-  transform: scaleX(0);
-  transition: transform 1s ease 0.4s;
-}
-
-.visible .mv-line {
-  transform: scaleX(1);
 }
 
 /* BOTTOM */
@@ -132,11 +115,6 @@
   height: 620px;
   margin-left: 40%;
   object-fit: cover;
-  opacity: 0;
-}
-
-.visible .mv-image {
-  animation: fadeInRight 1s ease forwards 0.8s;
 }
 
 /* CARD */
@@ -146,29 +124,24 @@
   left: 120px;
   top: 40px;
   width: 420px;
-  height: 500px;
+  min-height: 500px;
   background: #2f3339;
   color: white;
-  padding: 55px 90px;
+  padding: 45px 60px;
   box-shadow: 0 25px 45px rgba(0, 0, 0, 0.45);
-  opacity: 0;
-}
-
-.visible .mv-card {
-  animation: fadeInLeft 1s ease forwards 1s;
 }
 
 /* TEXTO CARD */
 
 .mv-card p {
-  font-size: 14px;
-  line-height: 1.4;
-  margin-top: 20px;
+  font-size: clamp(14px, 1.1vw, 17px);
+  line-height: 1.5;
+  margin-top: 15px;
 }
 
 .mv-card h4 {
-  margin-top: 25px;
-  font-size: 18px;
+  margin-top: 20px;
+  font-size: clamp(17px, 1.4vw, 22px);
   font-weight: 800;
   font-style: italic;
 }
@@ -180,40 +153,7 @@
   opacity: 0.9;
 }
 
-/* ANIMACIONES */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fadeInRight {
-  from {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
+/* ANIMACIONES Manejadas por AOS */
 
 /* ===== RESPONSIVE ===== */
 

@@ -11,11 +11,15 @@ const PropiedadesHero = () => {
       }}
     >
       <div className="propiedades-hero-content">
-        <h1>Propiedades</h1>
+        <h1 data-aos="fade-down">Propiedades</h1>
 
-        <div className="propiedades-line"></div>
+        <div
+          className="propiedades-line"
+          data-aos="zoom-in"
+          data-aos-delay="100"
+        ></div>
 
-        <p>
+        <p data-aos="fade-up" data-aos-delay="200">
           Tu próxima propiedad te está esperando. Encuentra el espacio perfecto
           para vivir o invertir.
         </p>

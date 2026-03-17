@@ -63,7 +63,7 @@
 /* TITULO */
 
 .nosotros-hero h1 {
-  font-size: 64px;
+  font-size: clamp(48px, 5vw, 80px);
 
   font-weight: 900; /* MÁS PESO */
 
@@ -86,7 +86,7 @@
 /* TEXTO */
 
 .nosotros-hero p {
-  font-size: 18px;
+  font-size: clamp(18px, 1.6vw, 24px);
 
   line-height: 1.5;
 

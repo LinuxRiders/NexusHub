@@ -9,34 +9,11 @@ import papel from "../../assets/img/icons/nuestrasEsp/papel.png";
 import trato from "../../assets/img/icons/nuestrasEsp/trato.png";
 
 const NuestrasEspecialidades = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.2 },
-    );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <section
-      className={`especialidades ${isVisible ? "visible" : ""}`}
-      ref={sectionRef}
-    >
+    <section className="especialidades">
       <div className="especialidades-container">
         {/* IZQUIERDA */}
-        <div className="especialidades-left">
+        <div className="especialidades-left" data-aos="fade-right">
           <h2>
             Nuestras
             <br />
@@ -55,7 +32,11 @@ const NuestrasEspecialidades = () => {
 
         {/* ESPECIALIDADES */}
         <div className="especialidades-items">
-          <div className="especialidad">
+          <div
+            className="especialidad"
+            data-aos="fade-left"
+            data-aos-delay="100"
+          >
             <div className="icon-box">
               <img src={inmueble} alt="Renta de Inmuebles" />
             </div>
@@ -66,7 +47,11 @@ const NuestrasEspecialidades = () => {
             </p>
           </div>
 
-          <div className="especialidad">
+          <div
+            className="especialidad"
+            data-aos="fade-left"
+            data-aos-delay="250"
+          >
             <div className="icon-box">
               <img src={trato} alt="Intermediación en Compraventa" />
             </div>
@@ -77,7 +62,11 @@ const NuestrasEspecialidades = () => {
             </p>
           </div>
 
-          <div className="especialidad">
+          <div
+            className="especialidad"
+            data-aos="fade-left"
+            data-aos-delay="400"
+          >
             <div className="icon-box">
               <img src={martillo} alt="Saneamiento Físico Legal" />
             </div>
@@ -88,7 +77,11 @@ const NuestrasEspecialidades = () => {
             </p>
           </div>
 
-          <div className="especialidad">
+          <div
+            className="especialidad"
+            data-aos="fade-left"
+            data-aos-delay="550"
+          >
             <div className="icon-box">
               <img src={papel} alt="Trámites y Documentos" />
             </div>
