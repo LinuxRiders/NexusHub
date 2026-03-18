@@ -187,7 +187,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
         {/* Logo */}
         <Box
           sx={{
-            height: { xs: "50px", md: "86%" },
+            height: { xs: "50px", md: "93%" },
             display: "flex",
             alignItems: "center",
             flexShrink: 0,
