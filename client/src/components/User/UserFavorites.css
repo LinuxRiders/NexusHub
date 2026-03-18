@@ -1,0 +1,177 @@
+/* UserFavorites.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.user-favorites-container {
+  width: 100%;
+  position: relative;
+  /* FUENTE NUNITO APLICADA */
+  font-family: "Nunito", sans-serif;
+}
+
+/* Cabecera siguiendo el estilo de Mis Alertas / Cambiar Contraseña */
+.favorites-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+/* NUEVOS ESTILOS PARA LA IMAGEN (Reemplaza .favorites-icon) */
+.favorites-title-icon-img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  margin-right: 20px;
+}
+
+.favorites-title {
+  margin: 0;
+  font-size: 38px;
+  color: #1c6a6e;
+  font-weight: 800; /* Negrita pronunciada de Nunito */
+}
+
+.no-favorites-text {
+  font-size: 18px;
+  color: #2f3339;
+  font-weight: 700;
+}
+
+/* No añadimos estilos estructurales para .properties-container ni PropertyCard 
+   porque el componente ya importa sus propios CSS que nos pasaste, 
+   solo nos aseguramos que fluya en responsive si no lo hacía.
+*/
+
+/* --- DISEÑO DE MODALES (Copiado exactamente de tus files) --- */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+  padding: 20px; /* Padding extra para que no toque los bordes en móviles */
+}
+
+.custom-modal-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%; /* Cambiado a 100% para fluidez */
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", sans-serif;
+}
+
+.modal-icon-wrapper {
+  margin-bottom: 20px;
+}
+.modal-icon {
+  font-size: 50px;
+}
+.confirm-icon {
+  color: #2f3339;
+}
+.success-icon {
+  color: #1c6a6e;
+}
+
+.modal-title {
+  color: #1c6a6e;
+  font-size: 22px;
+  margin: 0 0 15px 0;
+  font-weight: 800;
+}
+
+.modal-message {
+  color: #666666;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-modal {
+  padding: 12px 25px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+  font-family: "Nunito", sans-serif;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+.btn-cancel:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-accept {
+  background-color: #1c6a6e;
+  color: white;
+}
+.btn-accept:hover {
+  background-color: #154e52;
+}
+
+/* =========================================
+   RESPONSIVE OPTIMIZADO PARA MÓVILES
+   ========================================= */
+
+@media (max-width: 768px) {
+  /* Cabecera en tablets y móviles */
+  .favorites-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .favorites-title-icon-img {
+    margin-right: 0;
+    width: 40px;
+    height: 40px;
+  }
+
+  .favorites-title {
+    font-size: 30px;
+  }
+
+  /* Aseguramos que el grid de propiedades no se rompa si el padre no era flex-wrap */
+  .properties-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* En celulares pequeños los botones del modal se apilan para no salir de la pantalla */
+  .custom-modal-box {
+    padding: 30px 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-modal {
+    width: 100%;
+  }
+}

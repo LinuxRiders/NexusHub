@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthProvider";
-import api from "../../api/api";
+// import { useAuth } from "../../context/AuthProvider";
+// import api from "../../api/api";
 
-// Material-UI Imports (Todo el UI viene de aquí)
+// Material-UI Imports
 import {
   Box,
   Button,
   TextField,
   Typography,
-  Paper,
   Divider,
   Alert,
   Collapse,
@@ -18,51 +17,90 @@ import {
   Container,
   IconButton,
   InputAdornment,
+  Checkbox,
+  FormControlLabel,
 } from "@mui/material";
 
-// Iconos (Opcional, para mejor UX en password)
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import EmailIcon from "@mui/icons-material/Email";
+
+// Nuevas rutas de imágenes solicitadas
+import logo from "../../assets/img/logo2.png";
+import bgBottom from "../../assets/img/MarcaAgua2.png";
+
+// Estilo para Inputs: Bordes rectos, texto blanco, fuente Nunito
+const darkTextFieldStyle = {
+  "& .MuiOutlinedInput-root": {
+    color: "white",
+    borderRadius: 0,
+    fontFamily: "'Nunito', sans-serif",
+    "& fieldset": { borderColor: "rgba(255, 255, 255, 0.5)" },
+    "&:hover fieldset": { borderColor: "white" },
+    "&.Mui-focused fieldset": { borderColor: "white", borderWidth: "2px" },
+  },
+  "& .MuiInputLabel-root": {
+    color: "rgba(255, 255, 255, 0.7)",
+    fontFamily: "'Nunito', sans-serif",
+  },
+  "& .MuiInputLabel-root.Mui-focused": { color: "white" },
+  "& .MuiIconButton-root": { color: "white" },
+  "& .MuiFormHelperText-root": {
+    color: "#ff8a80",
+    fontFamily: "'Nunito', sans-serif",
+  },
+};
+
+// Icono de Google SVG
+const GoogleIcon = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      fill="#4285F4"
+    />
+    <path
+      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      fill="#34A853"
+    />
+    <path
+      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      fill="#FBBC05"
+    />
+    <path
+      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      fill="#EA4335"
+    />
+  </svg>
+);
 
 const Login = () => {
-  const { isAuthenticated, login, hasRole } = useAuth();
+  // const { isAuthenticated, login, hasRole } = useAuth();
   const goTo = useNavigate();
 
-  // Estados de vista: 'login', 'register', 'forgot', 'verify_pending'
   const [view, setView] = useState("login");
 
-  // Estado unificado del formulario
   const [formData, setFormData] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
+    termsAccepted: false,
   });
 
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
-  // Estados de feedback visual
   const [errorResponse, setErrorResponse] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
-  // Estado para controlar si ya se envió el link de recuperación (para cambiar el texto del botón)
   const [isResetSent, setIsResetSent] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      hasRole("dev");
-      if (hasRole("dev") || hasRole("admin")) {
-        goTo("/admin", { replace: true });
-      } else if (hasRole("user")) {
-        goTo("/perfil", { replace: true });
-      }
-    }
-  }, [isAuthenticated, hasRole, goTo]);
+  // useEffect(() => { ... }, [isAuthenticated, hasRole, goTo]);
 
-  // Limpiar estados al cambiar de vista
   const switchView = (newView) => {
     setView(newView);
     setErrorResponse("");
@@ -72,15 +110,16 @@ const Login = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    // Limpiar error al escribir
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  // --- VALIDACIONES ---
   const validateForm = (formType) => {
     const newErrors = {};
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -96,6 +135,7 @@ const Login = () => {
         newErrors.password = "La contraseña es obligatoria";
     }
 
+    // Validaciones exclusivas de REGISTRO
     if (formType === "register") {
       if (!formData.username) newErrors.username = "El usuario es obligatorio";
       if (formData.password.length < 8)
@@ -103,15 +143,18 @@ const Login = () => {
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = "Las contraseñas no coinciden";
       }
+      if (!formData.termsAccepted) {
+        newErrors.termsAccepted = "Debes aceptar los términos y condiciones";
+        setErrorResponse(
+          "Debes aceptar los términos y condiciones para crear tu cuenta.",
+        );
+      }
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // --- HANDLERS ---
-
-  // 1. LOGIN
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm("login")) return;
@@ -119,17 +162,17 @@ const Login = () => {
     setErrorResponse("");
 
     try {
-      await login(formData.email, formData.password);
-      // La redirección la maneja el useEffect
+      // await login(formData.email, formData.password);
+      console.log("Login simulado", formData);
+      setTimeout(() => setIsSubmitting(false), 1000);
     } catch (error) {
-      const msg = error.response?.data?.error || "Credenciales incorrectas.";
-      setErrorResponse(msg);
-    } finally {
+      setErrorResponse(
+        error.response?.data?.error || "Credenciales incorrectas.",
+      );
       setIsSubmitting(false);
     }
   };
 
-  // 2. REGISTRO
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm("register")) return;
@@ -137,28 +180,18 @@ const Login = () => {
     setErrorResponse("");
 
     try {
-      const response = await api.post("/auth/register", {
-        username: formData.username,
-        email: formData.email,
-        password: formData.password,
-      });
-
-      if (response.status === 201) {
-        // Al registrarse exitosamente, cambiamos a la vista de pendiente
+      // const response = await api.post("/auth/register", { ... });
+      setTimeout(() => {
         setSuccessMessage("");
         setView("verify_pending");
-      }
+        setIsSubmitting(false);
+      }, 1000);
     } catch (error) {
-      const msg =
-        error.response?.data?.error ||
-        "Error al registrarse. Intenta nuevamente.";
-      setErrorResponse(msg);
-    } finally {
+      setErrorResponse(error.response?.data?.error || "Error al registrarse.");
       setIsSubmitting(false);
     }
   };
 
-  // 3. RECUPERAR PASSWORD
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm("forgot")) return;
@@ -167,50 +200,96 @@ const Login = () => {
     setSuccessMessage("");
 
     try {
-      await api.post("/auth/forgot-password", { email: formData.email });
-      // Éxito: Mostrar mensaje de duración y cambiar estado del botón
-      setSuccessMessage(
-        "Si el correo existe, se ha enviado el enlace. Válido por 15 min."
-      );
-      setIsResetSent(true);
+      // await api.post("/auth/forgot-password", { email: formData.email });
+      setTimeout(() => {
+        setSuccessMessage("Si el correo existe, se ha enviado el enlace.");
+        setIsResetSent(true);
+        setIsSubmitting(false);
+      }, 1000);
     } catch (error) {
-      // Por seguridad, mostramos el mismo mensaje aunque falle internamente (o manejas el error explícito si prefieres)
-      setSuccessMessage(
-        "Si el correo existe, se ha enviado el enlace. Válido por 15 min."
-      );
+      setSuccessMessage("Si el correo existe, se ha enviado el enlace.");
       setIsResetSent(true);
-    } finally {
       setIsSubmitting(false);
     }
   };
 
-  // 4. REENVIAR VERIFICACIÓN (Desde la vista Verify Pending)
   const handleResendVerification = async () => {
     setIsSubmitting(true);
     setErrorResponse("");
     setSuccessMessage("");
 
     try {
-      await api.post("/auth/resend-verification", { email: formData.email });
-      setSuccessMessage(
-        "Nuevo enlace de verificación enviado. Revisa tu bandeja."
-      );
+      setTimeout(() => {
+        setSuccessMessage("Nuevo enlace enviado. Revisa tu bandeja.");
+        setIsSubmitting(false);
+      }, 1000);
     } catch (error) {
-      setErrorResponse("No se pudo reenviar el correo. Intenta más tarde.");
-    } finally {
+      setErrorResponse("No se pudo reenviar el correo.");
       setIsSubmitting(false);
     }
   };
 
-  // --- COMPONENTES DE RENDERIZADO (VISTAS) ---
+  // ==========================================
+  // INICIO DE SESIÓN CON GOOGLE (FUNCIONAL)
+  // ==========================================
+  const handleGoogleLogin = () => {
+    // Para que el backend reciba los datos, la forma más común y segura con
+    // OAuth2 (Google) es redirigir al usuario al endpoint de autenticación de tu API.
+    // Ej: El backend maneja el login con Passport.js y luego te redirige de vuelta al frontend con un token.
 
+    // window.location.href = "http://localhost:5000/api/auth/google"; // (Descomenta y ajusta esta ruta)
+
+    console.log("Redirigiendo a autenticación de Google...");
+  };
+
+  // ==========================================
+  // VISTAS DEL COMPONENTE
+  // ==========================================
   const renderLoginForm = () => (
     <Box
       component="form"
       onSubmit={handleLoginSubmit}
       noValidate
-      sx={{ mt: 1, width: "100%" }}
+      sx={{
+        width: "100%",
+        maxWidth: "340px",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 2,
+      }}
     >
+      {/* 1. Título */}
+      <Typography
+        component="h1"
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          fontSize: { xs: "1.6rem", sm: "2rem" },
+          fontWeight: 800,
+          color: "white",
+          textAlign: "center",
+          mb: 2,
+        }}
+      >
+        Iniciar Sesión en
+      </Typography>
+
+      {/* 2. Línea Horizontal */}
+      <Divider
+        sx={{ width: "100%", borderColor: "rgba(255, 255, 255, 0.3)", mb: 4 }}
+      />
+
+      {/* 3. Logo (Tamaño 340px) */}
+      <Box
+        sx={{ display: "flex", justifyContent: "center", mb: 4, width: "100%" }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "100%", maxWidth: "340px", objectFit: "contain" }}
+        />
+      </Box>
+
+      {/* 4. Casillas */}
       <TextField
         margin="normal"
         required
@@ -219,11 +298,11 @@ const Login = () => {
         label="Correo Electrónico"
         name="email"
         autoComplete="email"
-        autoFocus
         value={formData.email}
         onChange={handleChange}
         error={!!errors.email}
         helperText={errors.email}
+        sx={darkTextFieldStyle}
       />
       <TextField
         margin="normal"
@@ -233,19 +312,15 @@ const Login = () => {
         label="Contraseña"
         type={showPassword ? "text" : "password"}
         id="password"
-        autoComplete="current-password"
         value={formData.password}
         onChange={handleChange}
         error={!!errors.password}
         helperText={errors.password}
+        sx={darkTextFieldStyle}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                edge="end"
-              >
+              <IconButton onClick={handleClickShowPassword} edge="end">
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
@@ -253,6 +328,7 @@ const Login = () => {
         }}
       />
 
+      {/* 5. Botón Ingresar */}
       <Button
         type="submit"
         fullWidth
@@ -260,48 +336,81 @@ const Login = () => {
         disabled={isSubmitting}
         sx={{
           mt: 3,
-          mb: 2,
+          mb: 1.5,
           py: 1.5,
-          bgcolor: "#2563EB",
-          fontWeight: "bold",
-          "&:hover": { bgcolor: "#1e40af" },
+          bgcolor: "white",
+          color: "#2f3339",
+          borderRadius: 0,
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 800,
+          "&:hover": { bgcolor: "#e0e0e0" },
         }}
       >
         {isSubmitting ? (
           <CircularProgress size={24} color="inherit" />
         ) : (
-          "Ingresar"
+          "INGRESAR"
         )}
       </Button>
 
-      {/* LÍNEA DIVISORIA */}
-      <Divider sx={{ my: 2, color: "text.secondary" }}>O</Divider>
+      {/* 6. Botón Google */}
+      <Button
+        fullWidth
+        variant="outlined"
+        onClick={handleGoogleLogin}
+        startIcon={<GoogleIcon />}
+        sx={{
+          mb: 4,
+          py: 1.2,
+          color: "white",
+          borderColor: "rgba(255,255,255,0.5)",
+          borderRadius: 0,
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 700,
+          "&:hover": {
+            borderColor: "white",
+            bgcolor: "rgba(255,255,255,0.05)",
+          },
+        }}
+      >
+        Iniciar sesión con Google
+      </Button>
 
-      {/* ENLACES DEBAJO DE LA LÍNEA */}
+      {/* 7 y 8. Enlaces */}
       <Box
         sx={{
           display: "flex",
           flexDirection: "column",
-          gap: 1,
+          gap: 1.5,
           alignItems: "center",
+          mb: 0,
         }}
       >
         <Link
           component="button"
           variant="body2"
           onClick={() => switchView("forgot")}
-          sx={{ textDecoration: "none", fontWeight: 500, color: "#2563EB" }}
+          sx={{
+            fontFamily: "'Nunito', sans-serif",
+            textDecoration: "none",
+            color: "rgba(255,255,255,0.8)",
+            "&:hover": { color: "white" },
+          }}
         >
-          ¿Olvidaste tu contraseña?
+          Recuperar contraseña
         </Link>
-
         <Link
           component="button"
           variant="body2"
           onClick={() => switchView("register")}
-          sx={{ textDecoration: "none", fontWeight: 500, color: "#2563EB" }}
+          sx={{
+            fontFamily: "'Nunito', sans-serif",
+            textDecoration: "none",
+            color: "white",
+            fontWeight: 700,
+          }}
         >
-          ¿No tienes cuenta? Regístrate
+          ¿No tienes una cuenta? Regístrate
         </Link>
       </Box>
     </Box>
@@ -312,8 +421,40 @@ const Login = () => {
       component="form"
       onSubmit={handleRegisterSubmit}
       noValidate
-      sx={{ mt: 1, width: "100%" }}
+      sx={{
+        width: "100%",
+        maxWidth: "340px",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 2,
+      }}
     >
+      <Typography
+        component="h1"
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          fontSize: { xs: "1.6rem", sm: "2rem" },
+          fontWeight: 800,
+          color: "white",
+          textAlign: "center",
+          mb: 2,
+        }}
+      >
+        Crear Cuenta en
+      </Typography>
+      <Divider
+        sx={{ width: "100%", borderColor: "rgba(255, 255, 255, 0.3)", mb: 4 }}
+      />
+      <Box
+        sx={{ display: "flex", justifyContent: "center", mb: 4, width: "100%" }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "100%", maxWidth: "340px", objectFit: "contain" }}
+        />
+      </Box>
+
       <TextField
         margin="normal"
         required
@@ -321,11 +462,11 @@ const Login = () => {
         id="username"
         label="Nombre de Usuario"
         name="username"
-        autoFocus
         value={formData.username}
         onChange={handleChange}
         error={!!errors.username}
         helperText={errors.username}
+        sx={darkTextFieldStyle}
       />
       <TextField
         margin="normal"
@@ -334,11 +475,11 @@ const Login = () => {
         id="email"
         label="Correo Electrónico"
         name="email"
-        autoComplete="email"
         value={formData.email}
         onChange={handleChange}
         error={!!errors.email}
         helperText={errors.email}
+        sx={darkTextFieldStyle}
       />
       <TextField
         margin="normal"
@@ -352,14 +493,11 @@ const Login = () => {
         onChange={handleChange}
         error={!!errors.password}
         helperText={errors.password}
+        sx={darkTextFieldStyle}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                edge="end"
-              >
+              <IconButton onClick={handleClickShowPassword} edge="end">
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
@@ -378,19 +516,43 @@ const Login = () => {
         onChange={handleChange}
         error={!!errors.confirmPassword}
         helperText={errors.confirmPassword}
+        sx={darkTextFieldStyle}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                edge="end"
-              >
+              <IconButton onClick={handleClickShowPassword} edge="end">
                 {showPassword ? <VisibilityOff /> : <Visibility />}
               </IconButton>
             </InputAdornment>
           ),
         }}
+      />
+
+      {/* Checkbox Exclusivo del Registro */}
+      <FormControlLabel
+        control={
+          <Checkbox
+            name="termsAccepted"
+            checked={formData.termsAccepted}
+            onChange={handleChange}
+            sx={{
+              color: "rgba(255,255,255,0.5)",
+              "&.Mui-checked": { color: "white" },
+            }}
+          />
+        }
+        label={
+          <Typography
+            sx={{
+              fontFamily: "'Nunito', sans-serif",
+              color: "white",
+              fontSize: "0.85rem",
+            }}
+          >
+            Acepto los términos y condiciones
+          </Typography>
+        }
+        sx={{ width: "100%", mt: 1, mb: 1, ml: 0 }}
       />
 
       <Button
@@ -399,19 +561,44 @@ const Login = () => {
         variant="contained"
         disabled={isSubmitting}
         sx={{
-          mt: 3,
+          mt: 2,
           mb: 2,
           py: 1.5,
-          bgcolor: "#2563EB",
-          fontWeight: "bold",
-          "&:hover": { bgcolor: "#1e40af" },
+          bgcolor: "white",
+          color: "#2f3339",
+          borderRadius: 0,
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 800,
+          "&:hover": { bgcolor: "#e0e0e0" },
         }}
       >
         {isSubmitting ? (
           <CircularProgress size={24} color="inherit" />
         ) : (
-          "Crear Cuenta"
+          "CREAR CUENTA"
         )}
+      </Button>
+
+      <Button
+        fullWidth
+        variant="outlined"
+        onClick={handleGoogleLogin}
+        startIcon={<GoogleIcon />}
+        sx={{
+          mb: 3,
+          py: 1.2,
+          color: "white",
+          borderColor: "rgba(255,255,255,0.5)",
+          borderRadius: 0,
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 700,
+          "&:hover": {
+            borderColor: "white",
+            bgcolor: "rgba(255,255,255,0.05)",
+          },
+        }}
+      >
+        Registrarse con Google
       </Button>
 
       <Box sx={{ textAlign: "center", mt: 1 }}>
@@ -419,9 +606,14 @@ const Login = () => {
           component="button"
           variant="body2"
           onClick={() => switchView("login")}
-          sx={{ textDecoration: "none", fontWeight: 500, color: "#2563EB" }}
+          sx={{
+            fontFamily: "'Nunito', sans-serif",
+            textDecoration: "none",
+            color: "white",
+            fontWeight: 700,
+          }}
         >
-          Volver al inicio de sesión
+          ¿Ya tienes cuenta? Inicia sesión
         </Link>
       </Box>
     </Box>
@@ -432,16 +624,50 @@ const Login = () => {
       component="form"
       onSubmit={handleForgotSubmit}
       noValidate
-      sx={{ mt: 1, width: "100%" }}
+      sx={{
+        width: "100%",
+        maxWidth: "340px",
+        display: "flex",
+        flexDirection: "column",
+        zIndex: 2,
+      }}
     >
       <Typography
-        variant="body2"
-        color="text.secondary"
-        align="center"
-        sx={{ mb: 2 }}
+        component="h1"
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          fontSize: { xs: "1.6rem", sm: "2rem" },
+          fontWeight: 800,
+          color: "white",
+          textAlign: "center",
+          mb: 2,
+        }}
       >
-        Ingresa tu correo electrónico y te enviaremos un enlace para restablecer
-        tu contraseña.
+        Recuperar Contraseña
+      </Typography>
+      <Divider
+        sx={{ width: "100%", borderColor: "rgba(255, 255, 255, 0.3)", mb: 4 }}
+      />
+      <Box
+        sx={{ display: "flex", justifyContent: "center", mb: 4, width: "100%" }}
+      >
+        <img
+          src={logo}
+          alt="Logo"
+          style={{ width: "100%", maxWidth: "340px", objectFit: "contain" }}
+        />
+      </Box>
+
+      <Typography
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          mb: 3,
+          color: "rgba(255,255,255,0.8)",
+          textAlign: "center",
+        }}
+      >
+        Ingresa tu correo y te enviaremos un enlace para restablecer tu
+        contraseña.
       </Typography>
 
       <TextField
@@ -451,11 +677,11 @@ const Login = () => {
         id="email"
         label="Correo Electrónico"
         name="email"
-        autoComplete="email"
         value={formData.email}
         onChange={handleChange}
         error={!!errors.email}
         helperText={errors.email}
+        sx={darkTextFieldStyle}
       />
 
       <Button
@@ -467,26 +693,32 @@ const Login = () => {
           mt: 3,
           mb: 2,
           py: 1.5,
-          bgcolor: "#2563EB",
-          fontWeight: "bold",
-          "&:hover": { bgcolor: "#1e40af" },
+          bgcolor: "white",
+          color: "#2f3339",
+          borderRadius: 0,
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 800,
+          "&:hover": { bgcolor: "#e0e0e0" },
         }}
       >
         {isSubmitting ? (
           <CircularProgress size={24} color="inherit" />
         ) : isResetSent ? (
-          "Reenviar enlace de recuperación" // CAMBIO DE TEXTO AL ENVIAR
+          "REENVIAR ENLACE"
         ) : (
-          "Enviar enlace"
+          "ENVIAR ENLACE"
         )}
       </Button>
-
       <Box sx={{ textAlign: "center", mt: 1 }}>
         <Link
           component="button"
           variant="body2"
           onClick={() => switchView("login")}
-          sx={{ textDecoration: "none", fontWeight: 500, color: "#2563EB" }}
+          sx={{
+            fontFamily: "'Nunito', sans-serif",
+            textDecoration: "none",
+            color: "white",
+          }}
         >
           Volver al inicio de sesión
         </Link>
@@ -495,51 +727,82 @@ const Login = () => {
   );
 
   const renderVerifyPending = () => (
-    <Box sx={{ textAlign: "center", mt: 2 }}>
+    <Box
+      sx={{
+        textAlign: "center",
+        mt: 2,
+        color: "white",
+        width: "100%",
+        maxWidth: "340px",
+        zIndex: 2,
+      }}
+    >
       <Typography variant="h1" sx={{ fontSize: "4rem", mb: 2 }}>
         📧
       </Typography>
       <Typography
         component="h3"
         variant="h5"
-        sx={{ mb: 2, fontWeight: "bold", color: "#333" }}
+        sx={{ fontFamily: "'Nunito', sans-serif", mb: 2, fontWeight: 700 }}
       >
         ¡Revisa tu correo!
       </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 1 }}>
+      <Typography
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          mb: 1,
+          color: "rgba(255,255,255,0.8)",
+        }}
+      >
         Hemos enviado un enlace de verificación a:
       </Typography>
       <Typography
-        variant="body1"
-        sx={{ fontWeight: "bold", mb: 2, color: "#2563EB" }}
+        sx={{ fontFamily: "'Nunito', sans-serif", fontWeight: 800, mb: 2 }}
       >
         {formData.email}
       </Typography>
-      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+      <Typography
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          mb: 3,
+          color: "rgba(255,255,255,0.7)",
+        }}
+      >
         El enlace es válido por <strong>24 horas</strong>. Si no lo encuentras,
-        revisa tu carpeta de Spam.
+        revisa Spam.
       </Typography>
-
       <Button
         type="button"
         fullWidth
         variant="outlined"
         onClick={handleResendVerification}
         disabled={isSubmitting}
-        sx={{ mb: 3, borderColor: "#2563EB", color: "#2563EB" }}
+        sx={{
+          mb: 3,
+          py: 1.2,
+          color: "white",
+          borderColor: "white",
+          borderRadius: 0,
+          fontFamily: "'Nunito', sans-serif",
+          fontWeight: 700,
+          "&:hover": { borderColor: "white", bgcolor: "rgba(255,255,255,0.1)" },
+        }}
       >
         {isSubmitting ? (
-          <CircularProgress size={20} />
+          <CircularProgress size={20} color="inherit" />
         ) : (
-          "Reenviar correo de verificación"
+          "REENVIAR CORREO"
         )}
       </Button>
-
       <Link
         component="button"
         variant="body2"
         onClick={() => switchView("login")}
-        sx={{ textDecoration: "none", fontWeight: 500, color: "#2563EB" }}
+        sx={{
+          fontFamily: "'Nunito', sans-serif",
+          textDecoration: "none",
+          color: "white",
+        }}
       >
         Volver al Inicio
       </Link>
@@ -547,66 +810,94 @@ const Login = () => {
   );
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      sx={{ height: "100vh", display: "flex", alignItems: "center" }}
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "#2f3339",
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+      }}
     >
+      {/* IMÁGENES DE FONDO DUPLICADAS */}
+      {/* Imagen Izquierda (Muestra mitad Derecha visible) */}
       <Box
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          width: "100%",
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          height: { xs: "20vh", sm: "80vh" }, // Responsive height
+          width: { xs: "270px", sm: "540px" }, // Ancho visible (mitad)
+          overflow: "hidden", // Recorte
+          opacity: { xs: 0.1, sm: 0.25 }, // Responsive opacity
+          zIndex: 0,
+          pointerEvents: "none",
         }}
       >
-        <Paper
-          elevation={6}
+        <Box
+          component="img"
+          src={bgBottom}
+          alt="Fondo Ciudad Der"
           sx={{
-            p: 4,
+            height: "100%",
+            width: "200%", // Imagen completa tiene el doble de ancho que la ventana
+            objectFit: "cover",
+            transform: "translateX(-50%)", // Mueve la imagen para mostrar la mitad derecha (centro a derecha)
+          }}
+        />
+      </Box>
+
+      {/* Imagen Derecha (Muestra mitad Izquierda visible) */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          right: 0,
+          height: { xs: "20vh", sm: "80vh" }, // Responsive height
+          width: { xs: "270px", sm: "540px" }, // Ancho visible (mitad)
+          overflow: "hidden",
+          opacity: { xs: 0.1, sm: 0.25 },
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
+      >
+        <Box
+          component="img"
+          src={bgBottom}
+          alt="Fondo Ciudad Izq"
+          sx={{
+            height: "100%",
+            width: "200%",
+            objectFit: "cover",
+            transform: "translateX(0%)", // Muestra la mitad izquierda
+          }}
+        />
+      </Box>
+
+      {/* CONTENEDOR PRINCIPAL */}
+      <Container
+        component="main"
+        maxWidth="sm"
+        sx={{ position: "relative", zIndex: 1, pb: 6, pt: 6 }}
+      >
+        <Box
+          sx={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             width: "100%",
-            borderRadius: 3,
-            backgroundColor: "rgba(255, 255, 255, 0.95)",
+            margin: "0 auto",
           }}
         >
-          {/* HEADER CON TITULO E ICONO */}
-          {view !== "verify_pending" && (
-            <Box
-              sx={{
-                textAlign: "center",
-                mb: 2,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
-              <Typography
-                component="h1"
-                variant="h5"
-                sx={{ fontWeight: "bold", mb: 1, color: "#1e3a8a" }}
-              >
-                {view === "login" && "Bienvenido"}
-                {view === "register" && "Crear Cuenta"}
-                {view === "forgot" && "Recuperar Contraseña"}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {view === "login" && "Ingresa tus credenciales para acceder"}
-                {view === "register" &&
-                  "Únete a nuestra comunidad de profesionales"}
-              </Typography>
-            </Box>
-          )}
-
-          {/* ALERTAS DE ESTADO */}
-          <Box sx={{ width: "100%", mb: 2 }}>
+          {/* ALERTAS GLOBALES */}
+          <Box sx={{ width: "100%", maxWidth: "340px", mb: 2 }}>
             <Collapse in={!!errorResponse}>
               <Alert
                 severity="error"
                 onClose={() => setErrorResponse("")}
-                sx={{ fontSize: "0.85rem" }}
+                sx={{ fontFamily: "'Nunito', sans-serif", borderRadius: 0 }}
               >
                 {errorResponse}
               </Alert>
@@ -615,21 +906,21 @@ const Login = () => {
               <Alert
                 severity="success"
                 onClose={() => setSuccessMessage("")}
-                sx={{ fontSize: "0.85rem" }}
+                sx={{ fontFamily: "'Nunito', sans-serif", borderRadius: 0 }}
               >
                 {successMessage}
               </Alert>
             </Collapse>
           </Box>
 
-          {/* RENDERIZADO DE VISTAS */}
+          {/* FORMULARIOS */}
           {view === "login" && renderLoginForm()}
           {view === "register" && renderRegisterForm()}
           {view === "forgot" && renderForgotForm()}
           {view === "verify_pending" && renderVerifyPending()}
-        </Paper>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 

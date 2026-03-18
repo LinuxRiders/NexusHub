@@ -1,0 +1,201 @@
+/* Importación de la fuente Nunito */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap");
+
+/* CONTENEDOR GENERAL */
+.qeb-container {
+  font-family: "Nunito", sans-serif; /* <-- TIPO DE LETRA NUNITO */
+  background: white;
+  padding: 60px 0;
+  text-align: center;
+  /* Animación general para la sección al cargar */
+  animation: fadeIn 1s ease-out;
+}
+
+/* TITULO */
+.qeb-title {
+  font-size: clamp(24px, 2.2vw, 32px);
+  color: #30343a;
+  font-weight: 700; /* Nunito se ve muy bien en bold */
+  margin-bottom: 10px;
+  padding: 0 20px;
+}
+
+/* LINEA BAJO EL TITULO */
+.qeb-divider {
+  width: 50px;
+  height: 3px;
+  background: #30343a;
+  margin: 0 auto 20px auto;
+  border-radius: 3px;
+}
+
+/* SUBTITULO */
+.qeb-subtitle {
+  color: #6b6f75;
+  font-size: clamp(14px, 1.1vw, 16px);
+  margin-bottom: 50px;
+  padding: 0 20px; /* Previene que choque a los bordes en móviles */
+}
+
+/* GRID DE TARJETAS */
+.qeb-cards {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px; /* Margen para que no toque los bordes de la pantalla */
+}
+
+/* CARD INDIVIDUAL */
+.qeb-card {
+  position: relative;
+  width: 320px;
+  height: 380px;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* Transiciones para el Hover de la tarjeta */
+  transition:
+    transform 0.4s ease,
+    box-shadow 0.4s ease;
+
+  /* Animación de aparición (FadeInUp) */
+  animation: fadeInUp 0.8s ease backwards;
+}
+
+/* Efecto de cascada (stagger) para las cards SIN tocar el JSX */
+.qeb-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.qeb-card:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.qeb-card:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+/* EFECTO HOVER EN LA TARJETA (Se eleva y genera sombra) */
+.qeb-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* IMAGEN */
+.qeb-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Transición suave para el zoom */
+  transition: transform 0.6s ease;
+}
+
+/* ZOOM EN LA IMAGEN AL HACER HOVER */
+.qeb-card:hover img {
+  transform: scale(1.08); /* Crece ligeramente por dentro */
+}
+
+/* OVERLAY INFERIOR */
+.qeb-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  /* color 206b6f con transparencia */
+  background: rgba(32, 107, 111, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Transiciones para el hover del overlay */
+  transition:
+    background 0.3s ease,
+    padding-bottom 0.3s ease;
+}
+
+/* EFECTO HOVER EN EL OVERLAY (Se oscurece para resaltar el texto) */
+.qeb-card:hover .qeb-overlay {
+  background: rgba(32, 107, 111, 0.95);
+  padding-bottom: 5px; /* Da la sensación de que el texto sube un poquito */
+}
+
+/* TEXTO DEL CARD */
+.qeb-overlay span {
+  color: white;
+  font-size: clamp(16px, 1.5vw, 22px);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: transform 0.3s ease;
+}
+
+/* =========================================
+   ANIMACIONES KEYFRAMES AL CARGAR
+   ========================================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px); /* Entra desde abajo */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   MEDIA QUERIES (FULL RESPONSIVE)
+   ========================================= */
+
+/* Laptops pequeñas / Tablets en horizontal */
+@media (max-width: 1050px) {
+  .qeb-cards {
+    gap: 30px; /* Reducimos la separación */
+    flex-wrap: wrap; /* Permitimos que las tarjetas bajen si no caben */
+  }
+}
+
+/* Tablets en vertical */
+@media (max-width: 768px) {
+  .qeb-container {
+    padding: 40px 0;
+  }
+  .qeb-title {
+    font-size: 28px;
+  }
+  .qeb-cards {
+    gap: 25px;
+  }
+  .qeb-card {
+    /* Las tarjetas se adaptan al ancho disponible en tablet (2 columnas o 1 dependiendo del espacio) */
+    width: calc(50% - 15px);
+    max-width: 320px;
+    height: 340px;
+  }
+}
+
+/* Celulares */
+@media (max-width: 600px) {
+  .qeb-title {
+    font-size: 26px;
+  }
+  .qeb-cards {
+    flex-direction: column; /* Pasa a 1 sola columna vertical */
+    align-items: center;
+  }
+  .qeb-card {
+    width: 100%; /* Toma todo el ancho del celular */
+    max-width: 350px;
+    height: 350px;
+  }
+}

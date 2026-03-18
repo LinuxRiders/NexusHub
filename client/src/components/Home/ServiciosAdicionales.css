@@ -1,0 +1,204 @@
+/* Importación de la fuente Nunito */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap");
+
+/* COMPONENTE GENERAL */
+.servicios-container {
+  font-family: "Nunito", sans-serif;
+  background: white;
+  min-height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* padding: 80px 20px; */
+  box-sizing: border-box;
+  animation: fadeIn 1s ease-out;
+}
+
+/* TITULO */
+.servicios-title {
+  font-size: clamp(24px, 2.22vw, 32px);
+  color: #30343a;
+  font-weight: 700;
+  text-align: center;
+  margin: 0;
+}
+
+/* LINEA DECORATIVA */
+.servicios-divider {
+  width: 50px;
+  height: 3px;
+  background: #30343a;
+  margin: 15px 0 60px 0;
+  border-radius: 0 !important;
+}
+
+/* CONTENEDOR DE TARJETAS */
+.servicios-cards {
+  display: flex;
+  justify-content: center;
+  gap: 120px;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* TARJETA */
+.servicio-card {
+  background: #30343a;
+  width: 480px;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 25px;
+  /* Posición relativa para anclar el botón que sobresale */
+  position: relative;
+  box-sizing: border-box;
+  border-radius: 0 !important;
+  color: white;
+
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.servicio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* IMAGEN */
+.servicio-card img {
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border-radius: 0 !important;
+  transition: transform 0.4s ease;
+}
+
+.servicio-card:hover img {
+  transform: scale(1.05);
+}
+
+/* CONTENIDO DE LA TARJETA */
+.servicio-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  /* Damos un pequeño margen abajo para que el texto no toque el botón que sobresale */
+  padding-bottom: 15px;
+}
+
+.servicio-content h3 {
+  font-size: clamp(15px, 1.25vw, 18px);
+  margin: 0 0 8px 0;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.servicio-content p {
+  font-size: clamp(12px, 0.9vw, 13px);
+  margin: 0;
+  color: #d1d5db;
+  line-height: 1.4;
+}
+
+/* BOTÓN: MITAD DENTRO, MITAD FUERA, CENTRADO */
+.servicio-content button {
+  position: absolute;
+  bottom: -20px; /* Lo saca hacia abajo la mitad de su tamaño */
+  left: 50%;
+  transform: translateX(-50%); /* Lo centra horizontalmente */
+
+  background: #206b6f;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-family: "Nunito", sans-serif;
+  font-size: clamp(13px, 0.97vw, 14px);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 0 !important;
+  white-space: nowrap; /* Evita que el texto se parta en dos líneas */
+
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
+}
+
+/* Al hacer hover, debemos mantener el TranslateX para que no se descentre */
+.servicio-content button:hover {
+  background: #175256;
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* =========================================
+   ANIMACIONES KEYFRAMES
+   ========================================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* =========================================
+   MEDIA QUERIES (FULL RESPONSIVE)
+   ========================================= */
+
+@media (max-width: 1100px) {
+  .servicios-cards {
+    gap: 40px;
+  }
+  .servicio-card {
+    width: 100%;
+    max-width: 480px;
+  }
+}
+
+@media (max-width: 850px) {
+  .servicios-container {
+    padding: 60px 20px;
+  }
+  .servicios-cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 50px; /* Más espacio aquí para que el botón no choque con la card de abajo */
+  }
+  .servicio-card {
+    width: 100%;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 500px) {
+  .servicios-title {
+    font-size: 24px;
+  }
+  .servicio-card {
+    padding: 15px;
+    gap: 15px;
+    /* Margen extra interior para asegurar que el texto largo no pise la zona del botón */
+    padding-bottom: 25px;
+  }
+  .servicio-card img {
+    width: 80px;
+    height: 80px;
+  }
+  .servicio-content h3 {
+    font-size: 15px;
+  }
+  .servicio-content p {
+    font-size: 12px;
+  }
+  .servicio-content button {
+    padding: 10px 20px;
+    font-size: 13px;
+    bottom: -18px; /* Ajuste proporcional al tamaño en móvil */
+  }
+}

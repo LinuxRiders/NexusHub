@@ -1,0 +1,71 @@
+/* src/pages/User/User.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.user-page {
+  width: 100%;
+  background-color: #ffffff;
+  font-family: "Nunito", sans-serif;
+}
+
+.user-main-layout {
+  position: relative;
+  min-height: 200vh;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+/* MARCA DE AGUA */
+.watermark-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.watermark-image {
+  height: 110vh;
+  width: auto;
+  display: block;
+  opacity: 1;
+}
+
+/* CONTENEDOR CENTRAL */
+.user-content-wrapper {
+  position: relative;
+  z-index: 2;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  display: flex;
+  gap: 50px;
+  align-items: flex-start;
+}
+
+.user-dynamic-panel {
+  flex-grow: 1;
+  background-color: transparent;
+  min-height: 500px;
+  width: 100%;
+}
+
+/* =========================================
+   RESPONSIVE LAYOUT
+   ========================================= */
+@media (max-width: 850px) {
+  .user-main-layout {
+    min-height: auto;
+    padding-bottom: 80px;
+  }
+
+  .user-content-wrapper {
+    flex-direction: column; /* Cambia a columna: Menú arriba, Contenido abajo */
+    gap: 30px;
+    padding: 30px 20px;
+  }
+
+  .watermark-image {
+    height: 60vh;
+    opacity: 0.5; /* Más tenue para no entorpecer la lectura en móvil */
+  }
+}

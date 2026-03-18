@@ -12,16 +12,16 @@ const pages = [
     to: "/",
   },
   {
+    title: "Nosotros",
+    to: "/nosotros",
+  },
+  {
     title: "Servicios",
-    to: "/#cursos",
+    to: "/#servicios",
   },
   {
-    title: "Catalogo",
-    to: "/catalogo",
-  },
-  {
-    title: "Contacto",
-    to: "/#contact",
+    title: "Propiedades",
+    to: "/propiedades",
   },
 ];
 
@@ -34,12 +34,12 @@ const Layout = () => {
 
   return (
     <div>
-      <ScrollToTop btn={true} />
+      <ScrollToTop btn={false} />
       <header>
         <NavBar
-          barHeight="8vh"
+          barHeight="8dvh"
           pages={pages}
-          sx={{ px: { xs: 1, md: "12.5%" } }}
+          sx={{ px: { xs: 1, md: "15.2%" } }}
         />
       </header>
       <main style={{ maxWidth: "100vw" }}>

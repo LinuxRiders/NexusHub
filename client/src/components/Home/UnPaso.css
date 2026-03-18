@@ -1,0 +1,272 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.unpaso-container {
+  min-height: 80vh;
+  padding: 80px 20px;
+
+  background: white;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  font-family: "Nunito", sans-serif;
+}
+
+/* TITULO */
+.unpaso-title {
+  color: #30343a;
+  font-size: clamp(24px, 2.22vw, 32px);
+  font-weight: 700;
+  text-align: center;
+}
+
+.unpaso-divider {
+  width: 50px;
+  height: 3px;
+  background: #30343a;
+  margin: 12px 0 20px 0;
+  border-radius: 4px;
+}
+
+.unpaso-subtitle {
+  color: #8a8a8a;
+  margin-bottom: 70px;
+  text-align: center;
+}
+
+/* OPCIONES */
+.unpaso-options {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* ITEM */
+.unpaso-item {
+  text-decoration: none;
+  color: #30343a;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  opacity: 0;
+  /* animation: fadeInUp 0.8s ease forwards; */
+
+  transition: transform 0.3s ease;
+}
+
+.unpaso-item:hover {
+  transform: translateY(-8px);
+}
+
+.unpaso-item:hover .icon-card {
+  background: #206b6f;
+}
+
+.unpaso-item:hover .icon-frame {
+  border-color: #30343a;
+}
+
+.unpaso-item:hover h3 {
+  color: #206b6f;
+}
+
+/* ICONO */
+.icon-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin-bottom: 20px;
+}
+
+.icon-frame {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 5px solid #206b6f;
+  top: 0;
+  left: 0;
+  transition: border-color 0.3s ease;
+}
+
+.icon-card {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: #30343a;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  top: 20px;
+  left: 20px;
+
+  transition: background-color 0.3s ease;
+}
+
+.icon-img {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+}
+
+/* LINEA */
+.line {
+  width: 160px;
+  height: 1.5px;
+  background: #206b6f;
+
+  position: relative;
+  top: -30px;
+
+  opacity: 0;
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+/* TEXTOS */
+.unpaso-item h3 {
+  font-size: clamp(15px, 1.25vw, 18px);
+  margin-bottom: 6px;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.unpaso-item span {
+  font-size: clamp(12px, 0.97vw, 14px);
+  color: #7a7a7a;
+}
+
+/* ANIMACION */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.unpaso-options > :nth-child(1) {
+  animation-delay: 0.1s;
+}
+.unpaso-options > :nth-child(2) {
+  animation-delay: 0.3s;
+}
+.unpaso-options > :nth-child(3) {
+  animation-delay: 0.5s;
+}
+.unpaso-options > :nth-child(4) {
+  animation-delay: 0.7s;
+}
+.unpaso-options > :nth-child(5) {
+  animation-delay: 0.9s;
+}
+
+/* ============================
+TABLETS
+============================ */
+
+@media (max-width: 1024px) {
+  .unpaso-options {
+    gap: 30px;
+  }
+
+  .line {
+    width: 100px;
+  }
+
+  .icon-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .icon-frame,
+  .icon-card {
+    width: 80px;
+    height: 80px;
+  }
+
+  .icon-card {
+    top: 15px;
+    left: 15px;
+  }
+
+  .icon-img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* ============================
+CELULARES
+============================ */
+
+@media (max-width: 768px) {
+  .unpaso-container {
+    padding: 70px 20px;
+  }
+
+  .unpaso-title {
+    font-size: 24px;
+  }
+
+  .unpaso-subtitle {
+    margin-bottom: 50px;
+    font-size: 14px;
+  }
+
+  /* cambia a vertical */
+  .unpaso-options {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  /* linea horizontal entre items */
+  .line {
+    width: 120px;
+    height: 1px;
+    top: 0;
+  }
+}
+
+/* ============================
+CELULARES PEQUEÑOS
+============================ */
+
+@media (max-width: 480px) {
+  .icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .icon-frame,
+  .icon-card {
+    width: 65px;
+    height: 65px;
+  }
+
+  .icon-card {
+    top: 12px;
+    left: 12px;
+  }
+
+  .icon-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .unpaso-item h3 {
+    font-size: 15px;
+  }
+
+  .unpaso-item span {
+    font-size: 12px;
+  }
+}

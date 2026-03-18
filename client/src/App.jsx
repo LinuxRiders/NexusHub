@@ -1,17 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-
-// --- PAGES & LAYOUTS ---
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
+import Nosotros from "./pages/Nosotros";
+import Propiedades from "./pages/Propiedades";
+import Perfil from "./pages/Perfil";
 import LoginPage from "./pages/LoginPage";
-
-// --- UTILS & DATA ---
-import ProtectedRoute from "./utils/ProtectedRoute.jsx";
-
-import VerifyAccount from "./components/Login/VerifyAccount.jsx";
-import ResetPassword from "./components/Login/ResetPassword.jsx";
-import Login from "./components/Login/Login.jsx";
-// import ViewCursos from "./components/ViewCursos/ViewCursos"; // Unused?
+import Login from "./components/Login/Login";
+import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
   return (
@@ -29,12 +24,13 @@ function App() {
       */}
       <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
+        <Route path="/nosotros" element={<Nosotros />} />
+        <Route path="/propiedades" element={<Propiedades />} />
 
-        {/* AUTH */}
         <Route path="/" element={<LoginPage />}>
           <Route path="login" element={<Login />} />
-          <Route path="verify-account" element={<VerifyAccount />} />
-          <Route path="reset-password" element={<ResetPassword />} />
+          {/* <Route path="verify-account" element={<VerifyAccount />} />
+          <Route path="reset-password" element={<ResetPassword />} /> */}
         </Route>
       </Route>
 
@@ -43,10 +39,10 @@ function App() {
         #                         ADMIN PANEL                           #
         ################################################################# 
       */}
-      <Route
+      {/* <Route
         path="/admin"
         element={<ProtectedRoute to="/login" roles={["dev", "admin"]} />}
-      ></Route>
+      ></Route> */}
 
       {/* 
         #################################################################
@@ -57,7 +53,7 @@ function App() {
         path="/perfil"
         element={<ProtectedRoute to="/login" roles={["user"]} />}
       >
-        <Route path="" element={<Perfil />}></Route>
+        <Route path="" element={<Perfil />} />
       </Route>
     </Routes>
   );

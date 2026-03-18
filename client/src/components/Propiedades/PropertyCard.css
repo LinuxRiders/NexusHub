@@ -1,0 +1,172 @@
+/* src/components/Properties/PropertyCard.css */
+:root {
+  --primary-color: #1f6a6e;
+  --title-color: #227579;
+  --card-bg-color: #fefefe;
+  --icon-color: #808386;
+  --location-color: #666666;
+  --price-color: #000000;
+  --btn-bg-color: #1f6a6e;
+  --btn-text-color: #ffffff;
+}
+
+.property-card {
+  background-color: var(--card-bg-color);
+  width: 100%;
+  border-radius: 0;
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.2); /* Sombra ajustada para no ser tan oscura */
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+  font-family: "Nunito", sans-serif; /* Forzamos Nunito en la tarjeta */
+}
+
+.property-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  position: relative;
+  width: 100%;
+  height: 220px; /* Ligeramente más alto para que las fotos destaquen */
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.favorite-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.2s;
+  padding: 0;
+  z-index: 2;
+}
+
+.favorite-button:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: scale(1.05);
+}
+
+.card-body {
+  padding: 20px 15px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.property-avenue {
+  margin: 0 0 5px 0;
+  font-size: clamp(18px, 1.6vw, 22px);
+  font-weight: 800; /* Nunito extra bold */
+  color: var(--title-color);
+  line-height: 1.2;
+}
+
+.property-location {
+  margin: 0 0 12px 0;
+  color: var(--location-color);
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-weight: 600;
+}
+
+.property-price {
+  margin: 0 0 15px 0;
+  color: var(--price-color);
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-weight: 800;
+}
+
+.divider {
+  border-top: 1px solid #e0e0e0;
+  margin-bottom: 15px;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  align-items: flex-end;
+  margin-top: auto; /* Empuja el grid hacia abajo si hay espacio sobrante */
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.detail-item svg {
+  margin-bottom: 6px;
+}
+
+.detail-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.detail-label {
+  margin: 0;
+  font-size: clamp(10px, 0.9vw, 13px); /* Ligeramente más grande para legibilidad */
+  color: var(--icon-color);
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.detail-value {
+  margin: 0;
+  font-size: clamp(12px, 1vw, 16px);
+  font-weight: 800;
+}
+
+.card-action-button {
+  background-color: var(--btn-bg-color);
+  color: var(--btn-text-color);
+  border: none;
+  border-radius: 0;
+  padding: 15px;
+  width: 100%;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 800;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+  font-family: "Nunito", sans-serif;
+}
+
+.card-action-button:hover {
+  background-color: #154a4d; /* Oscurece el botón al pasar el mouse */
+}
+
+/* Responsividad para pantallas muy chicas */
+@media (max-width: 400px) {
+  .details-grid {
+    gap: 2px; /* Reduce el gap para que los 4 iconos entren bien */
+  }
+
+  .detail-label {
+    font-size: 10px;
+  }
+
+  .detail-item svg {
+    width: 22px; /* Achica un poco los iconos */
+    height: 22px;
+  }
+}

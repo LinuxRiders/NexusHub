@@ -1,0 +1,238 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
+.misionvision {
+  min-height: 100vh;
+  background: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  padding: 120px 0;
+  font-family: "Nunito", sans-serif;
+}
+
+/* CONTENEDOR */
+
+.mv-container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* TOP */
+
+.mv-top {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  gap: 90px;
+}
+
+/* ITEMS */
+
+.mv-item {
+  width: 280px;
+  text-align: center;
+}
+
+.mv-item h3 {
+  color: #2f3339;
+  font-size: clamp(20px, 1.8vw, 26px);
+  margin-top: 18px;
+}
+
+.mv-item p {
+  color: #7a7a7a;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+/* ICONOS */
+
+.mv-icon-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+}
+
+.mv-icon-border {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border: 5px solid #1f6a6e;
+  top: -20px;
+  left: -20px;
+  transition: 0.4s;
+}
+
+.mv-item:hover .mv-icon-border {
+  top: 0;
+  left: 0;
+}
+
+.mv-icon {
+  width: 100px;
+  height: 100px;
+  background: #1f6a6e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.mv-icon img {
+  width: 62px;
+  height: 62px;
+  object-fit: contain;
+}
+
+/* LINEA */
+
+.mv-line {
+  width: 110px;
+  height: 2px;
+  background: #1f6a6e;
+  margin-top: 40px;
+}
+
+/* BOTTOM */
+
+.mv-bottom {
+  margin-top: 160px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* IMAGEN */
+
+.mv-image {
+  width: 540px;
+  height: 620px;
+  margin-left: 40%;
+  object-fit: cover;
+}
+
+/* CARD */
+
+.mv-card {
+  position: absolute;
+  left: 120px;
+  top: 40px;
+  width: 420px;
+  min-height: 500px;
+  background: #2f3339;
+  color: white;
+  padding: 45px 60px;
+  box-shadow: 0 25px 45px rgba(0, 0, 0, 0.45);
+}
+
+/* TEXTO CARD */
+
+.mv-card p {
+  font-size: clamp(14px, 1.1vw, 17px);
+  line-height: 1.5;
+  margin-top: 15px;
+}
+
+.mv-card h4 {
+  margin-top: 20px;
+  font-size: clamp(17px, 1.4vw, 22px);
+  font-weight: 800;
+  font-style: italic;
+}
+
+/* COMILLAS */
+
+.mv-quote {
+  width: 105px;
+  opacity: 0.9;
+}
+
+/* ANIMACIONES Manejadas por AOS */
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 1100px) {
+  .mv-top {
+    gap: 50px;
+  }
+
+  .mv-image {
+    width: 450px;
+    height: 520px;
+  }
+
+  .mv-card {
+    left: 60px;
+    width: 380px;
+  }
+}
+
+@media (max-width: 900px) {
+  .mv-top {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .mv-line {
+    width: 2px;
+    height: 60px;
+  }
+
+  .mv-bottom {
+    margin-top: 100px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mv-image {
+    margin-left: 0;
+    width: 100%;
+    max-width: 500px;
+    height: 380px;
+  }
+
+  .mv-card {
+    position: relative;
+    left: 0;
+    top: -60px;
+
+    width: 90%;
+    padding: 40px;
+  }
+}
+
+@media (max-width: 500px) {
+  .mv-icon-wrapper {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mv-icon-border {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mv-icon {
+    width: 80px;
+    height: 80px;
+  }
+
+  .mv-icon img {
+    width: 34px;
+  }
+
+  .mv-card {
+    padding: 30px;
+  }
+
+  .mv-card p {
+    font-size: 13px;
+  }
+}

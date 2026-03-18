@@ -1,0 +1,212 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
+.especialidades {
+  min-height: 40vh;
+  background: #2f3339;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 60px 0;
+
+  font-family: "Nunito", sans-serif;
+}
+
+/* CONTENEDOR */
+
+.especialidades-container {
+  width: 100%;
+  max-width: 1200px;
+
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 50px;
+
+  color: white;
+}
+
+/* IZQUIERDA */
+
+.especialidades-left {
+  width: 260px;
+}
+
+.especialidades-left h2 {
+  font-size: clamp(28px, 2.5vw, 42px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.especialidades-line {
+  width: 40px;
+  height: 4px;
+
+  background: white;
+
+  margin: 14px 0 22px;
+
+  border-radius: 3px;
+}
+
+/* BOTON */
+
+.especialidades-btn {
+  width: 110px;
+  height: 42px;
+
+  background: #fbfcfe;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+
+  color: #1f6a6e;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.3s ease,
+    background 0.3s ease;
+}
+
+.especialidades-btn:hover {
+  transform: scale(1.08);
+  background: #eef4f7;
+}
+
+/* LINEA DIVISORIA */
+
+.especialidades-divider {
+  width: 2px;
+  height: 250px;
+
+  background: white;
+}
+
+/* ITEMS */
+
+.especialidades-items {
+  display: flex;
+  gap: 50px;
+}
+
+/* ITEM */
+
+.especialidad {
+  text-align: center;
+  width: 120px;
+}
+
+/* ICONO */
+
+.icon-box {
+  width: 70px;
+  height: 70px;
+
+  background: #fbfcfe;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 12px;
+
+  transition: transform 0.3s ease;
+}
+
+.icon-box img {
+  width: 43px;
+  height: 43px;
+  object-fit: contain;
+}
+
+.especialidad:hover .icon-box {
+  transform: translateY(-6px);
+}
+
+/* TEXTO */
+
+.especialidad p {
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.3;
+}
+
+/* ANIMACIONES Manejadas por AOS */
+
+/* ======================
+RESPONSIVE
+====================== */
+
+@media (max-width: 1100px) {
+  .especialidades-container {
+    padding: 0 40px;
+  }
+
+  .especialidades-items {
+    gap: 35px;
+  }
+}
+
+@media (max-width: 900px) {
+  .especialidades-container {
+    flex-direction: column;
+    text-align: center;
+    gap: 35px;
+  }
+
+  .especialidades-left {
+    width: 100%;
+  }
+
+  .especialidades-line {
+    margin: 14px auto 22px;
+  }
+
+  .especialidades-divider {
+    width: 150px;
+    height: 2px;
+
+    transform: scaleX(0);
+  }
+
+  .visible .especialidades-divider {
+    transform: scaleX(1);
+  }
+
+  .especialidades-items {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  .especialidad {
+    width: 140px;
+  }
+}
+
+@media (max-width: 500px) {
+  .especialidades-items {
+    gap: 20px;
+  }
+
+  .icon-box {
+    width: 60px;
+    height: 60px;
+  }
+
+  .icon-box img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .especialidad p {
+    font-size: 12px;
+  }
+}

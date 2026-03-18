@@ -1,0 +1,180 @@
+/* src/components/User/SidebarMenu/SidebarMenu.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.sidebar-menu-container {
+  width: 300px;
+  flex-shrink: 0;
+  position: relative;
+  font-family: "Nunito", sans-serif;
+}
+
+/* Línea vertical derecha (Para PC) */
+.sidebar-menu-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 200%;
+  background-color: #d1d5db;
+  z-index: 1;
+}
+
+/* Botón Móvil oculto por defecto */
+.mobile-menu-toggle {
+  display: none;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Líneas horizontales separadas */
+.sidebar-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - 15px);
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.sidebar-item:last-child::after {
+  display: none;
+}
+
+.sidebar-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 15px;
+  position: relative;
+  display: flex;
+}
+
+.sidebar-icon img {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: opacity 0.25s ease;
+}
+
+.icon-normal {
+  opacity: 1;
+}
+.icon-hover {
+  opacity: 0;
+}
+
+.sidebar-item:hover .icon-normal,
+.sidebar-item.active .icon-normal {
+  opacity: 0;
+}
+
+.sidebar-item:hover .icon-hover,
+.sidebar-item.active .icon-hover {
+  opacity: 1;
+}
+
+.sidebar-text {
+  font-size: 16px;
+  color: #2f3339;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.sidebar-item:hover,
+.sidebar-item.active {
+  background-color: #1c6a6e;
+}
+
+.sidebar-item:hover .sidebar-icon,
+.sidebar-item.active .sidebar-icon,
+.sidebar-item:hover .sidebar-text,
+.sidebar-item.active .sidebar-text {
+  color: #ffffff;
+}
+
+/* =========================================
+   RESPONSIVE: MENÚ DESPLEGABLE MÓVIL
+   ========================================= */
+@media (max-width: 850px) {
+  .sidebar-menu-container {
+    width: 100%;
+    z-index: 100; /* Asegura que se despliegue por encima del resto */
+  }
+
+  /* Ocultamos la línea vertical de PC */
+  .sidebar-menu-container::before {
+    display: none;
+  }
+
+  /* DISEÑO DEL BOTÓN DESPLEGABLE */
+  .mobile-menu-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px 20px;
+    background-color: #1c6a6e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Nunito", sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* OCULTAMOS LA LISTA POR DEFECTO Y LA VOLVEMOS FLOTANTE */
+  .sidebar-list {
+    display: none; /* Oculto */
+    flex-direction: column;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    position: absolute; /* Para que caiga sobre el contenido sin empujarlo bruscamente */
+    top: 100%;
+    left: 0;
+    overflow: hidden;
+  }
+
+  /* CLASE QUE SE ACTIVA CON EL CLIC */
+  .sidebar-list.open {
+    display: flex;
+    animation: fadeInDown 0.3s ease;
+  }
+
+  /* Ajustes a los items dentro del menú móvil */
+  .sidebar-item::after {
+    width: 100%; /* Línea de borde a borde en móvil */
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

@@ -1,0 +1,97 @@
+/* src/components/Properties/Property.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.properties-page {
+  padding: 40px 5vw;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family:
+    "Nunito", sans-serif; /* Aplicación global de la fuente a la página */
+  background-color: transparent;
+}
+
+/* --- ESTILOS DE FILTROS --- */
+.filters-container {
+  background-color: #fefefe;
+  padding: 20px 25px;
+  margin-bottom: 40px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05); /* Sombra un poco más suave y moderna */
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 150px;
+}
+
+.filter-group label {
+  font-size: clamp(12px, 1vw, 14px);
+  color: #1f6a6e;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-family: "Nunito", sans-serif;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 12px 10px; /* Un poco más de padding para mejor clic en móviles */
+  border: 1px solid #ccc;
+  outline: none;
+  color: #666666;
+  font-size: clamp(13px, 1.1vw, 16px);
+  font-family: "Nunito", sans-serif;
+  background-color: #fff;
+  transition: border-color 0.3s;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  border-color: #1f6a6e;
+}
+
+.no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #666666;
+  font-size: clamp(16px, 1.4vw, 20px);
+  font-weight: 600;
+  padding: 40px;
+}
+
+/* --- CONTENEDOR DE TARJETAS --- */
+.properties-container {
+  display: grid;
+  /* Usar auto-fill hace que el grid sea fluido automáticamente */
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+/* =========================================
+   RESPONSIVIDAD ESPECÍFICA
+   ========================================= */
+@media (max-width: 1024px) {
+  .properties-page {
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 650px) {
+  .properties-container {
+    grid-template-columns: 1fr; /* 1 columna en móviles */
+  }
+
+  .filters-container {
+    flex-direction: column; /* Apila los filtros verticalmente */
+    padding: 20px 15px;
+    gap: 15px;
+  }
+
+  .filter-group {
+    min-width: 100%; /* Cada filtro ocupa todo el ancho */
+  }
+}

@@ -1,0 +1,254 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap");
+
+.quienes {
+  min-height: 100vh;
+  padding: 120px 0 0px;
+
+  background: #eef4f7;
+
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+
+  font-family: "Nunito", sans-serif;
+}
+
+/* BACKGROUND VECTORIAL INFERIOR */
+.quienes::after {
+  content: "";
+  position: absolute;
+
+  left: 0;
+  bottom: 0;
+
+  width: 100%;
+  height: 50%;
+
+  background-image: var(--bg-vectores);
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: cover;
+
+  opacity: 0.1;
+
+  z-index: 1;
+}
+
+.quienes-container {
+  width: 100%;
+  max-width: 1600px;
+  padding: 0 220px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
+
+  position: relative;
+  z-index: 2;
+}
+
+/* TOP */
+
+.quienes-top {
+  display: flex;
+  align-items: center;
+}
+
+.quienes-left {
+  width: 50%;
+}
+
+.quienes-right {
+  width: 50%;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.quienes-text {
+  width: 420px;
+  margin-top: 80px;
+}
+
+.quienes-text h2 {
+  color: #1f6a6e;
+  font-size: clamp(26px, 2.5vw, 36px);
+  font-weight: 700;
+}
+
+.quienes-line {
+  width: 45px;
+  height: 3px;
+  background: #1f6a6e;
+  margin: 10px 0 15px;
+}
+
+.quienes-text p {
+  color: #8a8a8a;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.quienes-text strong {
+  color: #1f6a6e;
+}
+
+/* BUILDINGS */
+
+.quienes-buildings {
+  --b-width: 200px;
+  --b-gap: 30px;
+  --b-offset-y: 100px;
+
+  display: flex;
+  gap: var(--b-gap);
+}
+
+.building {
+  width: var(--b-width);
+  height: 380px;
+  /* Hacemos la imagen más grande proporcionalmente (ancho * 1.5) 
+     para que al adoptar el alto mayor no se vea estirada, 
+     y usamos el alto calculado. */
+  background-size: calc(((var(--b-width) * 2) + var(--b-gap)) * 1.5) calc(100% + var(--b-offset-y)); 
+  background-repeat: no-repeat;
+  box-shadow: 12px 12px 25px rgba(0, 0, 0, 0.25);
+}
+
+.building.left {
+  margin-top: var(--b-offset-y);
+  /* Al hacer la imagen un 50% más ancha (*1.5), el centro se mueve. 
+     Movemos el origen X hacia la izquierda un 25% del ancho original
+     para volver a centrar visualmente las torres. */
+  background-position: calc(var(--b-width) * -0.5) calc(var(--b-offset-y) * -1);
+}
+
+.building.right {
+  /* Análogamente, para la derecha sumamos el desfase del origen + el salto de caja (width+gap) */
+  background-position: calc((var(--b-width) * 1.5 + var(--b-gap)) * -1) 0px;
+}
+
+/* BOTTOM */
+
+.quienes-bottom {
+  display: flex;
+  align-items: flex-end;
+}
+
+.quienes-agent {
+  height: 520px;
+  object-fit: contain;
+  position: relative;
+  bottom: -10px;
+}
+
+.quienes-bottom-text {
+  width: 420px;
+  margin-left: 70px;
+  margin-bottom: 120px;
+}
+
+.quienes-bottom-text p {
+  color: #8a8a8a;
+  font-size: clamp(15px, 1.2vw, 18px);
+  line-height: 1.5;
+}
+
+.quienes-bottom-text strong {
+  color: #1f6a6e;
+}
+
+/* ANIMACIONES (Manejadas por AOS) */
+
+/* ======================
+RESPONSIVE
+====================== */
+
+@media (max-width: 1200px) {
+  .quienes-container {
+    padding: 0 80px;
+    gap: 60px;
+  }
+
+  .quienes-text {
+    width: 100%;
+  }
+
+  .quienes-buildings {
+    --b-width: 180px;
+  }
+
+  .building {
+    height: 300px;
+  }
+
+  .quienes-agent {
+    height: 420px;
+  }
+
+  .quienes-bottom-text {
+    width: 340px;
+    margin-bottom: 80px;
+  }
+}
+
+@media (max-width: 900px) {
+  .quienes-top {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .quienes-left,
+  .quienes-right {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .quienes-text {
+    margin-top: 0;
+    text-align: center;
+  }
+
+  .quienes-line {
+    margin: 10px auto 15px;
+  }
+
+  .quienes-buildings {
+    margin-top: 40px;
+  }
+
+  .quienes-bottom {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .quienes-agent {
+    height: 360px;
+  }
+
+  .quienes-bottom-text {
+    margin: 20px 0 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .quienes-container {
+    padding: 0 25px;
+  }
+
+  .quienes-buildings {
+    --b-width: 140px;
+  }
+
+  .building {
+    height: 220px;
+  }
+
+  .quienes-agent {
+    height: 300px;
+  }
+}
