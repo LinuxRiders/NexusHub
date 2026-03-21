@@ -8,6 +8,8 @@ import LoginPage from "./pages/LoginPage";
 import Login from "./components/Login/Login";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
+import Admin from "./pages/Admin";
+
 function App() {
   return (
     <Routes>
@@ -16,6 +18,7 @@ function App() {
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
+      <Route path="/admin" element={<Admin />} />
 
       {/* 
         #################################################################

@@ -1,0 +1,564 @@
+/* src/components/Admin/AdminMensajes/AdminMensajes.css */
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.am-container {
+  width: 100%;
+  font-family: "Nunito", sans-serif;
+  animation: amFadeIn 0.4s ease;
+}
+@keyframes amFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================================
+   HEADER Y STATS
+   ========================================= */
+.am-header {
+  margin-bottom: 25px;
+}
+.am-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.am-title {
+  margin: 0;
+  font-size: 32px;
+  color: #1c6a6e;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.am-subtitle {
+  margin: 0;
+  font-size: 15px;
+  color: #888;
+  font-weight: 600;
+}
+
+.am-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-bottom: 25px;
+}
+.am-stat-item {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 15px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.am-stat-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+.am-stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  color: #111827;
+}
+.am-text-red {
+  color: #ef4444;
+}
+.am-text-green {
+  color: #059669;
+}
+
+/* =========================================
+   TOOLBAR (BÚSQUEDA Y FILTRO)
+   ========================================= */
+.am-toolbar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.am-search-bar,
+.am-filter-bar {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0 15px;
+  height: 44px;
+  transition: all 0.3s ease;
+  flex-grow: 1;
+  min-width: 200px;
+}
+.am-search-bar:focus-within,
+.am-filter-bar:focus-within {
+  border-color: #1c6a6e;
+  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
+}
+.am-search-icon {
+  color: #9ca3af;
+  font-size: 14px;
+}
+.am-search-bar input,
+.am-filter-select {
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  height: 100%;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #2f3339;
+  background: transparent;
+  width: 100%;
+}
+.am-filter-select {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+/* =========================================
+   TABLA DE INBOX
+   ========================================= */
+.am-table-container {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+.am-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 800px;
+}
+.am-table th {
+  background-color: #f9fafb;
+  color: #6b7280;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+.am-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #2f3339;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+/* Efectos Fila INBOX */
+.am-tr-message {
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s;
+}
+.am-tr-message:hover {
+  background-color: #f4f8f8;
+  box-shadow: inset 3px 0 0 #1c6a6e;
+}
+.am-tr-unread {
+  background-color: #f0fdfa;
+}
+.am-text-bold {
+  font-weight: 800 !important;
+  color: #111827 !important;
+}
+
+/* Contenidos de celda */
+.am-status-icon {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.am-text-corp {
+  color: #1c6a6e;
+}
+.am-text-gray {
+  color: #9ca3af;
+}
+.am-th-status {
+  width: 50px;
+  text-align: center;
+}
+.am-th-center {
+  text-align: center;
+}
+
+.am-td-contact {
+  display: flex;
+  flex-direction: column;
+}
+.am-td-contact strong {
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 14px;
+}
+.am-td-contact span {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.am-td-content {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+}
+.am-td-content strong {
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+.am-text-truncate {
+  color: #6b7280;
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.am-date-text {
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.am-col-actions {
+  display: flex;
+  justify-content: center;
+}
+.am-btn-icon {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 15px;
+}
+.am-delete {
+  background-color: transparent;
+  color: #9ca3af;
+}
+.am-delete:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.am-no-data {
+  text-align: center;
+  padding: 60px !important;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+/* =========================================
+   MODAL HILO DE CONVERSACIÓN (CHAT STYLE)
+   ========================================= */
+.am-message-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.am-message-box {
+  background: #ffffff;
+  width: 100%;
+  max-width: 750px;
+  max-height: 95vh;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  animation: amZoomIn 0.3s ease;
+  overflow: hidden;
+}
+
+@keyframes amZoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.am-msg-header {
+  padding: 20px 25px;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.am-msg-header-titles {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.am-msg-badge {
+  background-color: #1c6a6e;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.am-msg-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #111827;
+  font-weight: 800;
+}
+.am-msg-close {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.2s;
+  line-height: 1;
+}
+.am-msg-close:hover {
+  color: #dc2626;
+}
+
+.am-msg-body {
+  padding: 25px;
+  overflow-y: auto;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Detalles del Contacto */
+.am-client-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px dashed #e5e7eb;
+}
+.am-client-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background-color: #1c6a6e;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.am-client-details {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.am-client-details strong {
+  font-size: 16px;
+  color: #111827;
+  font-weight: 800;
+}
+.am-client-details span {
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 2px;
+}
+.am-small-icon {
+  font-size: 11px;
+}
+
+/* Hilo de mensajes (Burbujas) */
+.am-thread-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.am-bubble-row {
+  display: flex;
+  width: 100%;
+  margin-bottom: 5px;
+}
+.client-row {
+  justify-content: flex-start;
+}
+.admin-row {
+  justify-content: flex-end;
+}
+
+.am-bubble {
+  max-width: 80%;
+  padding: 15px 20px;
+  border-radius: 12px;
+  position: relative;
+}
+.am-bubble p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.am-bubble-client {
+  background-color: #f3f4f6;
+  color: #374151;
+  border-bottom-left-radius: 2px;
+}
+.am-bubble-admin {
+  background-color: #f0fdfa;
+  border: 1px solid #ccfbf1;
+  color: #115e59;
+  border-bottom-right-radius: 2px;
+}
+
+.am-bubble-time {
+  display: block;
+  font-size: 11px;
+  margin-top: 8px;
+  font-weight: 700;
+  opacity: 0.7;
+}
+.am-bubble-admin .am-bubble-time {
+  text-align: right;
+}
+
+/* Área de respuesta final */
+.am-reply-section {
+  margin-top: 10px;
+}
+.am-reply-section label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 800;
+  color: #111827;
+  margin-bottom: 10px;
+}
+.am-reply-textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 15px;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s;
+  box-sizing: border-box;
+  resize: vertical;
+  background-color: #f9fafb;
+}
+.am-reply-textarea:focus {
+  border-color: #1c6a6e;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
+}
+
+/* Footer del modal */
+.am-msg-footer {
+  padding: 15px 25px;
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+.am-btn-cancel,
+.am-btn-accept {
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: "Nunito", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.am-btn-cancel {
+  background: #ffffff;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
+}
+.am-btn-cancel:hover {
+  background: #f3f4f6;
+}
+.am-btn-accept {
+  background: #1c6a6e;
+  color: white;
+  border: none;
+}
+.am-btn-accept:hover {
+  background: #154e52;
+}
+.am-btn-accept.disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .am-stats-bar {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .am-toolbar {
+    flex-direction: column;
+  }
+  .am-search-bar,
+  .am-filter-bar {
+    width: 100%;
+  }
+  .am-hide-mobile {
+    display: none;
+  }
+  .am-bubble {
+    max-width: 95%;
+  }
+
+  .am-client-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .am-msg-footer {
+    flex-direction: column-reverse;
+  }
+  .am-msg-footer button {
+    width: 100%;
+  }
+}
