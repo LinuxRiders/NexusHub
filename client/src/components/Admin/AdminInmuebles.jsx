@@ -379,21 +379,25 @@ const AdminInmuebles = () => {
                         <span>{prop.rooms} Habs</span> •{" "}
                         <span>{prop.bathrooms} Baños</span>
                       </td>
-                      <td className="col-actions">
-                        <button
-                          className="btn-icon-action edit"
-                          onClick={() => handleEdit(prop)}
-                          title="Editar"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className="btn-icon-action delete"
-                          onClick={() => handleDeleteClick(prop.id)}
-                          title="Eliminar"
-                        >
-                          <FaTrashAlt />
-                        </button>
+
+                      {/* CORRECCIÓN: Separando el td del flex de las acciones */}
+                      <td className="th-center">
+                        <div className="col-actions">
+                          <button
+                            className="btn-icon-action edit"
+                            onClick={() => handleEdit(prop)}
+                            title="Editar"
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            className="btn-icon-action delete"
+                            onClick={() => handleDeleteClick(prop.id)}
+                            title="Eliminar"
+                          >
+                            <FaTrashAlt />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

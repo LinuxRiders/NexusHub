@@ -237,25 +237,30 @@
 }
 
 .am-col-actions {
-  display: flex;
-  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  /* Eliminamos el display: flex y justify-content: center para no romper la celda */
 }
+
 .am-btn-icon {
   width: 34px;
   height: 34px;
   border: none;
   border-radius: 6px;
-  display: flex;
+  display: inline-flex; /* Cambiamos flex por inline-flex */
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 15px;
+  margin: 0 auto; /* Asegura el centrado perfecto del botón dentro de la celda */
 }
+
 .am-delete {
   background-color: transparent;
   color: #9ca3af;
 }
+
 .am-delete:hover {
   background-color: #fee2e2;
   color: #dc2626;
@@ -269,7 +274,7 @@
 }
 
 /* =========================================
-   MODAL HILO DE CONVERSACIÓN (CHAT STYLE)
+   MODAL VISOR DE MENSAJES (FORMULARIO)
    ========================================= */
 .am-message-overlay {
   position: fixed;
@@ -289,7 +294,7 @@
 .am-message-box {
   background: #ffffff;
   width: 100%;
-  max-width: 750px;
+  max-width: 650px;
   max-height: 95vh;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -367,6 +372,7 @@
   gap: 15px;
   padding-bottom: 15px;
   border-bottom: 1px dashed #e5e7eb;
+  position: relative;
 }
 .am-client-avatar {
   width: 45px;
@@ -400,65 +406,58 @@
 .am-small-icon {
   font-size: 11px;
 }
-
-/* Hilo de mensajes (Burbujas) */
-.am-thread-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
+.am-msg-date {
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 700;
 }
 
-.am-bubble-row {
-  display: flex;
-  width: 100%;
-  margin-bottom: 5px;
-}
-.client-row {
-  justify-content: flex-start;
-}
-.admin-row {
-  justify-content: flex-end;
+/* Contenedores de Mensajes */
+.am-label-title {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
 }
 
-.am-bubble {
-  max-width: 80%;
+.am-original-message {
+  background-color: #f9fafb;
   padding: 15px 20px;
-  border-radius: 12px;
-  position: relative;
+  border-radius: 6px;
+  border-left: 4px solid #9ca3af;
 }
-.am-bubble p {
+.am-original-message p {
   margin: 0;
+  color: #374151;
   font-size: 15px;
   line-height: 1.5;
 }
 
-.am-bubble-client {
-  background-color: #f3f4f6;
-  color: #374151;
-  border-bottom-left-radius: 2px;
-}
-.am-bubble-admin {
+.am-admin-response {
   background-color: #f0fdfa;
-  border: 1px solid #ccfbf1;
+  padding: 15px 20px;
+  border-radius: 6px;
+  border-left: 4px solid #1c6a6e;
+}
+.am-admin-response .am-label-title {
+  color: #1c6a6e;
+  display: flex;
+  align-items: center;
+}
+.am-admin-response p {
+  margin: 0;
   color: #115e59;
-  border-bottom-right-radius: 2px;
-}
-
-.am-bubble-time {
-  display: block;
-  font-size: 11px;
-  margin-top: 8px;
-  font-weight: 700;
-  opacity: 0.7;
-}
-.am-bubble-admin .am-bubble-time {
-  text-align: right;
+  font-size: 15px;
+  line-height: 1.5;
 }
 
 /* Área de respuesta final */
-.am-reply-section {
-  margin-top: 10px;
-}
 .am-reply-section label {
   display: flex;
   align-items: center;
@@ -478,11 +477,10 @@
   transition: all 0.3s;
   box-sizing: border-box;
   resize: vertical;
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 .am-reply-textarea:focus {
   border-color: #1c6a6e;
-  background-color: white;
   box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
 }
 
@@ -547,10 +545,11 @@
   .am-hide-mobile {
     display: none;
   }
-  .am-bubble {
-    max-width: 95%;
-  }
 
+  .am-msg-date {
+    position: relative;
+    margin-top: 10px;
+  }
   .am-client-info {
     flex-direction: column;
     align-items: flex-start;

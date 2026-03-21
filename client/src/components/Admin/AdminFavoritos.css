@@ -348,26 +348,32 @@
 }
 
 /* Acciones en tabla */
+/* Acciones en tabla */
 .af-col-actions {
-  display: flex;
-  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  /* Eliminamos el display: flex para que no rompa la celda de la tabla */
 }
+
 .af-btn-icon-action {
   width: 36px;
   height: 36px;
   border: none;
   border-radius: 6px;
-  display: flex;
+  display: inline-flex; /* Cambiamos de flex a inline-flex */
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 15px;
+  margin: 0 auto; /* Asegura que el botón se centre perfectamente */
 }
+
 .af-promote {
   background-color: #fef3c7;
   color: #d97706;
 }
+
 .af-promote:hover {
   background-color: #fde68a;
   color: #b45309;

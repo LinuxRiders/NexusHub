@@ -49,30 +49,6 @@
   font-weight: 600;
 }
 
-.au-btn-primary {
-  background-color: #1c6a6e;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  height: 44px;
-  padding: 0 24px;
-  font-size: 15px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: "Nunito", sans-serif;
-  box-shadow: 0 4px 6px rgba(28, 106, 110, 0.2);
-}
-.au-btn-primary:hover {
-  background-color: #154e52;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(28, 106, 110, 0.3);
-}
-
 /* STATS BAR SUPERIOR */
 .au-stats-bar {
   display: grid;
@@ -103,8 +79,8 @@
 .au-text-green {
   color: #059669;
 }
-.au-text-corp {
-  color: #1c6a6e;
+.au-text-red {
+  color: #dc2626;
 }
 .au-flex-align {
   display: flex;
@@ -160,6 +136,10 @@
 .au-filter-select {
   cursor: pointer;
 }
+.au-filter-select optgroup {
+  font-weight: 700;
+  color: #1c6a6e;
+}
 
 /* =========================================
    TABLA DE USUARIOS
@@ -199,13 +179,13 @@
   background-color: #f4f8f8;
 }
 
+/* Fila Inactiva (Suspendida) */
+.au-row-inactive td {
+  opacity: 0.6;
+  background-color: #fafafa;
+}
 .au-th-center {
   text-align: center;
-}
-.au-col-id {
-  color: #9ca3af !important;
-  font-weight: 700;
-  width: 60px;
 }
 
 /* Avatares y Textos */
@@ -251,12 +231,27 @@
   text-transform: uppercase;
 }
 
-/* Metodo Auth */
+/* Info de Acceso y Fecha */
+.au-access-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+.au-join-date {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+}
+
 .au-auth-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 4px 10px;
   border-radius: 20px;
   font-size: 11px;
   font-weight: 800;
@@ -272,32 +267,14 @@
   background-color: #f3f4f6;
 }
 
-/* Badges Rol y Estado */
-.au-badges-column {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: flex-start;
-}
-.au-badge-role,
+/* Badges Estado */
 .au-badge-status {
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
-}
-.au-role-admin {
-  background-color: #f3e8ff;
-  color: #7e22ce;
-}
-.au-role-agente {
-  background-color: #e0e7ff;
-  color: #4338ca;
-}
-.au-role-cliente {
-  background-color: #f3f4f6;
-  color: #4b5563;
+  display: inline-block;
 }
 .au-status-activo {
   background-color: #d1fae5;
@@ -308,11 +285,12 @@
   color: #dc2626;
 }
 
-/* Acciones en tabla */
+/* Acciones en tabla (CORREGIDO) */
 .au-col-actions {
   display: flex;
   gap: 8px;
   justify-content: center;
+  align-items: center;
 }
 .au-btn-icon {
   width: 34px;
@@ -326,14 +304,6 @@
   transition: all 0.2s;
   font-size: 14px;
 }
-.au-edit {
-  background-color: #f3f4f6;
-  color: #4b5563;
-}
-.au-edit:hover {
-  background-color: #e5e7eb;
-  color: #111827;
-}
 .au-sendmail {
   background-color: #e0f2fe;
   color: #0284c7;
@@ -341,6 +311,22 @@
 .au-sendmail:hover {
   background-color: #bae6fd;
   color: #0369a1;
+}
+.au-ban {
+  background-color: #fffbeb;
+  color: #d97706;
+}
+.au-ban:hover {
+  background-color: #fde68a;
+  color: #b45309;
+}
+.au-unban {
+  background-color: #dcfce7;
+  color: #059669;
+}
+.au-unban:hover {
+  background-color: #a7f3d0;
+  color: #047857;
 }
 .au-delete {
   background-color: #fee2e2;
@@ -359,165 +345,7 @@
 }
 
 /* =========================================
-   FORMULARIO
-   ========================================= */
-.au-form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-}
-.au-form-section {
-  background-color: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 25px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-}
-.au-section-title {
-  margin: 0 0 20px 0;
-  font-size: 16px;
-  color: #1c6a6e;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-bottom: 1px solid #f3f4f6;
-  padding-bottom: 10px;
-}
-.au-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-.au-form-header {
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 20px;
-}
-.au-mt-2 {
-  margin-top: 15px;
-}
-.au-btn-back {
-  background: none;
-  border: none;
-  color: #6b7280;
-  font-weight: 700;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  padding: 0;
-  font-family: "Nunito", sans-serif;
-  transition: color 0.2s;
-}
-.au-btn-back:hover {
-  color: #1c6a6e;
-}
-
-.au-form-alert {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  padding: 15px 20px;
-  border-radius: 8px;
-  color: #166534;
-  font-size: 14px;
-  font-weight: 600;
-}
-.au-form-alert svg {
-  font-size: 24px;
-  color: #ea4335;
-}
-
-.au-input-box {
-  display: flex;
-  flex-direction: column;
-  position: relative;
-}
-.au-input-box label {
-  font-size: 13px;
-  color: #4b5563;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.au-input-box input,
-.au-select {
-  background-color: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 12px 15px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #111827;
-  outline: none;
-  font-family: "Nunito", sans-serif;
-  transition: all 0.3s ease;
-}
-.au-input-box input:focus,
-.au-select:focus {
-  border-color: #1c6a6e;
-  background-color: #ffffff;
-  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
-}
-.au-readonly-input {
-  background-color: #f3f4f6 !important;
-  color: #9ca3af !important;
-  cursor: not-allowed;
-}
-
-/* Validaciones y Errores */
-.au-has-error input {
-  border-color: #dc2626 !important;
-  background-color: #fef2f2 !important;
-}
-.au-has-error input:focus {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15) !important;
-}
-.au-has-error label {
-  color: #dc2626;
-}
-.au-error-text {
-  color: #dc2626;
-  font-size: 12px;
-  font-weight: 700;
-  margin-top: 5px;
-}
-
-/* Botones inferiores Form */
-.au-form-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 15px;
-  margin-top: 10px;
-  border-top: 1px solid #e5e7eb;
-  padding-top: 25px;
-}
-.au-btn-secondary {
-  background-color: #ffffff;
-  color: #4b5563;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  height: 44px;
-  padding: 0 24px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: "Nunito", sans-serif;
-}
-.au-btn-secondary:hover {
-  background-color: #f3f4f6;
-  color: #111827;
-}
-
-/* =========================================
-   MODAL REDACTAR MENSAJE
+   MODALES Y FORMULARIOS
    ========================================= */
 .au-modal-mail-form {
   display: flex;
@@ -565,22 +393,8 @@
     align-items: flex-start;
     gap: 15px;
   }
-  .au-btn-primary {
-    width: 100%;
-    justify-content: center;
-  }
   .au-hide-mobile {
     display: none;
-  }
-  .au-form-grid {
-    grid-template-columns: 1fr;
-  }
-  .au-form-actions {
-    flex-direction: column-reverse;
-  }
-  .au-form-actions button {
-    width: 100%;
-    justify-content: center;
   }
 }
 

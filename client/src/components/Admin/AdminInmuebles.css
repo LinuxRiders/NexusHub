@@ -145,7 +145,7 @@
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  min-width: 800px; /* Asegura que no se aplaste en móviles */
+  min-width: 800px;
 }
 
 .crud-table th {

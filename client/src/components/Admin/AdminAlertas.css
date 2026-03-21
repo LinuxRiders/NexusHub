@@ -292,36 +292,43 @@
 }
 
 /* Acciones */
+/* Acciones */
 .aa-col-actions {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
+  text-align: center;
+  vertical-align: middle;
+  /* Eliminamos display: flex, gap y justify-content para mantener la celda intacta */
 }
+
 .aa-btn-icon {
   width: 34px;
   height: 34px;
   border: none;
   border-radius: 6px;
-  display: flex;
+  display: inline-flex; /* Cambiamos flex por inline-flex */
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;
+  margin: 0 4px; /* Reemplazamos el 'gap' del padre con márgenes laterales */
 }
+
 .aa-suggest {
   background-color: #e0f2fe;
   color: #0284c7;
 }
+
 .aa-suggest:hover {
   background-color: #bae6fd;
   color: #0369a1;
   transform: translateY(-2px);
 }
+
 .aa-delete {
   background-color: transparent;
   color: #9ca3af;
 }
+
 .aa-delete:hover {
   background-color: #fee2e2;
   color: #dc2626;
