@@ -1,3 +1,4 @@
+// src/components/PropuestasValor/PropuestasValor.jsx
 import React, { useState, useEffect } from "react";
 import "./PropuestasValor.css";
 
@@ -5,13 +6,15 @@ import edificio from "../../assets/img/icons/propuestasValor/edificio.png";
 import eficiencia from "../../assets/img/icons/propuestasValor/eficiencia.png";
 import martillo from "../../assets/img/icons/propuestasValor/martillo.png";
 import persona from "../../assets/img/icons/propuestasValor/persona.png";
+import computador from "../../assets/img/icons/propuestasValor/computador.png";
+import foco from "../../assets/img/icons/propuestasValor/foco.png";
 
 const PropuestasValor = () => {
   // Estado para el carrusel
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(4);
 
-  // Arreglo con la información de las tarjetas para iterar fácilmente
+  // Arreglo con 6 tarjetas (4 originales + 2 adicionales con nuevos íconos)
   const cards = [
     {
       id: 1,
@@ -37,49 +40,78 @@ const PropuestasValor = () => {
       title: "Eficiencia y transparencia",
       desc: "Procesos claros, información precisa y comunicación constante durante toda la gestión inmobiliaria.",
     },
+    {
+      id: 5,
+      img: computador,
+      title: "Uso de herramientas digitales",
+      desc: "Canales de contactos ágiles, agenda automatizada y seguimiento organizado para una experiencia eficiente.",
+    },
+    {
+      id: 6,
+      img: foco,
+      title: "Innovación Tecnológica",
+      desc: "Utilizamos las últimas herramientas digitales para agilizar procesos y mejorar la experiencia del usuario.",
+    },
   ];
 
   // Detectar tamaño de pantalla para ajustar el número de tarjetas visibles
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 1024) {
-        setItemsPerPage(4); // PC: 4 tarjetas
-        setCurrentIndex(0); // Reiniciar índice
+        setItemsPerPage(4); // PC: 4 tarjetas (Grid 2x2)
       } else if (window.innerWidth > 768) {
         setItemsPerPage(2); // Tablet: 2 tarjetas
       } else {
         setItemsPerPage(1); // Celular: 1 tarjeta
       }
+      // Evitamos reiniciar el index a un punto vacío al redimensionar la pantalla
+      setCurrentIndex((prev) =>
+        Math.min(
+          prev,
+          cards.length -
+            (window.innerWidth > 1024 ? 4 : window.innerWidth > 768 ? 2 : 1),
+        ),
+      );
     };
 
     handleResize(); // Ejecutar al inicio
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [cards.length]);
 
-  // Lógica para cambiar tarjetas
+  // Lógica para cambiar tarjetas (Avanza 2 posiciones en PC/Tablet, 1 en celular)
   const handlePrev = () => {
-    if (itemsPerPage === 4) return; // En PC no hace nada
     setCurrentIndex((prev) => {
-      if (prev - itemsPerPage < 0) {
+      const step = itemsPerPage === 1 ? 1 : 2;
+      const newIndex = prev - step;
+
+      // Si nos pasamos de cero, vamos al último bloque posible
+      if (newIndex < 0) {
         return cards.length - itemsPerPage;
       }
-      return prev - itemsPerPage;
+      return newIndex;
     });
   };
 
   const handleNext = () => {
-    if (itemsPerPage === 4) return; // En PC no hace nada
     setCurrentIndex((prev) => {
-      if (prev + itemsPerPage >= cards.length) {
+      const step = itemsPerPage === 1 ? 1 : 2;
+      const newIndex = prev + step;
+      const maxIndex = cards.length - itemsPerPage;
+
+      // Si superamos el límite máximo, volvemos a la primera tarjeta
+      if (newIndex > maxIndex) {
         return 0;
       }
-      return prev + itemsPerPage;
+      return newIndex;
     });
   };
 
   // Obtener solo las tarjetas que deben ser visibles
   const visibleCards = cards.slice(currentIndex, currentIndex + itemsPerPage);
+
+  // Determinar si debemos mostrar las flechas
+  const showArrows = cards.length > itemsPerPage;
 
   return (
     <section className="valor-section">
@@ -103,8 +135,7 @@ const PropuestasValor = () => {
         <div
           className="valor-arrow"
           onClick={handlePrev}
-          // Ocultamos las flechas en PC para que no estorben, pero mantienen el espacio (visibility)
-          style={{ visibility: itemsPerPage === 4 ? "hidden" : "visible" }}
+          style={{ visibility: showArrows ? "visible" : "hidden" }}
         >
           <svg viewBox="0 0 24 24" width="32" height="32" fill="white">
             <polygon points="16,4 6,12 16,20"></polygon>
@@ -116,7 +147,7 @@ const PropuestasValor = () => {
           {visibleCards.map((card, index) => (
             <div
               className="valor-card"
-              // Al combinar el currentIndex con el id, forzamos a react a volver a montar la tarjeta, reactivando la animación CSS
+              // Forzamos a react a aplicar las animaciones de AOS al cambiar las cards
               key={`${currentIndex}-${card.id}`}
               data-aos={index < itemsPerPage / 2 ? "fade-right" : "fade-left"}
               data-aos-delay={"200"}
@@ -132,7 +163,7 @@ const PropuestasValor = () => {
         <div
           className="valor-arrow"
           onClick={handleNext}
-          style={{ visibility: itemsPerPage === 4 ? "hidden" : "visible" }}
+          style={{ visibility: showArrows ? "visible" : "hidden" }}
         >
           <svg viewBox="0 0 24 24" width="32" height="32" fill="white">
             <polygon points="8,4 18,12 8,20"></polygon>

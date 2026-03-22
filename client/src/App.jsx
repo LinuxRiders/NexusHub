@@ -10,6 +10,8 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import VerifyAccount from "./components/Login/VerifyAccount";
 import ResetPassword from "./components/Login/ResetPassword";
 
+import Admin from "./pages/Admin";
+
 function App() {
   return (
     <Routes>
@@ -18,6 +20,7 @@ function App() {
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
+      <Route path="/admin" element={<Admin />} />
 
       {/* 
         #################################################################
