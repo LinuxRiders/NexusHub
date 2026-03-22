@@ -5,7 +5,7 @@ import { generateRefreshTokenPair, generateResetToken, hashTokenToBuffer, parseD
 import logger from '../../../utils/logger.js';
 import pool from '../../../config/db.js';
 import dotenv from 'dotenv';
-import { RolePermission, UserRole } from '../models/rolepermission.model.js';
+import { UserRole } from '../models/rolepermission.model.js';
 import { mailer } from '../../../config/mailer.js';
 
 dotenv.config();
@@ -45,30 +45,30 @@ export const dataToken = async (user) => {
         }));
 
         // 2) Obtener permisos por roles en batch (role_ids)
-        const roleIds = userRoles.map(r => r.role_id).filter(Boolean);
-        let permissions = [];
+        // const roleIds = userRoles.map(r => r.role_id).filter(Boolean);
+        // let permissions = [];
 
-        if (roleIds.length > 0) {
+        // if (roleIds.length > 0) {
 
-            const permRows = await RolePermission.findByRoles(roleIds, connection); // [{permission_id}, ...]
-            // Mapear a { module, action } en lowercase y deduplicar
-            const seen = new Set();
-            for (const p of permRows) {
-                const moduleLower = String(p.module || '').toLowerCase();
-                const actionLower = String(p.action || '').toLowerCase();
-                const key = `${moduleLower}::${actionLower}`;
-                if (!seen.has(key) && moduleLower !== '' && actionLower !== '') {
-                    seen.add(key);
-                    permissions.push({ module: moduleLower, action: actionLower });
-                }
-            }
-        }
+        //     const permRows = await RolePermission.findByRoles(roleIds, connection); // [{permission_id}, ...]
+        //     // Mapear a { module, action } en lowercase y deduplicar
+        //     const seen = new Set();
+        //     for (const p of permRows) {
+        //         const moduleLower = String(p.module || '').toLowerCase();
+        //         const actionLower = String(p.action || '').toLowerCase();
+        //         const key = `${moduleLower}::${actionLower}`;
+        //         if (!seen.has(key) && moduleLower !== '' && actionLower !== '') {
+        //             seen.add(key);
+        //             permissions.push({ module: moduleLower, action: actionLower });
+        //         }
+        //     }
+        // }
 
         // Payload JWT
         return {
             sub: user.user_id,
-            roles,
-            permissions
+            roles
+            // permissions
         };
     } finally {
         connection.release();
@@ -86,9 +86,11 @@ export const register = async (req, res, next) => {
     const { username, email, password } = req.body;
     const connection = await pool.getConnection();
 
+    console.log(email);
+    
     try {
         await connection.beginTransaction();
-
+        
         // 1. Verificar existencia
         const existingUser = await User.findByEmail(email, connection);
         if (existingUser) {
@@ -587,9 +589,9 @@ export const resetPassword = async (req, res, next) => {
 
         // ---------- CAMBIO DE CONTRASEÑA ------------
 
-        // Hashear nueva contraseña y actualizar en BD
+        // Hashear nueva contraseña y actualizar en BD, Activar usuario si es que no lo estaba
         const password_hash = await hashPassword(newPassword);
-        await User.update({ id: userId, updated_by: null }, { password_hash }, connection);
+        await User.update({ id: userId, updated_by: null }, { password_hash, is_verified: 1 }, connection);
 
         // Marcar token como usado y revocar otros resets
         await PasswordReset.markUsed(tokenRow.password_reset_id, connection);

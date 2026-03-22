@@ -27,6 +27,8 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 // Nuevas rutas de imágenes solicitadas
 import logo from "../../assets/img/logo2.png";
 import bgBottom from "../../assets/img/MarcaAgua2.png";
+import { useAuth } from "../../context/AuthProvider";
+import api from "../../api/api";
 
 // Estilo para Inputs: Bordes rectos, texto blanco, fuente Nunito
 const darkTextFieldStyle = {
@@ -79,7 +81,7 @@ const GoogleIcon = () => (
 );
 
 const Login = () => {
-  // const { isAuthenticated, login, hasRole } = useAuth();
+  const { isAuthenticated, login, hasRole } = useAuth();
   const goTo = useNavigate();
 
   const [view, setView] = useState("login");
@@ -99,7 +101,15 @@ const Login = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const [isResetSent, setIsResetSent] = useState(false);
 
-  // useEffect(() => { ... }, [isAuthenticated, hasRole, goTo]);
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (hasRole("dev") || hasRole("admin")) {
+        goTo("/admin", { replace: true });
+      } else if (hasRole("user")) {
+        goTo("/perfil", { replace: true });
+      }
+    }
+  }, [isAuthenticated, hasRole, goTo]);
 
   const switchView = (newView) => {
     setView(newView);
@@ -155,6 +165,9 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
+  // --- HANDLERS ---
+
+  // 1. LOGIN
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm("login")) return;
@@ -162,17 +175,18 @@ const Login = () => {
     setErrorResponse("");
 
     try {
-      // await login(formData.email, formData.password);
-      console.log("Login simulado", formData);
-      setTimeout(() => setIsSubmitting(false), 1000);
+      await login(formData.email, formData.password);
+      // La redirección la maneja el useEffect
     } catch (error) {
       setErrorResponse(
         error.response?.data?.error || "Credenciales incorrectas.",
       );
+    } finally {
       setIsSubmitting(false);
     }
   };
 
+  // 2. REGISTRO
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm("register")) return;
@@ -180,18 +194,25 @@ const Login = () => {
     setErrorResponse("");
 
     try {
-      // const response = await api.post("/auth/register", { ... });
-      setTimeout(() => {
+      const response = await api.post("/auth/register", {
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+      });
+      if (response.status === 201) {
+        // Al registrarse exitosamente, cambiamos a la vista de pendiente
         setSuccessMessage("");
         setView("verify_pending");
         setIsSubmitting(false);
-      }, 1000);
+      }
     } catch (error) {
       setErrorResponse(error.response?.data?.error || "Error al registrarse.");
+    } finally {
       setIsSubmitting(false);
     }
   };
 
+  // 3. RECUPERAR PASSWORD
   const handleForgotSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm("forgot")) return;
@@ -200,31 +221,38 @@ const Login = () => {
     setSuccessMessage("");
 
     try {
-      // await api.post("/auth/forgot-password", { email: formData.email });
-      setTimeout(() => {
-        setSuccessMessage("Si el correo existe, se ha enviado el enlace.");
-        setIsResetSent(true);
-        setIsSubmitting(false);
-      }, 1000);
-    } catch (error) {
-      setSuccessMessage("Si el correo existe, se ha enviado el enlace.");
+      await api.post("/auth/forgot-password", { email: formData.email });
+      // Éxito: Mostrar mensaje de duración y cambiar estado del botón
+      setSuccessMessage(
+        "Si el correo existe, se ha enviado el enlace. Válido por 15 min.",
+      );
       setIsResetSent(true);
+      setIsSubmitting(false);
+    } catch (error) {
+      setSuccessMessage(
+        "Si el correo existe, se ha enviado el enlace. Válido por 15 min.",
+      );
+      setIsResetSent(true);
+    } finally {
       setIsSubmitting(false);
     }
   };
 
+  // 4. REENVIAR VERIFICACIÓN (Desde la vista Verify Pending)
   const handleResendVerification = async () => {
     setIsSubmitting(true);
     setErrorResponse("");
     setSuccessMessage("");
 
     try {
-      setTimeout(() => {
-        setSuccessMessage("Nuevo enlace enviado. Revisa tu bandeja.");
-        setIsSubmitting(false);
-      }, 1000);
+      await api.post("/auth/resend-verification", { email: formData.email });
+      setSuccessMessage(
+        "Nuevo enlace de verificación enviado. Revisa tu bandeja.",
+      );
+      setIsSubmitting(false);
     } catch (error) {
-      setErrorResponse("No se pudo reenviar el correo.");
+      setErrorResponse("No se pudo reenviar el correo. Intenta más tarde.");
+    } finally {
       setIsSubmitting(false);
     }
   };

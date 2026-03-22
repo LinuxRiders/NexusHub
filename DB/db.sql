@@ -1,8 +1,8 @@
-DROP DATABASE IF EXISTS db_nexora;
+DROP DATABASE IF EXISTS db_nexushub;
 
-CREATE DATABASE db_nexora;
+CREATE DATABASE db_nexushub;
 
-USE db_nexora;
+USE db_nexushub;
 
 -- //////////////////////////////////////////// GRUPO USUARIOS Y AUTH ///////////////////////////////////////
 -- TABLE: USER
@@ -121,38 +121,6 @@ CREATE TABLE user_roles (
   FOREIGN KEY (updated_by) REFERENCES USER (user_id) ON DELETE SET NULL
 );
 
-CREATE TABLE permissions (
-  permission_id INT AUTO_INCREMENT PRIMARY KEY,
-  module VARCHAR(255) NOT NULL,
-  action VARCHAR(255) NOT NULL,
-  description TEXT,
-  UNIQUE KEY unique_perm (module, action),
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by INT NULL,
-  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  updated_by INT NULL,
-  deleted_at DATETIME NULL,
-  FOREIGN KEY (created_by) REFERENCES USER (user_id) ON DELETE SET NULL,
-  FOREIGN KEY (updated_by) REFERENCES USER (user_id) ON DELETE SET NULL
-);
-
--- DROP TABLE role_permissions;
-
-CREATE TABLE role_permissions (
-  role_id INT,
-  permission_id INT,
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  created_by INT NULL,
-  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  updated_by INT NULL,
-  deleted_at DATETIME NULL,
-  PRIMARY KEY (role_id, permission_id),
-  FOREIGN KEY (role_id) REFERENCES roles (role_id) ON DELETE CASCADE,
-  FOREIGN KEY (permission_id) REFERENCES permissions (permission_id) ON DELETE CASCADE,
-  FOREIGN KEY (created_by) REFERENCES USER (user_id) ON DELETE SET NULL,
-  FOREIGN KEY (updated_by) REFERENCES USER (user_id) ON DELETE SET NULL
-);
-
 
 CREATE TABLE IF NOT EXISTS userdata (
   userdata_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -175,3 +143,32 @@ CREATE TABLE IF NOT EXISTS userdata (
 
 
 
+-- ============ ASIGNACION DE ROLES =============
+
+-- Crear rol "SuperAdministrador"
+INSERT INTO
+  roles (name, description, created_by)
+VALUES
+  ('dev', 'Acceso total al sistema', NULL);
+
+-- Crear roles del sistema "USER"
+INSERT INTO
+  roles (name, description, created_by)
+VALUES
+  ('user', 'Usuario comun del sistema', NULL);
+
+
+-- =================== CREACION DE USUARIOS =======================
+
+INSERT 
+	INTO USER (username, email, password_hash, is_verified)
+VALUES
+	( 'Admin','med@admin.com', '$2b$10$SN94lmApxyHlvWebzloLP.0JoG11yw7vSt4gxmy1I87hTp9BLmVD.', 1 ); -- psswd: F@cil123
+  
+-- Asignar el rol dev al usuario ID 1
+INSERT 
+	INTO user_roles (user_id, role_id, created_by)
+VALUES
+	(1, 1, NULL);
+
+  

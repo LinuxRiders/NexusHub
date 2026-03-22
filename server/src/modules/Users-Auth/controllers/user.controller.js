@@ -4,6 +4,16 @@ import {
 import { hashPassword } from "../../../utils/password.js";
 import logger from "../../../utils/logger.js";
 import { UserRole } from "../models/rolepermission.model.js";
+import MailService from '../../../services/mail.service.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const TEMPLATE_DIR = path.join(__dirname, '../../Courses/templates');
+const mailService = new MailService({ templateDir: TEMPLATE_DIR });
+const LOGO_PATH = path.join(__dirname, '../../../../assets/logos.png'); // Ajusta según assets
 
 export const createUser = async (req, res, next) => {
   try {
@@ -35,15 +45,14 @@ export const createUser = async (req, res, next) => {
 
 export const getAllUsers = async (req, res, next) => {
   const created_by = req.user?.sub ?? null;
-  const isAdmin = req.user?.isAdmin ?? null;
 
   try {
-    const users = isAdmin ? await User.getAll() : await User.getAllOwner(created_by);
+    const users = await User.getAll(); // : await User.getChildren(created_by); cuando haya hijos de un usuario
 
     // Obtener roles de todos los usuarios
     const usersWithRoles = await Promise.all(
       users.map(async (user) => {
-        const roles = await UserRole.getRolesByUser(user.user_id);
+        const roles = await UserRole.findRolesByUser(user.user_id);
         return { ...user, roles };
       })
     );
@@ -123,9 +132,8 @@ export const updateUser = async (req, res, next) => {
     }
 
     // Aquí puedes agregar más campos si es necesario (roles, etc.)
-
     if (Object.keys(updates).length > 0) {
-      await User.update(req.params.id, updates);
+      await User.update({ id: req.params.id, updated_by: req.user?.sub }, updates);
     }
 
     const updatedUser = await User.findById(req.params.id);
@@ -254,6 +262,63 @@ export const updateUserById = async (req, res, next) => {
     res.json({ message: "Usuario actualizado correctamente" });
   } catch (error) {
     logger.error(`UserController:updateUserById Error: ${error.message}`, {
+      stack: error.stack,
+    });
+    next(error);
+  }
+};
+
+/**
+ * Envía un correo a una lista de usuarios (o a todos).
+ * Body: { userIds: [1, 2, ...], subject, message }
+ */
+export const sendUserEmail = async (req, res, next) => {
+  const { userIds, subject, message } = req.body;
+
+  if (!userIds || !Array.isArray(userIds) || userIds.length === 0) {
+    return res.status(400).json({ error: "Debes seleccionar al menos un usuario." });
+  }
+
+  try {
+    // 1. Obtener emails y nombres de los usuarios seleccionados
+    const users = await User.findByIds(userIds);
+
+    if (users.length === 0) {
+      return res.status(404).json({ error: 'No se encontraron usuarios válidos.' });
+    }
+
+    // 2. Enviar correos
+    const emailPromises = users.map(user => {
+
+      return mailService.sendMail({
+        toEmail: user.email,
+        subject: subject || 'Notificación de MedLearn',
+        templateName: 'admin_announcement.html',
+        inlineImages: [
+          // Verificación laxa de logo
+          { varName: 'logo', path: LOGO_PATH }
+        ],
+        variables: {
+          username: user.username,
+          message_body: message ? message.replace(/\n/g, '<br>') : '',
+          action_button: '',
+          year: new Date().getFullYear()
+        },
+        interpolatedKeys: ['message_body'] // Permitimos que el mensaje contenga variables como {{username}}
+      }).catch(err => {
+        logger.error(`sendUserEmail failed for ${user.email}: ${err.message}`);
+        return null;
+      });
+    });
+
+    await Promise.all(emailPromises);
+
+    res.status(200).json({
+      message: `Mensaje enviado a ${users.length} usuarios.`
+    });
+
+  } catch (error) {
+    logger.error(`UserController:sendUserEmail Error: ${error.message}`, {
       stack: error.stack,
     });
     next(error);

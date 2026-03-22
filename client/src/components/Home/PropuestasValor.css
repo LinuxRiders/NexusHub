@@ -20,7 +20,7 @@ SECCION PRINCIPAL
 TITULO
 ========================= */
 .valor-title {
-  font-size: clamp(24px, 4.1vw, 30px);
+  font-size: clamp(24px, 2.1vw, 30px);
   font-weight: 600; /* Ajustado para hacer match con Nunito */
   letter-spacing: 1px;
 }

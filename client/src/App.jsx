@@ -7,6 +7,8 @@ import Perfil from "./pages/Perfil";
 import LoginPage from "./pages/LoginPage";
 import Login from "./components/Login/Login";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import VerifyAccount from "./components/Login/VerifyAccount";
+import ResetPassword from "./components/Login/ResetPassword";
 
 function App() {
   return (
@@ -29,8 +31,8 @@ function App() {
 
         <Route path="/" element={<LoginPage />}>
           <Route path="login" element={<Login />} />
-          {/* <Route path="verify-account" element={<VerifyAccount />} />
-          <Route path="reset-password" element={<ResetPassword />} /> */}
+          <Route path="verify-account" element={<VerifyAccount />} />
+          <Route path="reset-password" element={<ResetPassword />} />
         </Route>
       </Route>
 
@@ -39,10 +41,10 @@ function App() {
         #                         ADMIN PANEL                           #
         ################################################################# 
       */}
-      {/* <Route
+      <Route
         path="/admin"
         element={<ProtectedRoute to="/login" roles={["dev", "admin"]} />}
-      ></Route> */}
+      ></Route>
 
       {/* 
         #################################################################
