@@ -1,5 +1,5 @@
 // src/components/Admin/AdminDashboard/AdminDashboard.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaUsers,
   FaBuilding,
@@ -15,14 +15,35 @@ import {
   FaRegEye,
 } from "react-icons/fa";
 import "./AdminDashboard.css";
+import api from "../../api/api"; // Added API
 
 const AdminDashboard = ({ setActiveTab }) => {
-  // Simulación de datos estadísticos
-  const stats = {
-    usuarios: { total: 1250, trend: "+12%", isUp: true },
-    propiedades: { total: 342, trend: "+5%", isUp: true },
-    mensajes: { total: 48, trend: "+18%", isUp: true },
-    operaciones: { total: 12, trend: "-2%", isUp: false },
+  const [stats, setStats] = useState(null);
+  const [dbUsers, setDbUsers] = useState(null);
+  const [recentActivity, setRecentActivity] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    setIsLoading(true);
+    try {
+      const [statsRes, usersRes, activityRes] = await Promise.all([
+        api.get("/properties/admin/dashboard"),
+        api.get("/users/stats?includeAdmins=false"), // Reutilizamos tu script optimizado
+        api.get("/system/activity?limit=10"), // Nuevo motor de eventos
+      ]);
+
+      setStats(statsRes.data.data);
+      setDbUsers(usersRes.data.data);
+      setRecentActivity(activityRes.data.data || []);
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const [isGenerating, setIsGenerating] = useState(false);
@@ -104,6 +125,9 @@ const AdminDashboard = ({ setActiveTab }) => {
     }
   };
 
+  if (isLoading || !stats || !dbUsers)
+    return <div className="admindash-container">Cargando métricas...</div>;
+
   return (
     <div className="admindash-container">
       {/* MODAL DEL SISTEMA */}
@@ -183,20 +207,17 @@ const AdminDashboard = ({ setActiveTab }) => {
           <div className="stat-card-top">
             <div className="stat-info">
               <span className="stat-label">Usuarios Totales</span>
-              <span className="stat-value">{stats.usuarios.total}</span>
+              <span className="stat-value">{dbUsers?.totalUsers || 0}</span>
             </div>
             <div className="stat-icon-wrapper bg-blue">
               <FaUsers />
             </div>
           </div>
           <div className="stat-card-bottom">
-            <span
-              className={`stat-trend ${stats.usuarios.isUp ? "trend-up" : "trend-down"}`}
-            >
-              {stats.usuarios.isUp ? <FaArrowUp /> : <FaArrowDown />}{" "}
-              {stats.usuarios.trend}
+            <span className="stat-period">
+              Activos: <strong>{dbUsers?.activeUsers || 0}</strong> |
+              Suspendidos: <strong>{dbUsers?.inactiveUsers || 0}</strong>
             </span>
-            <span className="stat-period">vs mes anterior</span>
           </div>
         </div>
 
@@ -225,41 +246,17 @@ const AdminDashboard = ({ setActiveTab }) => {
           <div className="stat-card-top">
             <div className="stat-info">
               <span className="stat-label">Nuevos mensajes</span>
-              <span className="stat-value">{stats.mensajes.total}</span>
+              <span className="stat-value">0</span>
             </div>
             <div className="stat-icon-wrapper bg-orange">
               <FaEnvelope />
             </div>
           </div>
           <div className="stat-card-bottom">
-            <span
-              className={`stat-trend ${stats.mensajes.isUp ? "trend-up" : "trend-down"}`}
-            >
-              {stats.mensajes.isUp ? <FaArrowUp /> : <FaArrowDown />}{" "}
-              {stats.mensajes.trend}
+            <span className="stat-trend trend-down">
+              <FaArrowDown /> 0%
             </span>
             <span className="stat-period">esta semana</span>
-          </div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-card-top">
-            <div className="stat-info">
-              <span className="stat-label">Operaciones Cerradas</span>
-              <span className="stat-value">{stats.operaciones.total}</span>
-            </div>
-            <div className="stat-icon-wrapper bg-green">
-              <FaFileContract />
-            </div>
-          </div>
-          <div className="stat-card-bottom">
-            <span
-              className={`stat-trend ${stats.operaciones.isUp ? "trend-up" : "trend-down"}`}
-            >
-              {stats.operaciones.isUp ? <FaArrowUp /> : <FaArrowDown />}{" "}
-              {stats.operaciones.trend}
-            </span>
-            <span className="stat-period">vs mes anterior</span>
           </div>
         </div>
       </div>
@@ -276,45 +273,78 @@ const AdminDashboard = ({ setActiveTab }) => {
           </div>
           <div className="panel-box-content">
             <div className="timeline">
-              <div className="timeline-item">
-                <div className="timeline-dot dot-corp"></div>
-                <div className="timeline-content">
-                  <span className="timeline-time">Hace 15 min</span>
-                  <p>
-                    Nuevo usuario registrado: <strong>Juan Pérez</strong>
-                  </p>
-                </div>
-              </div>
-              <div className="timeline-item">
-                <div className="timeline-dot dot-orange"></div>
-                <div className="timeline-content">
-                  <span className="timeline-time">Hace 1 hora</span>
-                  <p>
-                    Lead entrante para propiedad <strong>Av. España 123</strong>{" "}
-                    de María López.
-                  </p>
-                </div>
-              </div>
-              <div className="timeline-item">
-                <div className="timeline-dot dot-green"></div>
-                <div className="timeline-content">
-                  <span className="timeline-time">Ayer, 14:30</span>
-                  <p>
-                    Operación de Venta cerrada exitosamente:{" "}
-                    <strong>Dpto. Víctor Larco</strong>.
-                  </p>
-                </div>
-              </div>
-              <div className="timeline-item">
-                <div className="timeline-dot dot-blue"></div>
-                <div className="timeline-content">
-                  <span className="timeline-time">Ayer, 09:00</span>
-                  <p>
-                    El sistema envió <strong>12 correos automáticos</strong> de
-                    coincidencia de alertas.
-                  </p>
-                </div>
-              </div>
+              {recentActivity.length === 0 ? (
+                <p className="no-activity-msg">
+                  No hay actividad reciente registrada en el sistema.
+                </p>
+              ) : (
+                recentActivity.map((log) => {
+                  let dotClass = "dot-corp";
+                  let logText = "";
+
+                  // Formatear el texto basado en el actionType agnóstico de la BD
+                  switch (log.action_type) {
+                    case "USER_REGISTERED":
+                      dotClass = "dot-blue";
+                      logText = (
+                        <>
+                          Nuevo usuario registrado:{" "}
+                          <strong>{log.metadata?.name || "Desconocido"}</strong>{" "}
+                          ({log.metadata?.email})
+                        </>
+                      );
+                      break;
+                    case "PROPERTY_FAVORITED":
+                      dotClass = "dot-orange";
+                      logText = (
+                        <>
+                          Propiedad{" "}
+                          <strong>{log.metadata?.address || "N/A"}</strong>{" "}
+                          guardada en favoritos por{" "}
+                          {log.metadata?.user_name || "Alguien"}.
+                        </>
+                      );
+                      break;
+                    case "ALERT_MATCH_EMAIL_SENT":
+                      dotClass = "dot-green";
+                      logText = (
+                        <>
+                          Sistema originó notificación:{" "}
+                          <strong>
+                            {log.metadata?.notes || "Alerta Disparada"}
+                          </strong>
+                          .
+                        </>
+                      );
+                      break;
+                    default:
+                      logText = <>{log.action_type}</>;
+                  }
+
+                  // Calcular tiempo transcurrido (soporte multiplataforma e internacional)
+                  // Ya que la DB devuelve en UTC (con la Z), new Date() en JS lo convertirá
+                  // de forma transparente y automática a la hora local exacta del país donde
+                  // esté el navegador del usuario (sea Chile, Perú, España, etc).
+                  const eventDate = new Date(log.created_at);
+                  const mins = Math.floor((new Date() - eventDate) / 60000);
+                  let timeLabel = "Hace un momento";
+                  if (mins > 60 && mins < 1440)
+                    timeLabel = `Hace ${Math.floor(mins / 60)} hora(s)`;
+                  else if (mins >= 1440)
+                    timeLabel = `Hace ${Math.floor(mins / 1440)} día(s)`;
+                  else if (mins > 0) timeLabel = `Hace ${mins} min`;
+
+                  return (
+                    <div className="timeline-item" key={log.id}>
+                      <div className={`timeline-dot ${dotClass}`}></div>
+                      <div className="timeline-content">
+                        <span className="timeline-time">{timeLabel}</span>
+                        <p>{logText}</p>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>
@@ -333,34 +363,66 @@ const AdminDashboard = ({ setActiveTab }) => {
                 <div className="progress-group">
                   <div className="progress-labels">
                     <span>En Venta</span>
-                    <span className="txt-bold">65%</span>
+                    <span className="txt-bold">
+                      {stats.portfolio.ventas + stats.portfolio.alquileres > 0
+                        ? Math.round(
+                            (stats.portfolio.ventas /
+                              (stats.portfolio.ventas +
+                                stats.portfolio.alquileres)) *
+                              100,
+                          )
+                        : 0}
+                      %
+                    </span>
                   </div>
                   <div className="progress-bar">
                     <div
                       className="progress-fill bg-corp"
-                      style={{ width: "65%" }}
+                      style={{
+                        width: `${stats.portfolio.ventas + stats.portfolio.alquileres > 0 ? Math.round((stats.portfolio.ventas / (stats.portfolio.ventas + stats.portfolio.alquileres)) * 100) : 0}%`,
+                      }}
                     ></div>
                   </div>
                 </div>
                 <div className="progress-group">
                   <div className="progress-labels">
                     <span>En Alquiler</span>
-                    <span className="txt-bold">35%</span>
+                    <span className="txt-bold">
+                      {stats.portfolio.ventas + stats.portfolio.alquileres > 0
+                        ? Math.round(
+                            (stats.portfolio.alquileres /
+                              (stats.portfolio.ventas +
+                                stats.portfolio.alquileres)) *
+                              100,
+                          )
+                        : 0}
+                      %
+                    </span>
                   </div>
                   <div className="progress-bar">
                     <div
-                      className="progress-fill bg-blue"
-                      style={{ width: "35%" }}
+                      className="progress-fill bg-orange"
+                      style={{
+                        width: `${stats.portfolio.ventas + stats.portfolio.alquileres > 0 ? Math.round((stats.portfolio.alquileres / (stats.portfolio.ventas + stats.portfolio.alquileres)) * 100) : 0}%`,
+                      }}
                     ></div>
                   </div>
                 </div>
               </div>
 
               <div className="tags-container mt-3">
-                <span className="dash-tag">Departamentos: 180</span>
-                <span className="dash-tag">Casas: 95</span>
-                <span className="dash-tag">Terrenos: 42</span>
-                <span className="dash-tag">Oficinas: 25</span>
+                <span className="dash-tag">
+                  Departamentos: {stats.portfolio.types?.departamentos || 0}
+                </span>
+                <span className="dash-tag">
+                  Casas: {stats.portfolio.types?.casas || 0}
+                </span>
+                <span className="dash-tag">
+                  Terrenos: {stats.portfolio.types?.terrenos || 0}
+                </span>
+                <span className="dash-tag">
+                  Oficinas: {stats.portfolio.types?.oficinas || 0}
+                </span>
               </div>
             </div>
           </div>

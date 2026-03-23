@@ -14,51 +14,11 @@ import {
   FaUser,
   FaCheck,
 } from "react-icons/fa";
+import api from "../../api/api";
 import "./AdminMensajes.css";
 
-// Mock de datos adaptado a "Una sola respuesta"
-const initialMessages = [
-  {
-    id: 1,
-    name: "Luis Ramírez",
-    email: "luis.ramirez@gmail.com",
-    phone: "987 654 321",
-    subject: "Consulta sobre Dpto. Av. España 123",
-    message:
-      "Hola, estoy muy interesado en agendar una visita para este departamento. ¿Tienen disponibilidad para este fin de semana por la mañana? Quedo atento a su respuesta.",
-    date: "Hoy, 10:30 AM",
-    status: "UNREAD",
-    adminReply: null, // Sin respuesta aún
-  },
-  {
-    id: 2,
-    name: "María Gómez",
-    email: "maria.gomez88@hotmail.com",
-    phone: "912 345 678",
-    subject: "Información de financiamiento - Casa Fátima",
-    message:
-      "Buen día. Me gustaría saber si aceptan crédito hipotecario con el BCP para la casa ubicada en la Av. Fátima. Gracias.",
-    date: "Ayer, 04:15 PM",
-    status: "READ",
-    adminReply: null,
-  },
-  {
-    id: 3,
-    name: "Carlos Villalobos",
-    email: "carlos.v@empresa.com",
-    phone: "998 877 665",
-    subject: "Busco oficina en alquiler",
-    message:
-      "Estimados, estoy buscando una oficina de al menos 100m2 en el centro histórico. ¿Tienen opciones disponibles en su catálogo actual?",
-    date: "18 Mar, 09:00 AM",
-    status: "REPLIED",
-    adminReply:
-      "Hola Carlos, ¡gracias por contactarnos! Sí, tenemos 3 opciones que se ajustan a tu perfil. Te acabo de enviar la información a tu correo con los detalles.",
-  },
-];
-
 const AdminMensajes = () => {
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("TODOS");
 
@@ -72,6 +32,19 @@ const AdminMensajes = () => {
     message: "",
     targetId: null,
   });
+
+  const fetchMessages = async () => {
+    try {
+      const { data } = await api.get("/messages/admin");
+      setMessages(data.data.messages || []);
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchMessages();
+  }, []);
 
   // ==========================================
   // ESTADÍSTICAS Y FILTROS
@@ -96,17 +69,21 @@ const AdminMensajes = () => {
   // LÓGICA DE MENSAJES Y RESPUESTAS
   // ==========================================
 
-  const handleOpenMessage = (msg) => {
-    if (msg.status === "UNREAD") {
-      const updatedMessages = messages.map((m) =>
-        m.id === msg.id ? { ...m, status: "READ" } : m,
-      );
-      setMessages(updatedMessages);
-      setSelectedMessage({ ...msg, status: "READ" });
-    } else {
-      setSelectedMessage(msg);
-    }
+  const handleOpenMessage = async (msg) => {
+    setSelectedMessage(msg);
     setReplyText("");
+
+    if (msg.status === "UNREAD") {
+      try {
+        await api.patch(`/messages/admin/${msg.id}/status`, { status: "READ" });
+        setMessages(
+          messages.map((m) => (m.id === msg.id ? { ...m, status: "READ" } : m)),
+        );
+        setSelectedMessage({ ...msg, status: "READ" });
+      } catch (error) {
+        console.error("Error update message status:", error);
+      }
+    }
   };
 
   const handleCloseMessage = () => {
@@ -114,32 +91,45 @@ const AdminMensajes = () => {
     setReplyText("");
   };
 
-  const handleSendReply = () => {
-    if (!replyText.trim()) return;
+  const handleSendReply = async () => {
+    if (!replyText.trim() || !selectedMessage) return;
 
-    // Actualizamos el mensaje guardando la respuesta única y cambiando el estado a REPLIED
-    const updatedMessages = messages.map((m) => {
-      if (m.id === selectedMessage.id) {
-        return {
-          ...m,
-          status: "REPLIED",
-          adminReply: replyText,
-        };
-      }
-      return m;
-    });
+    try {
+      await api.post(`/messages/admin/${selectedMessage.id}/reply`, {
+        reply_text: replyText,
+        subject: `Re: ${selectedMessage.subject || "Consulta NexusHub"}`,
+      });
 
-    setMessages(updatedMessages);
-    setSelectedMessage(null); // Cerramos el visor
-    setReplyText("");
+      // Update local state
+      const updatedMessages = messages.map((m) => {
+        if (m.id === selectedMessage.id) {
+          return {
+            ...m,
+            status: "REPLIED",
+            replied_at: new Date().toISOString(),
+          };
+        }
+        return m;
+      });
 
-    // Mostramos la alerta de éxito
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message:
-        "Respuesta enviada. El usuario recibirá una notificación con tu mensaje.",
-    });
+      setMessages(updatedMessages);
+      setSelectedMessage(null); // Cerramos el visor
+      setReplyText("");
+
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message:
+          "Respuesta enviada. El usuario recibirá un correo y, si aplica, una notificación nativa.",
+      });
+    } catch (error) {
+      console.error("Error send reply:", error);
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error enviando la respuesta.",
+      });
+    }
   };
 
   const handleDeleteClick = (e, id) => {
@@ -153,17 +143,28 @@ const AdminMensajes = () => {
     });
   };
 
-  const confirmDelete = () => {
-    setMessages(messages.filter((m) => m.id !== modalConfig.targetId));
-    if (selectedMessage && selectedMessage.id === modalConfig.targetId) {
-      setSelectedMessage(null);
+  const confirmDelete = async () => {
+    try {
+      await api.delete(`/messages/admin/${modalConfig.targetId}`);
+      setMessages(messages.filter((m) => m.id !== modalConfig.targetId));
+      if (selectedMessage && selectedMessage.id === modalConfig.targetId) {
+        setSelectedMessage(null);
+      }
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message: "Mensaje eliminado permanentemente de la bandeja.",
+        targetId: null,
+      });
+    } catch (error) {
+      console.error("Error delete message", error);
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error al intentar eliminar el mensaje.",
+        targetId: null,
+      });
     }
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: "Mensaje eliminado de la bandeja.",
-      targetId: null,
-    });
   };
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
@@ -243,7 +244,12 @@ const AdminMensajes = () => {
                     {selectedMessage.phone}
                   </span>
                 </div>
-                <div className="am-msg-date">{selectedMessage.date}</div>
+                <div className="am-msg-date">
+                  {new Date(selectedMessage.created_at).toLocaleString(
+                    "es-ES",
+                    { dateStyle: "medium", timeStyle: "short" },
+                  )}
+                </div>
               </div>
 
               {/* MENSAJE DEL FORMULARIO */}
@@ -253,14 +259,20 @@ const AdminMensajes = () => {
               </div>
 
               {/* ÁREA DE RESPUESTA O RESPUESTA YA ENVIADA */}
-              {selectedMessage.status === "REPLIED" &&
-              selectedMessage.adminReply ? (
+              {selectedMessage.status === "REPLIED" ? (
                 <div className="am-admin-response">
                   <span className="am-label-title">
-                    <FaCheck style={{ marginRight: "5px" }} /> Tu respuesta
-                    enviada:
+                    <FaCheck style={{ marginRight: "5px" }} /> Respuesta enviada
+                    exitosamente:
                   </span>
-                  <p>{selectedMessage.adminReply}</p>
+                  <p className="am-text-muted">
+                    La hora de respuesta a la consulta se registró el{" "}
+                    {new Date(selectedMessage.replied_at).toLocaleString(
+                      "es-ES",
+                      { dateStyle: "medium", timeStyle: "short" },
+                    )}{" "}
+                    vía correo electrónico.
+                  </p>
                 </div>
               ) : (
                 <div className="am-reply-section">
@@ -400,7 +412,10 @@ const AdminMensajes = () => {
                       <span
                         className={`am-date-text ${isUnread ? "am-text-bold" : ""}`}
                       >
-                        {msg.date}
+                        {new Date(msg.created_at).toLocaleDateString("es-ES", {
+                          day: "numeric",
+                          month: "short",
+                        })}
                       </span>
                     </td>
                     <td className="am-col-actions">

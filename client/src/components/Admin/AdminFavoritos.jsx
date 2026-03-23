@@ -1,203 +1,70 @@
 // src/components/Admin/AdminFavoritos/AdminFavoritos.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaHeart,
   FaFire,
   FaTrophy,
   FaChartBar,
-  FaBullhorn,
   FaFilter,
   FaSortAmountDown,
-  FaCheckCircle,
-  FaExclamationTriangle,
-  FaPaperPlane,
 } from "react-icons/fa";
+import api from "../../api/api";
 import "./AdminFavoritos.css";
 
-// Mock de datos para el análisis de mercado
-const initialRankedProperties = [
-  {
-    id: 1,
-    avenue: "Residencial El Golf",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 520,000",
-    type: "COMPRA",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    favoritesCount: 145, // Muy popular
-  },
-  {
-    id: 2,
-    avenue: "Dpto. Av. Fátima",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 2,500 /mes",
-    type: "ALQUILER",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    favoritesCount: 89,
-  },
-  {
-    id: 3,
-    avenue: "Casa de Campo Huanchaco",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 850,000",
-    type: "COMPRA",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    favoritesCount: 34,
-  },
-  {
-    id: 4,
-    avenue: "Oficina Centro Histórico",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 1,200 /mes",
-    type: "ALQUILER",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    favoritesCount: 12, // Poco popular
-  },
-];
-
 const AdminFavoritos = () => {
-  const [properties] = useState(initialRankedProperties);
+  const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    const fetchTop = async () => {
+      try {
+        const res = await api.get("/favorites/top");
+        setProperties(res.data.data || []);
+      } catch (err) {
+        console.error("Error fetching top favorites:", err);
+      }
+    };
+    fetchTop();
+  }, []);
 
   // Estados para filtros
   const [filterType, setFilterType] = useState("TODOS");
   const [sortOrder, setSortOrder] = useState("DESC"); // DESC = Mayor a menor
 
-  // Configuración de Modales
-  const [modalConfig, setModalConfig] = useState({
-    isOpen: false,
-    type: "",
-    message: "",
-    targetProperty: null,
-  });
-
-  const [promoMessage, setPromoMessage] = useState("");
-
   // ==========================================
   // LÓGICA DE ESTADÍSTICAS Y FILTROS
   // ==========================================
   const totalFavorites = properties.reduce(
-    (acc, curr) => acc + curr.favoritesCount,
+    (acc, curr) => acc + Number(curr.favoritesCount),
     0,
   );
-  const maxFavorites = Math.max(...properties.map((p) => p.favoritesCount));
+  const maxFavorites =
+    properties.length > 0
+      ? Math.max(...properties.map((p) => Number(p.favoritesCount)))
+      : 0;
 
   // Encontrar la propiedad top (la más deseada)
-  const topProperty = properties.reduce((prev, current) =>
-    prev.favoritesCount > current.favoritesCount ? prev : current,
-  );
+  const topProperty =
+    properties.length > 0
+      ? properties.reduce((prev, current) =>
+          Number(prev.favoritesCount) > Number(current.favoritesCount)
+            ? prev
+            : current,
+        )
+      : null;
 
   // Filtrar y ordenar
   let displayData = properties.filter(
-    (p) => filterType === "TODOS" || p.type === filterType,
+    (p) => filterType === "TODOS" || p.operation_type === filterType,
   );
 
   displayData.sort((a, b) => {
-    if (sortOrder === "DESC") return b.favoritesCount - a.favoritesCount;
-    return a.favoritesCount - b.favoritesCount;
+    if (sortOrder === "DESC")
+      return Number(b.favoritesCount) - Number(a.favoritesCount);
+    return Number(a.favoritesCount) - Number(b.favoritesCount);
   });
-
-  // ==========================================
-  // ACCIONES DE MODALES (MARKETING)
-  // ==========================================
-  const handlePromoteClick = (property) => {
-    setPromoMessage("");
-    setModalConfig({
-      isOpen: true,
-      type: "promote",
-      targetProperty: property,
-      message: `Enviarás una notificación a los ${property.favoritesCount} usuarios que marcaron "${property.avenue}" como favorito.`,
-    });
-  };
-
-  const confirmPromotion = () => {
-    if (!promoMessage.trim()) return; // Validación simple
-
-    // Simulamos el envío
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: `¡Campaña enviada! ${modalConfig.targetProperty.favoritesCount} usuarios han sido notificados exitosamente.`,
-      targetProperty: null,
-    });
-  };
-
-  const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
 
   return (
     <div className="af-container">
-      {/* MODAL DEL SISTEMA */}
-      {modalConfig.isOpen && (
-        <div className="af-modal-overlay">
-          <div className="af-modal-box">
-            <div className="af-modal-icon-wrapper">
-              {modalConfig.type === "promote" ? (
-                <FaBullhorn
-                  className="af-modal-icon confirm-icon"
-                  style={{ color: "#f59e0b" }}
-                />
-              ) : (
-                <FaCheckCircle className="af-modal-icon success-icon" />
-              )}
-            </div>
-
-            <h3 className="af-modal-title">
-              {modalConfig.type === "promote" ? "Lanzar Promoción" : "¡Éxito!"}
-            </h3>
-            <p className="af-modal-message">{modalConfig.message}</p>
-
-            {/* Input extra si es modo promoción */}
-            {modalConfig.type === "promote" && (
-              <div className="af-modal-form">
-                <label>
-                  Mensaje de la notificación (Ej. ¡Ha bajado de precio!)
-                </label>
-                <textarea
-                  className="af-modal-textarea"
-                  rows="3"
-                  placeholder="Escribe el mensaje atractivo aquí..."
-                  value={promoMessage}
-                  onChange={(e) => setPromoMessage(e.target.value)}
-                ></textarea>
-                {!promoMessage.trim() && (
-                  <span className="af-error-text">
-                    El mensaje es obligatorio.
-                  </span>
-                )}
-              </div>
-            )}
-
-            <div className="af-modal-actions">
-              {modalConfig.type === "promote" && (
-                <button className="af-btn-cancel" onClick={closeModal}>
-                  Cancelar
-                </button>
-              )}
-              <button
-                className={`af-btn-accept ${modalConfig.type === "promote" && !promoMessage.trim() ? "disabled" : ""}`}
-                disabled={
-                  modalConfig.type === "promote" && !promoMessage.trim()
-                }
-                onClick={
-                  modalConfig.type === "promote" ? confirmPromotion : closeModal
-                }
-              >
-                {modalConfig.type === "promote" ? (
-                  <>
-                    <FaPaperPlane style={{ marginRight: "8px" }} /> Enviar a
-                    todos
-                  </>
-                ) : (
-                  "Aceptar"
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* HEADER */}
       <div className="af-header">
         <div className="af-title-group">
@@ -224,10 +91,10 @@ const AdminFavoritos = () => {
             <FaTrophy className="af-text-gold" />
             <div className="af-stat-text-col">
               <span className="af-stat-value text-medium">
-                {topProperty.avenue}
+                {topProperty ? topProperty.avenue : "N/D"}
               </span>
               <span className="af-stat-subtext">
-                {topProperty.favoritesCount} interesados
+                {topProperty ? topProperty.favoritesCount : 0} interesados
               </span>
             </div>
           </div>
@@ -238,7 +105,9 @@ const AdminFavoritos = () => {
           <div className="af-stat-value-group">
             <FaChartBar className="af-text-corp" />
             <span className="af-stat-value">
-              {Math.round(totalFavorites / properties.length)}{" "}
+              {properties.length > 0
+                ? Math.round(totalFavorites / properties.length)
+                : 0}{" "}
               <span style={{ fontSize: "14px", color: "#6b7280" }}>/ prop</span>
             </span>
           </div>
@@ -282,7 +151,6 @@ const AdminFavoritos = () => {
               <th>Inmueble</th>
               <th className="af-hide-mobile">Operación / Precio</th>
               <th>Nivel de Interés</th>
-              <th className="af-th-center">Marketing</th>
             </tr>
           </thead>
           <tbody>
@@ -307,14 +175,18 @@ const AdminFavoritos = () => {
                     <td>
                       <div className="af-td-flex">
                         <img
-                          src={prop.imageUrl}
+                          src={
+                            prop.images && prop.images.length > 0
+                              ? prop.images[0]
+                              : ""
+                          }
                           alt="inmueble"
                           className="af-td-img"
                         />
                         <div>
                           <strong>{prop.avenue}</strong>
                           <span className="af-text-muted">
-                            {prop.cityCountry}
+                            {prop.city_country}
                           </span>
                         </div>
                       </div>
@@ -322,9 +194,9 @@ const AdminFavoritos = () => {
                     <td className="af-hide-mobile">
                       <div className="af-td-col">
                         <span
-                          className={`af-badge-type ${prop.type === "COMPRA" ? "af-badge-compra" : "af-badge-alquiler"}`}
+                          className={`af-badge-type ${prop.operation_type === "COMPRA" ? "af-badge-compra" : "af-badge-alquiler"}`}
                         >
-                          {prop.type}
+                          {prop.operation_type}
                         </span>
                         <strong className="af-price-text">{prop.price}</strong>
                       </div>
@@ -351,21 +223,12 @@ const AdminFavoritos = () => {
                         </div>
                       </div>
                     </td>
-                    <td className="af-col-actions">
-                      <button
-                        className="af-btn-icon-action af-promote"
-                        onClick={() => handlePromoteClick(prop)}
-                        title="Enviar promoción a interesados"
-                      >
-                        <FaBullhorn />
-                      </button>
-                    </td>
                   </tr>
                 );
               })
             ) : (
               <tr>
-                <td colSpan="5" className="af-no-data">
+                <td colSpan="4" className="af-no-data">
                   No hay inmuebles que coincidan con el filtro.
                 </td>
               </tr>

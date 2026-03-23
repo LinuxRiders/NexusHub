@@ -1,5 +1,5 @@
 // src/components/Admin/AdminInmuebles/AdminInmuebles.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEdit,
   FaTrashAlt,
@@ -12,76 +12,83 @@ import {
   FaTags,
   FaRulerCombined,
   FaImage,
+  FaTimes, // Added FaTimes
 } from "react-icons/fa";
+import { Autocomplete, TextField } from "@mui/material";
 import "./AdminInmuebles.css";
-
-const initialProperties = [
-  {
-    id: 1,
-    avenue: "Av. España 123",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 350,000",
-    numericPrice: 350000,
-    rooms: 4,
-    bathrooms: 2,
-    levels: 2,
-    mt2: 120,
-    type: "COMPRA",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    isFavorite: false,
-  },
-  {
-    id: 2,
-    avenue: "Av. Fátima 456",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 420,000",
-    numericPrice: 420000,
-    rooms: 5,
-    bathrooms: 3,
-    levels: 2,
-    mt2: 150,
-    type: "COMPRA",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    isFavorite: true,
-  },
-  {
-    id: 3,
-    avenue: "Av. América Sur 789",
-    cityCountry: "Trujillo, Perú",
-    price: "S/ 2,500 /mes",
-    numericPrice: 2500,
-    rooms: 3,
-    bathrooms: 2,
-    levels: 1,
-    mt2: 90,
-    type: "ALQUILER",
-    imageUrl:
-      "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/18/55/99/1d/casa.jpg?w=1200&h=-1&s=1",
-    isFavorite: false,
-  },
-];
+import api from "../../api/api"; // Added API
 
 const AdminInmuebles = () => {
-  const [properties, setProperties] = useState(initialProperties);
+  const [properties, setProperties] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [view, setView] = useState("list");
   const [currentId, setCurrentId] = useState(null);
 
   const [formData, setFormData] = useState({
     avenue: "",
     cityCountry: "Trujillo, Perú", // Valor por defecto
+    property_type: "Departamento",
+    operation_type: "COMPRA",
     numericPrice: "",
     rooms: "",
     bathrooms: "",
     levels: "1",
     mt2: "",
-    type: "COMPRA",
     imageUrl: "",
+    status: "BORRADOR",
   });
+
+  useEffect(() => {
+    fetchProperties();
+    fetchLocations();
+  }, []);
+
+  const fetchLocations = async () => {
+    try {
+      const res = await api.get("/properties/locations");
+      setLocations(res.data.data || []);
+    } catch (error) {
+      console.error("Error fetching locations", error);
+    }
+  };
+
+  const fetchProperties = async () => {
+    try {
+      const res = await api.get("/properties/admin/all");
+      setProperties(res.data.data);
+    } catch (error) {
+      console.error("Error fetching properties", error);
+    }
+  };
 
   // Estado para validaciones de campos
   const [formErrors, setFormErrors] = useState({});
+  const [tempImageUrl, setTempImageUrl] = useState("");
+
+  const handleAddImage = () => {
+    const urlPattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|svg))/i; // Relaxed end of string just in case there are query params for tokens
+    if (!tempImageUrl.trim()) return;
+    if (!urlPattern.test(tempImageUrl.trim())) {
+      setFormErrors((prev) => ({
+        ...prev,
+        imageUrl: "Ingresa una URL válida de imagen.",
+      }));
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      images: [...(prev.images || []), tempImageUrl.trim()],
+    }));
+    setTempImageUrl("");
+    setFormErrors((prev) => ({ ...prev, imageUrl: "" }));
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, idx) => idx !== indexToRemove),
+    }));
+  };
 
   const [modalConfig, setModalConfig] = useState({
     isOpen: false,
@@ -110,13 +117,15 @@ const AdminInmuebles = () => {
     setFormData({
       avenue: "",
       cityCountry: "Trujillo, Perú",
+      property_type: "Departamento",
+      operation_type: "COMPRA",
       numericPrice: "",
       rooms: "",
       bathrooms: "",
       levels: "1",
       mt2: "",
-      type: "COMPRA",
-      imageUrl: "",
+      images: [],
+      status: "BORRADOR",
     });
     setFormErrors({});
     setCurrentId(null);
@@ -124,7 +133,19 @@ const AdminInmuebles = () => {
   };
 
   const handleEdit = (property) => {
-    setFormData({ ...property });
+    setFormData({
+      avenue: property.avenue,
+      cityCountry: property.city_country,
+      property_type: property.property_type,
+      operation_type: property.operation_type,
+      numericPrice: property.price,
+      rooms: property.rooms,
+      bathrooms: property.bathrooms,
+      levels: property.levels,
+      mt2: property.mt2,
+      images: property.images || [],
+      status: property.status,
+    });
     setFormErrors({});
     setCurrentId(property.id);
     setView("form");
@@ -164,12 +185,6 @@ const AdminInmuebles = () => {
     if (formData.bathrooms && formData.bathrooms < 0)
       errors.bathrooms = "No puede ser negativo.";
 
-    // Validación simple de URL si el usuario llenó el campo
-    const urlPattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|svg))$/i;
-    if (formData.imageUrl && !urlPattern.test(formData.imageUrl)) {
-      errors.imageUrl = "Ingresa una URL de imagen válida (jpg, png, etc).";
-    }
-
     setFormErrors(errors);
     return Object.keys(errors).length === 0; // Retorna true si no hay errores
   };
@@ -187,14 +202,47 @@ const AdminInmuebles = () => {
     });
   };
 
-  const confirmDelete = () => {
-    setProperties(properties.filter((p) => p.id !== modalConfig.targetId));
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: "El inmueble ha sido eliminado correctamente.",
-      targetId: null,
-    });
+  const confirmDelete = async () => {
+    try {
+      await api.delete(`/properties/${modalConfig.targetId}`);
+      await fetchProperties();
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message: "El inmueble ha sido eliminado correctamente.",
+        targetId: null,
+      });
+    } catch (error) {
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error al eliminar el inmueble.",
+        targetId: null,
+      });
+    }
+  };
+
+  const handleStatusChange = async (propId, newStatus) => {
+    try {
+      await api.put(`/properties/${propId}`, { status: newStatus });
+      setProperties((prev) =>
+        prev.map((p) => (p.id === propId ? { ...p, status: newStatus } : p)),
+      );
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message: "El estado del inmueble ha sido actualizado exitosamente.",
+        targetId: null,
+      });
+    } catch (error) {
+      console.error("Error updating status inline:", error);
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "No se pudo actualizar el estado del inmueble.",
+        targetId: null,
+      });
+    }
   };
 
   const handleSaveClick = (e) => {
@@ -219,50 +267,44 @@ const AdminInmuebles = () => {
     });
   };
 
-  const confirmSave = () => {
-    // Autogeneramos la versión string del precio para las tarjetas del usuario
-    const generatedPriceString = formatPriceString(
-      formData.numericPrice,
-      formData.type,
-    );
-
+  const confirmSave = async () => {
     const finalData = {
-      ...formData,
-      price: generatedPriceString,
-      numericPrice: Number(formData.numericPrice),
+      avenue: formData.avenue,
+      city_country: formData.cityCountry,
+      property_type: formData.property_type,
+      operation_type: formData.operation_type,
+      price: Number(formData.numericPrice),
       rooms: Number(formData.rooms) || 0,
       bathrooms: Number(formData.bathrooms) || 0,
       levels: Number(formData.levels) || 1,
       mt2: Number(formData.mt2) || 0,
+      images: formData.images,
+      status: formData.status,
     };
 
-    if (currentId) {
-      setProperties(
-        properties.map((p) =>
-          p.id === currentId
-            ? { ...finalData, id: currentId, isFavorite: p.isFavorite }
-            : p,
-        ),
-      );
-    } else {
-      const newId =
-        properties.length > 0
-          ? Math.max(...properties.map((p) => p.id)) + 1
-          : 1;
-      setProperties([
-        ...properties,
-        { ...finalData, id: newId, isFavorite: false },
-      ]);
-    }
+    try {
+      if (currentId) {
+        await api.put(`/properties/${currentId}`, finalData);
+      } else {
+        await api.post("/properties", finalData);
+      }
 
-    setView("list");
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: currentId
-        ? "Inmueble actualizado con éxito."
-        : "Nuevo inmueble registrado con éxito.",
-    });
+      await fetchProperties();
+      setView("list");
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message: currentId
+          ? "Inmueble actualizado con éxito."
+          : "Nuevo inmueble registrado con éxito.",
+      });
+    } catch (error) {
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Error al guardar el inmueble.",
+      });
+    }
   };
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
@@ -340,6 +382,7 @@ const AdminInmuebles = () => {
                   <th>Operación</th>
                   <th>Precio</th>
                   <th>Características</th>
+                  <th>Estado</th>
                   <th className="th-center">Acciones</th>
                 </tr>
               </thead>
@@ -350,9 +393,9 @@ const AdminInmuebles = () => {
                       <td className="col-id">#{prop.id}</td>
                       <td className="col-avenue">
                         <div className="td-flex">
-                          {prop.imageUrl ? (
+                          {prop.images && prop.images.length > 0 ? (
                             <img
-                              src={prop.imageUrl}
+                              src={prop.images[0]}
                               alt="inmueble"
                               className="td-img"
                             />
@@ -363,21 +406,47 @@ const AdminInmuebles = () => {
                           )}
                           <div>
                             <strong>{prop.avenue}</strong>
-                            <span>{prop.cityCountry}</span>
+                            <span>{prop.city_country}</span>
+                            <span
+                              style={{
+                                display: "block",
+                                fontSize: "11px",
+                                color: "#666",
+                              }}
+                            >
+                              {prop.property_type}
+                            </span>
                           </div>
                         </div>
                       </td>
                       <td>
                         <span
-                          className={`badge-type ${prop.type === "COMPRA" ? "badge-compra" : "badge-alquiler"}`}
+                          className={`badge-type ${prop.operation_type === "COMPRA" ? "badge-compra" : "badge-alquiler"}`}
                         >
-                          {prop.type}
+                          {prop.operation_type}
                         </span>
                       </td>
-                      <td className="col-price">{prop.price}</td>
+                      <td className="col-price">S/ {prop.price}</td>
                       <td className="col-features">
                         <span>{prop.rooms} Habs</span> •{" "}
                         <span>{prop.bathrooms} Baños</span>
+                      </td>
+                      <td className="col-status">
+                        <button
+                          className={`modern-status-toggle ${prop.status === "PUBLICADO" ? "is-published" : "is-draft"}`}
+                          onClick={() =>
+                            handleStatusChange(
+                              prop.id,
+                              prop.status === "PUBLICADO"
+                                ? "BORRADOR"
+                                : "PUBLICADO",
+                            )
+                          }
+                          title={`Click para cambiar a ${prop.status === "PUBLICADO" ? "BORRADOR" : "PUBLICADO"}`}
+                        >
+                          <div className="toggle-slider-circle"></div>
+                          <span className="toggle-text">{prop.status}</span>
+                        </button>
                       </td>
 
                       {/* CORRECCIÓN: Separando el td del flex de las acciones */}
@@ -457,12 +526,60 @@ const AdminInmuebles = () => {
                   className={`admin-input-box ${formErrors.cityCountry ? "has-error" : ""}`}
                 >
                   <label>Ciudad y País *</label>
-                  <input
-                    type="text"
-                    name="cityCountry"
-                    placeholder="Ej. Trujillo, Perú"
+                  <Autocomplete
+                    freeSolo
+                    options={locations}
                     value={formData.cityCountry}
-                    onChange={handleInputChange}
+                    onChange={(event, newValue) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        cityCountry: newValue || "",
+                      }));
+                      if (formErrors.cityCountry) {
+                        setFormErrors((prev) => ({ ...prev, cityCountry: "" }));
+                      }
+                    }}
+                    onInputChange={(event, newInputValue) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        cityCountry: newInputValue,
+                      }));
+                      if (formErrors.cityCountry) {
+                        setFormErrors((prev) => ({ ...prev, cityCountry: "" }));
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        placeholder="Ej. Trujillo, Perú"
+                        variant="outlined"
+                        sx={{
+                          backgroundColor: "#f9fafb",
+                          "& .MuiOutlinedInput-root": {
+                            padding: "0 9px", // Right spacing for chevron
+                            height: "45px", // Enforce exact height to match standard inputs
+                            fontFamily: '"Nunito", sans-serif',
+                            fontSize: "15px",
+                            fontWeight: 600,
+                            color: "#111827",
+                            borderRadius: "6px",
+                            "& fieldset": { borderColor: "#d1d5db" },
+                            "&:hover fieldset": { borderColor: "#1c6a6e" },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#1c6a6e",
+                              borderWidth: "2px",
+                            },
+                          },
+                          "& input": {
+                            border: "none !important",
+                            backgroundColor: "transparent !important",
+                            boxShadow: "none !important",
+                            padding: "0 6px !important", // Inner text padding
+                            height: "100%",
+                          },
+                        }}
+                      />
+                    )}
                   />
                   {formErrors.cityCountry && (
                     <span className="error-text">{formErrors.cityCountry}</span>
@@ -478,10 +595,26 @@ const AdminInmuebles = () => {
               </h3>
               <div className="admin-form-grid">
                 <div className="admin-input-box">
+                  <label>Tipo de Inmueble *</label>
+                  <select
+                    name="property_type"
+                    value={formData.property_type}
+                    onChange={handleInputChange}
+                    className="admin-select"
+                  >
+                    <option value="Departamento">Departamento</option>
+                    <option value="Casa">Casa</option>
+                    <option value="Oficina">Oficina</option>
+                    <option value="Local Comercial">Local Comercial</option>
+                    <option value="Terreno">Terreno</option>
+                    <option value="Almacén">Almacén</option>
+                  </select>
+                </div>
+                <div className="admin-input-box">
                   <label>Tipo de Operación *</label>
                   <select
-                    name="type"
-                    value={formData.type}
+                    name="operation_type"
+                    value={formData.operation_type}
                     onChange={handleInputChange}
                     className="admin-select"
                   >
@@ -504,7 +637,7 @@ const AdminInmuebles = () => {
                       value={formData.numericPrice}
                       onChange={handleInputChange}
                     />
-                    {formData.type === "ALQUILER" && (
+                    {formData.operation_type === "ALQUILER" && (
                       <span className="suffix">/mes</span>
                     )}
                   </div>
@@ -592,38 +725,139 @@ const AdminInmuebles = () => {
             {/* SECCIÓN 4: Multimedia */}
             <div className="form-section">
               <h3 className="section-title">
-                <FaImage /> Multimedia
+                <FaImage /> Galería de Imágenes
               </h3>
               <div className="admin-form-grid">
                 <div
                   className={`admin-input-box full-width ${formErrors.imageUrl ? "has-error" : ""}`}
                 >
-                  <label>URL de la Imagen Principal</label>
-                  <input
-                    type="text"
-                    name="imageUrl"
-                    placeholder="Ej. https://miservidor.com/foto.jpg"
-                    value={formData.imageUrl}
-                    onChange={handleInputChange}
-                  />
+                  <label>Añadir Nueva URL de Imagen</label>
+                  <div style={{ display: "flex", gap: "10px" }}>
+                    <input
+                      type="text"
+                      placeholder="Ej. https://miservidor.com/foto.jpg"
+                      value={tempImageUrl}
+                      onChange={(e) => {
+                        setTempImageUrl(e.target.value);
+                        if (formErrors.imageUrl)
+                          setFormErrors((prev) => ({ ...prev, imageUrl: "" }));
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleAddImage();
+                        }
+                      }}
+                      style={{ flex: 1 }}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleAddImage}
+                      style={{
+                        padding: "0 20px",
+                        backgroundColor: "#1c6a6e",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "6px",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        fontFamily: '"Nunito", sans-serif',
+                      }}
+                    >
+                      Añadir a Galería
+                    </button>
+                  </div>
                   {formErrors.imageUrl && (
                     <span className="error-text">{formErrors.imageUrl}</span>
                   )}
                 </div>
               </div>
 
-              {/* Preview de la imagen si hay una URL válida */}
-              {formData.imageUrl && !formErrors.imageUrl && (
-                <div className="image-preview-container">
-                  <p className="helper-text">Vista previa:</p>
-                  <img
-                    src={formData.imageUrl}
-                    alt="Vista previa"
-                    className="image-preview"
-                    onError={(e) => (e.target.style.display = "none")}
-                  />
+              {/* Preview de la galería */}
+              {formData.images && formData.images.length > 0 && (
+                <div
+                  className="image-preview-container"
+                  style={{ marginTop: "20px" }}
+                >
+                  <p className="helper-text" style={{ marginBottom: "15px" }}>
+                    Vista previa de la galería ({formData.images.length}):
+                  </p>
+                  <div
+                    style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}
+                  >
+                    {formData.images.map((imgUrl, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          position: "relative",
+                          width: "150px",
+                          height: "150px",
+                          borderRadius: "8px",
+                          overflow: "hidden",
+                          border: "1px solid #ddd",
+                        }}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`Prev ${idx}`}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                          onError={(e) => (e.target.style.display = "none")}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(idx)}
+                          style={{
+                            position: "absolute",
+                            top: "5px",
+                            right: "5px",
+                            backgroundColor: "rgba(255,0,0,0.8)",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "50%",
+                            width: "24px",
+                            height: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <FaTimes size={12} />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
+            </div>
+
+            {/* SECCIÓN 5: Estado */}
+            <div className="form-section">
+              <h3 className="section-title">
+                <FaCheckCircle /> Estado de Publicación
+              </h3>
+              <div className="admin-form-grid">
+                <div className="admin-input-box">
+                  <label>Estado *</label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    className="admin-select"
+                  >
+                    <option value="BORRADOR">
+                      Borrador (No visible para usuarios)
+                    </option>
+                    <option value="PUBLICADO">
+                      Publicado (Visible y envía alertas a interesados)
+                    </option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             {/* BOTONES */}

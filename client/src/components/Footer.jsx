@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Footer.css";
 
@@ -6,8 +6,13 @@ import logo from "../assets/img/logo.png";
 import facebook from "../assets/img/icons/redes/facebook.png";
 import instagram from "../assets/img/icons/redes/instagram.png";
 import linkedin from "../assets/img/icons/redes/linkedin.png";
+import { useAuth } from "../context/AuthProvider";
+import api from "../api/api";
 
 const Footer = () => {
+  const { isAuthenticated, user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [hasAutoFilled, setHasAutoFilled] = useState(false);
   const [formData, setFormData] = useState({
     nombres: "",
     apellidos: "",
@@ -16,17 +21,50 @@ const Footer = () => {
     mensaje: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const handleFocus = () => {
+    if (isAuthenticated && user && !hasAutoFilled) {
+      setFormData((prev) => ({
+        ...prev,
+        nombres: prev.nombres || user.nombres || user.username || "",
+        apellidos: prev.apellidos || user.apellidos || "",
+        email: prev.email || user.email || "",
+        numero: prev.numero || user.telefono || "",
+      }));
+      setHasAutoFilled(true);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    alert("Mensaje enviado correctamente");
+    setLoading(true);
+    try {
+      await api.post("/messages", {
+        name: `${formData.nombres} ${formData.apellidos}`.trim(),
+        email: formData.email,
+        phone: formData.numero,
+        message: formData.mensaje,
+        subject: "Contacto desde el Footer",
+      });
+      alert("¡Mensaje enviado correctamente! Te contactaremos pronto.");
+      setFormData({
+        nombres: "",
+        apellidos: "",
+        email: "",
+        numero: "",
+        mensaje: "",
+      });
+      setHasAutoFilled(false);
+      if (document.activeElement) document.activeElement.blur();
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
+      alert("Ocurrió un error al enviar el mensaje. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,7 +103,11 @@ const Footer = () => {
         <div className="footer-form-wrapper">
           <div className="footer-form-border"></div>
 
-          <form className="footer-form" onSubmit={handleSubmit}>
+          <form
+            className="footer-form"
+            onSubmit={handleSubmit}
+            onFocus={handleFocus}
+          >
             <h2>
               Tu espacio ideal <span>aquí</span>
             </h2>
@@ -76,6 +118,7 @@ const Footer = () => {
             <input
               name="nombres"
               type="text"
+              value={formData.nombres}
               placeholder="Introduce tu nombre"
               onChange={handleChange}
               required
@@ -85,6 +128,7 @@ const Footer = () => {
             <input
               name="apellidos"
               type="text"
+              value={formData.apellidos}
               placeholder="Introduce tu apellido"
               onChange={handleChange}
               required
@@ -94,6 +138,7 @@ const Footer = () => {
             <input
               name="email"
               type="email"
+              value={formData.email}
               placeholder="Introduce tu email"
               onChange={handleChange}
               required
@@ -103,6 +148,7 @@ const Footer = () => {
             <input
               name="numero"
               type="text"
+              value={formData.numero}
               placeholder="Introduce tu número"
               onChange={handleChange}
               required
@@ -111,12 +157,15 @@ const Footer = () => {
             <label>Mensaje*</label>
             <textarea
               name="mensaje"
+              value={formData.mensaje}
               placeholder="Introduce tu mensaje"
               onChange={handleChange}
               required
             ></textarea>
 
-            <button type="submit">Enviar</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Enviando..." : "Enviar"}
+            </button>
           </form>
         </div>
       </div>

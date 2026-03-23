@@ -219,17 +219,49 @@ export const User = {
     }
   },
 
-  getAll: async (connection = pool) => {
+  getAll: async (includeUserData = false, connection = pool) => {
     try {
-      // Agregado is_verified
-      const [rows] = await connection.execute(
-        "SELECT user_id, username, email, status, is_verified, created_at, updated_at FROM USER WHERE deleted_at IS NULL"
-      );
+      let query = "SELECT user_id, username, email, status, is_verified, created_at, updated_at FROM USER WHERE deleted_at IS NULL";
+      
+      if (includeUserData) {
+        query = `SELECT u.user_id, u.username, u.email, u.status, u.is_verified, u.created_at, u.updated_at,
+                 ud.*
+                 FROM USER u
+                 LEFT JOIN userdata ud ON u.user_id = ud.user_id
+                 WHERE u.deleted_at IS NULL`;
+      }
+      
+      const [rows] = await connection.execute(query);
       return rows;
     } catch (error) {
       logger.error(`[Model]:User:getAll Error: ${error.message}`, {
         stack: error.stack,
       });
+      throw error;
+    }
+  },
+
+  getStats: async (includeAdmins = false, connection = pool) => {
+    try {
+      const adminFilter = includeAdmins ? "" : `
+        AND user_id NOT IN (
+          SELECT ur.user_id FROM user_roles ur
+          JOIN roles r ON ur.role_id = r.role_id WHERE r.name IN ('admin', 'dev')
+        )`;
+
+      const [rows] = await connection.execute(`
+        SELECT 
+          COUNT(DISTINCT user_id) as totalUsers,
+          SUM(status = 'active') as activeUsers,
+          SUM(status = 'inactive') as inactiveUsers,
+          0 as googleUsers
+        FROM USER 
+        WHERE deleted_at IS NULL ${adminFilter}
+      `);
+
+      return rows[0];
+    } catch (error) {
+      logger.error(`[Model]:User:getStats Error: ${error.message}`, { stack: error.stack });
       throw error;
     }
   },

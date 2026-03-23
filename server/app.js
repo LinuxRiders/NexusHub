@@ -5,6 +5,8 @@ import 'dotenv/config';
 import { createServer } from "http"; // Importar para crear el servidor HTTP
 import routes from './src/routes/routes.js';
 import { errorHandler } from "./src/middlewares/errorHandler.js";
+import { registerActivityListeners } from "./src/modules/System-Activity/events/activity.listener.js";
+import { registerNotificationListeners } from "./src/modules/Properties/events/notification.listener.js";
 
 const PORT = process.env.PORT || 4000;
 
@@ -39,6 +41,10 @@ app.use('/api/', (req, res, next) => {
 
 // Middleware de manejo de errores
 app.use(errorHandler);
+
+// Inicializar módulos Background / Event Workers
+registerActivityListeners();
+registerNotificationListeners();
 
 // Usar server.listen en lugar de app.listen
 server.listen(PORT, () => {

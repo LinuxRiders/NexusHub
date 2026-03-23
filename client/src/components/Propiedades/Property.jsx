@@ -1,44 +1,71 @@
 // src/components/Properties/Property.jsx
 import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import PropertyCard from "./PropertyCard";
-import { propertiesData as initialData } from "./propertiesData";
 import "./Property.css";
+import api from "../../api/api";
+import { useAuth } from "../../context/AuthProvider";
 
 const Property = () => {
-  const [properties, setProperties] = useState(initialData);
-  const [filteredProperties, setFilteredProperties] = useState(initialData);
+  const { isAuthenticated } = useAuth();
+  const [properties, setProperties] = useState([]);
+  const [filteredProperties, setFilteredProperties] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  // Estado para los filtros
+  // Estado para los filtros (iniciados desde la URL si existen)
   const [filters, setFilters] = useState({
-    type: "TODOS",
-    minPrice: "",
-    maxPrice: "",
-    rooms: "TODOS",
-    bathrooms: "TODOS",
+    id: searchParams.get("id") || "",
+    type: searchParams.get("type") || "TODOS",
+    minPrice: searchParams.get("minPrice") || "",
+    maxPrice: searchParams.get("maxPrice") || "",
+    rooms: searchParams.get("rooms") || "TODOS",
+    bathrooms: searchParams.get("bathrooms") || "TODOS",
   });
+
+  const fetchProperties = async () => {
+    try {
+      const { data } = await api.get("/properties");
+
+      // El backend ahora devuelve un campo `isFavorite` (true/false) en cada propiedad
+      // si es que el usuario incluyó su token (gracias a optionalAuthMiddleware).
+      setProperties(data.data || []);
+    } catch (error) {
+      console.error("Error fetching properties", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProperties();
+  }, [isAuthenticated]);
 
   // Lógica de filtrado
   useEffect(() => {
     let result = properties;
 
-    if (filters.type !== "TODOS") {
-      result = result.filter((p) => p.type === filters.type);
-    }
-    if (filters.minPrice !== "") {
-      result = result.filter(
-        (p) => p.numericPrice >= parseInt(filters.minPrice),
-      );
-    }
-    if (filters.maxPrice !== "") {
-      result = result.filter(
-        (p) => p.numericPrice <= parseInt(filters.maxPrice),
-      );
-    }
-    if (filters.rooms !== "TODOS") {
-      result = result.filter((p) => p.rooms >= parseInt(filters.rooms));
-    }
-    if (filters.bathrooms !== "TODOS") {
-      result = result.filter((p) => p.bathrooms >= parseInt(filters.bathrooms));
+    if (filters.id) {
+      result = result.filter((p) => String(p.id) === String(filters.id));
+    } else {
+      if (filters.type !== "TODOS") {
+        result = result.filter((p) => p.operation_type === filters.type);
+      }
+      if (filters.minPrice !== "") {
+        result = result.filter(
+          (p) => Number(p.price) >= parseInt(filters.minPrice),
+        );
+      }
+      if (filters.maxPrice !== "") {
+        result = result.filter(
+          (p) => Number(p.price) <= parseInt(filters.maxPrice),
+        );
+      }
+      if (filters.rooms !== "TODOS") {
+        result = result.filter((p) => p.rooms >= parseInt(filters.rooms));
+      }
+      if (filters.bathrooms !== "TODOS") {
+        result = result.filter(
+          (p) => p.bathrooms >= parseInt(filters.bathrooms),
+        );
+      }
     }
 
     setFilteredProperties(result);
@@ -46,17 +73,40 @@ const Property = () => {
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+
+    setFilters((prev) => {
+      const nextFilters = { ...prev, [name]: value };
+
+      // Actualizamos la URL descartando TODOS y vacios
+      const query = {};
+      for (const key in nextFilters) {
+        if (nextFilters[key] && nextFilters[key] !== "TODOS") {
+          query[key] = nextFilters[key];
+        }
+      }
+      setSearchParams(query, { replace: true });
+      return nextFilters;
+    });
   };
 
-  const toggleFavorite = (id) => {
-    setProperties((prevProperties) =>
-      prevProperties.map((property) =>
-        property.id === id
-          ? { ...property, isFavorite: !property.isFavorite }
-          : property,
-      ),
-    );
+  const toggleFavorite = async (id) => {
+    if (!isAuthenticated) {
+      alert("Debes iniciar sesión para añadir a favoritos.");
+      return;
+    }
+
+    try {
+      await api.post(`/favorites/toggle/${id}`);
+      setProperties((prevProperties) =>
+        prevProperties.map((property) =>
+          property.id === id
+            ? { ...property, isFavorite: !property.isFavorite }
+            : property,
+        ),
+      );
+    } catch (error) {
+      console.error("Error toggling favorite", error);
+    }
   };
 
   return (
@@ -127,6 +177,23 @@ const Property = () => {
           </select>
         </div>
       </div>
+
+      {filters.id && (
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <button
+            className="btn-action-primary"
+            style={{ display: "inline-block" }}
+            onClick={() => {
+              const { id, ...rest } = filters;
+              setFilters({ ...rest, id: "" });
+              searchParams.delete("id");
+              setSearchParams(searchParams);
+            }}
+          >
+            Ver catálogo completo de propiedades
+          </button>
+        </div>
+      )}
 
       {/* Contenedor de Tarjetas */}
       <div className="properties-container">

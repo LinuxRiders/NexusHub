@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Añadimos iconos para el botón móvil
 import { useAuth } from "../../context/AuthProvider";
+import api from "../../api/api";
 
 import user from "../../assets/img/icons/userCuenta/user.png";
 import user2 from "../../assets/img/icons/userCuenta/user2.png";
@@ -24,6 +25,21 @@ const SidebarMenu = ({ activeTab, setActiveTab }) => {
   const { logout } = useAuth();
   // Nuevo estado para controlar si el menú está abierto en móviles
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  React.useEffect(() => {
+    fetchUnreadNotifications();
+  }, []);
+
+  const fetchUnreadNotifications = async () => {
+    try {
+      const res = await api.get("/notifications/me");
+      const unread = res.data.data.filter((n) => !n.is_read).length;
+      setUnreadCount(unread);
+    } catch (error) {
+      console.error("Error fetching notifications count", error);
+    }
+  };
 
   const menuOptions = [
     { id: "datos", label: "Datos del usuario", icon: user, iconHover: user2 },
@@ -34,6 +50,13 @@ const SidebarMenu = ({ activeTab, setActiveTab }) => {
       iconHover: candado2,
     },
     { id: "alertas", label: "Mis alertas", icon: alerta, iconHover: alerta2 },
+    {
+      id: "notificaciones",
+      label: "Notificaciones",
+      icon: alerta,
+      iconHover: alerta2,
+      badge: unreadCount,
+    },
     {
       id: "favoritos",
       label: "Mis favoritos",
@@ -84,9 +107,26 @@ const SidebarMenu = ({ activeTab, setActiveTab }) => {
             className={`sidebar-item ${activeTab === option.id ? "active" : ""}`}
             onClick={() => handleMenuClick(option.id)}
           >
-            <span className="sidebar-icon">
+            <span className="sidebar-icon" style={{ position: "relative" }}>
               <img src={option.icon} alt="" className="icon-normal" />
               <img src={option.iconHover} alt="" className="icon-hover" />
+              {option.badge > 0 && (
+                <span
+                  style={{
+                    position: "absolute",
+                    top: -5,
+                    right: -5,
+                    backgroundColor: "red",
+                    color: "white",
+                    fontSize: "10px",
+                    fontWeight: "bold",
+                    borderRadius: "50%",
+                    padding: "2px 6px",
+                  }}
+                >
+                  {option.badge}
+                </span>
+              )}
             </span>
 
             <span className="sidebar-text">{option.label}</span>

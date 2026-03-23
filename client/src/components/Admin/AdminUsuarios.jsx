@@ -1,9 +1,6 @@
 // src/components/Admin/AdminUsuarios/AdminUsuarios.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  FaTrashAlt,
-  FaCheckCircle,
-  FaExclamationTriangle,
   FaSearch,
   FaEnvelope,
   FaGoogle,
@@ -12,50 +9,62 @@ import {
   FaBan,
   FaCheck,
   FaCalendarAlt,
+  FaExclamationTriangle,
+  FaCheckCircle,
 } from "react-icons/fa";
+import api from "../../api/api";
 import "./AdminUsuarios.css";
 
-const initialUsers = [
-  {
-    id: 1,
-    name: "Sofía",
-    lastname: "Nolasco",
-    email: "sofia.nolasco@gmail.com",
-    phone: "987654321",
-    country: "Perú",
-    status: "ACTIVO",
-    authMethod: "email",
-    joinDate: "15 Mar 2026",
-    avatar: null,
-  },
-  {
-    id: 2,
-    name: "Carlos",
-    lastname: "Mendoza",
-    email: "carlos.m@hotmail.com",
-    phone: "912345678",
-    country: "Perú",
-    status: "ACTIVO",
-    authMethod: "google",
-    joinDate: "18 Mar 2026",
-    avatar: "https://lh3.googleusercontent.com/a/default-user",
-  },
-  {
-    id: 3,
-    name: "Andrea",
-    lastname: "Salazar",
-    email: "andrea.ventas@nexushub.com",
-    phone: "998877665",
-    country: "Perú",
-    status: "INACTIVO",
-    authMethod: "email",
-    joinDate: "20 Mar 2026",
-    avatar: null,
-  },
-];
-
 const AdminUsuarios = () => {
-  const [users, setUsers] = useState(initialUsers);
+  const [users, setUsers] = useState([]);
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    inactiveUsers: 0,
+    googleUsers: 0,
+  });
+
+  useEffect(() => {
+    const fetchUsersAndStats = async () => {
+      try {
+        const [usersRes, statsRes] = await Promise.all([
+          api.get("/users/"),
+          api.get("/users/stats?includeAdmins=false"),
+        ]);
+
+        // Filtrar cualquier rol administrativo de la vista (si si tiene roles = mostrar)
+        const filteredData = (usersRes.data.data || []).filter(
+          (u) => !u.roles || u.roles.length > 0,
+        );
+
+        // Mapear los datos de la DB al formato esperado por el frontend
+        const mappedUsers = filteredData.map((u) => ({
+          id: u.user_id,
+          name: u.nombres || u.username,
+          lastname: u.apellidos || "",
+          email: u.email,
+          phone: u.telefono || "",
+          country: u.pais || "",
+          status: (u.status || "active").toUpperCase(),
+          authMethod: "email", // Dejamos por defecto 'email' hasta dar soporte a Google
+          joinDate: new Date(u.created_at).toLocaleDateString("es-ES", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+          }),
+          avatar: null,
+        }));
+
+        setUsers(mappedUsers);
+        if (statsRes.data?.data) {
+          setStats(statsRes.data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching users or stats:", error);
+      }
+    };
+    fetchUsersAndStats();
+  }, []);
 
   // Estados de Búsqueda y Filtros
   const [searchTerm, setSearchTerm] = useState("");
@@ -74,10 +83,7 @@ const AdminUsuarios = () => {
   // ==========================================
   // ESTADÍSTICAS RÁPIDAS
   // ==========================================
-  const totalUsers = users.length;
-  const activeUsers = users.filter((u) => u.status === "ACTIVO").length;
-  const inactiveUsers = users.filter((u) => u.status === "INACTIVO").length;
-  const googleUsers = users.filter((u) => u.authMethod === "google").length;
+  const { totalUsers, activeUsers, inactiveUsers, googleUsers } = stats;
 
   // ==========================================
   // FILTROS
@@ -91,9 +97,10 @@ const AdminUsuarios = () => {
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
 
     let matchesFilter = true;
-    if (filterType === "ACTIVOS") matchesFilter = user.status === "ACTIVO";
+    if (filterType === "ACTIVOS")
+      matchesFilter = user.status === "ACTIVO" || user.status === "ACTIVE";
     if (filterType === "SUSPENDIDOS")
-      matchesFilter = user.status === "INACTIVO";
+      matchesFilter = user.status === "INACTIVO" || user.status === "INACTIVE";
     if (filterType === "GOOGLE") matchesFilter = user.authMethod === "google";
     if (filterType === "EMAIL") matchesFilter = user.authMethod === "email";
 
@@ -113,59 +120,79 @@ const AdminUsuarios = () => {
     });
   };
 
-  const handleSendMail = () => {
+  const handleSendMail = async () => {
     if (!mailData.subject || !mailData.body) return;
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: `Mensaje enviado con éxito a ${modalConfig.targetUser.email}`,
-      targetUser: null,
-    });
+    try {
+      await api.post("/users/message", {
+        userIds: [modalConfig.targetUser.id],
+        subject: mailData.subject,
+        message: mailData.body,
+      });
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message: `Mensaje enviado con éxito a ${modalConfig.targetUser.email}`,
+        targetUser: null,
+      });
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error al enviar el correo.",
+        targetUser: null,
+      });
+    }
   };
 
   const handleToggleStatusClick = (user) => {
-    const actionText = user.status === "ACTIVO" ? "suspender" : "reactivar";
+    const isActive = user.status === "ACTIVO" || user.status === "ACTIVE";
+    const actionText = isActive ? "desactivar" : "reactivar";
     setModalConfig({
       isOpen: true,
       type: "confirm-toggle-status",
-      message: `¿Estás seguro de que deseas ${actionText} la cuenta de ${user.name}?`,
+      message: `¿Estás seguro de que deseas ${actionText} permanentemente el acceso de la cuenta de ${user.name}?`,
       targetUser: user,
     });
   };
 
-  const confirmToggleStatus = () => {
-    const newStatus =
-      modalConfig.targetUser.status === "ACTIVO" ? "INACTIVO" : "ACTIVO";
-    setUsers(
-      users.map((u) =>
-        u.id === modalConfig.targetUser.id ? { ...u, status: newStatus } : u,
-      ),
-    );
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: `La cuenta ha sido ${newStatus === "ACTIVO" ? "reactivada" : "suspendida"}.`,
-      targetUser: null,
-    });
-  };
+  const confirmToggleStatus = async () => {
+    const isActive =
+      modalConfig.targetUser.status === "ACTIVO" ||
+      modalConfig.targetUser.status === "ACTIVE";
+    const newStatus = isActive ? "inactive" : "active";
 
-  const handleDeleteClick = (user) => {
-    setModalConfig({
-      isOpen: true,
-      type: "confirm-delete",
-      message: `¿Eliminar permanentemente la cuenta de ${user.name}? Esta acción no se puede deshacer.`,
-      targetUser: user,
-    });
-  };
+    try {
+      // 1. Llamar al API para cambiar el estado
+      await api.patch(`/users/${modalConfig.targetUser.id}`, {
+        status: newStatus,
+      });
 
-  const confirmDelete = () => {
-    setUsers(users.filter((u) => u.id !== modalConfig.targetUser.id));
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: "Usuario eliminado de forma permanente.",
-      targetUser: null,
-    });
+      // 2. Actualizar el estado local
+      setUsers(
+        users.map((u) =>
+          u.id === modalConfig.targetUser.id
+            ? { ...u, status: newStatus.toUpperCase() }
+            : u,
+        ),
+      );
+
+      // 3. Confirmar al administrador
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message: `La cuenta ha sido ${newStatus === "active" ? "reactivada" : "suspendida"}.`,
+        targetUser: null,
+      });
+    } catch (error) {
+      console.error("Error al cambiar estado:", error);
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error al actualizar el estado del usuario.",
+        targetUser: null,
+      });
+    }
   };
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
@@ -368,6 +395,7 @@ const AdminUsuarios = () => {
                     <td className="au-hide-mobile">
                       <div>
                         <strong>{user.phone || "Sin teléfono"}</strong>
+                        <br />
                         <span className="au-text-muted">
                           {user.country || "No especificado"}
                         </span>
@@ -413,22 +441,53 @@ const AdminUsuarios = () => {
                           <FaEnvelope />
                         </button>
                         <button
-                          className={`au-btn-icon ${user.status === "ACTIVO" ? "au-ban" : "au-unban"}`}
+                          className={`au-btn-icon ${
+                            user.status === "ACTIVO" || user.status === "ACTIVE"
+                              ? "au-ban"
+                              : "au-unban"
+                          }`}
                           onClick={() => handleToggleStatusClick(user)}
                           title={
-                            user.status === "ACTIVO"
-                              ? "Suspender Usuario"
+                            user.status === "ACTIVO" || user.status === "ACTIVE"
+                              ? "Desactivar Usuario"
                               : "Reactivar Usuario"
                           }
+                          style={{
+                            width: "auto",
+                            padding: "0 10px",
+                            borderRadius: "6px",
+                            fontSize: "0.85rem",
+                            display: "flex",
+                            gap: "6px",
+                            alignItems: "center",
+                          }}
                         >
-                          {user.status === "ACTIVO" ? <FaBan /> : <FaCheck />}
-                        </button>
-                        <button
-                          className="au-btn-icon au-delete"
-                          onClick={() => handleDeleteClick(user)}
-                          title="Eliminar Permanentemente"
-                        >
-                          <FaTrashAlt />
+                          {user.status === "ACTIVO" ||
+                          user.status === "ACTIVE" ? (
+                            <>
+                              <FaBan />
+                              <span
+                                style={{
+                                  fontFamily: "Inter, sans-serif",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Desactivar
+                              </span>
+                            </>
+                          ) : (
+                            <>
+                              <FaCheck />
+                              <span
+                                style={{
+                                  fontFamily: "Inter, sans-serif",
+                                  fontWeight: 600,
+                                }}
+                              >
+                                Activar
+                              </span>
+                            </>
+                          )}
                         </button>
                       </div>
                     </td>

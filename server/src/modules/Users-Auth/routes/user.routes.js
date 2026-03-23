@@ -7,7 +7,8 @@ import {
   updateUser,
   deleteUser,
   sendUserEmail,
-  updateMyProfile
+  updateMyProfile,
+  getUserStats
 } from "../controllers/user.controller.js";
 import { authMiddleware } from "../../../middlewares/auth.middleware.js";
 import { requireRole } from "../../../middlewares/permissions.middleware.js";
@@ -29,12 +30,13 @@ router.get("/me", getCurrentUser);
 router.patch("/me", rateLimiter('15m', 15, 'update_profile'), updateProfileValidation, validateResults, updateMyProfile);
 
 // ================ Usuario ===============
-router.post("/message", requireRole('dev'), sendUserEmail); // Nueva ruta para enviar mensajes
+router.post("/message", requireRole(['admin', 'dev']), sendUserEmail); // Nueva ruta para enviar mensajes
 
-router.get("/", requireRole('dev'), getAllUsers); // Por si acaso
-// router.post("/", requireRole('dev'), createUser); // createUserValidation, validateResults
-router.get("/:id", requireRole('dev'), getUser); // idParamValidation, validateResults
-router.patch("/:id", requireRole('dev'), updateUser); // idParamValidation, validateResults
-router.delete("/:id", requireRole('dev'), deleteUser); // authMiddleware, idParamValidation, validateResults
+router.get("/stats", requireRole(['admin', 'dev']), getUserStats); // Métricas Generales
+router.get("/", requireRole(['admin', 'dev']), getAllUsers); // Por si acaso
+// router.post("/", requireRole(['admin', 'dev']), createUser); // createUserValidation, validateResults
+router.get("/:id", requireRole(['admin', 'dev']), getUser); // idParamValidation, validateResults
+router.patch("/:id", requireRole(['admin', 'dev']), updateUser); // idParamValidation, validateResults
+router.delete("/:id", requireRole(['admin', 'dev']), deleteUser); // authMiddleware, idParamValidation, validateResults
 
 export default router;

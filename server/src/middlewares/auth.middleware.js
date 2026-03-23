@@ -30,3 +30,21 @@ export const authMiddleware = (req, res, next) => {
     }
 };
 
+export const optionalAuthMiddleware = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const [scheme, token] = authHeader.split(' ');
+        if (token && /^Bearer$/i.test(scheme)) {
+            try {
+                req.user = verify(token, process.env.JWT_SECRET);
+            } catch (error) {
+                // Ignore errors for optional auth
+                logger.debug(`OptionalAuthMiddleware: Invalid token ignored: ${error.message}`);
+            }
+        }
+    }
+
+    next();
+};
+

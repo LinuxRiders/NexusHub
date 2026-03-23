@@ -1,5 +1,5 @@
 // src/components/User/UserFavorites/UserFavorites.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaExclamationTriangle,
   FaCheckCircle,
@@ -10,14 +10,24 @@ import {
 import favorito from "../../assets/img/icons/userCuenta/favorito.png";
 
 import PropertyCard from "../Propiedades/PropertyCard";
-import { propertiesData as initialData } from "../Propiedades/propertiesData";
 import "./UserFavorites.css";
+import api from "../../api/api";
 
 const UserFavorites = () => {
-  // Filtramos los datos iniciales para mostrar solo favoritos
-  const [properties, setProperties] = useState(
-    initialData.filter((p) => p.isFavorite === true),
-  );
+  const [properties, setProperties] = useState([]);
+
+  useEffect(() => {
+    fetchFavorites();
+  }, []);
+
+  const fetchFavorites = async () => {
+    try {
+      const { data } = await api.get("/favorites/me");
+      setProperties(data.data.map((fav) => ({ ...fav, isFavorite: true })));
+    } catch (error) {
+      console.error("Error fetching favorites", error);
+    }
+  };
 
   // ESTADO DE ALERTA (Copiado de tu UserPassword/UserAlerts)
   const [modalConfig, setModalConfig] = useState({
@@ -39,18 +49,29 @@ const UserFavorites = () => {
   };
 
   // Función que se ejecuta al dar "Aceptar" en el modal de confirmación
-  const confirmRemoval = () => {
-    setProperties((prev) =>
-      prev.filter((p) => p.id !== modalConfig.idToRemove),
-    );
+  const confirmRemoval = async () => {
+    try {
+      await api.post(`/favorites/toggle/${modalConfig.idToRemove}`);
+      setProperties((prev) =>
+        prev.filter((p) => p.id !== modalConfig.idToRemove),
+      );
 
-    // Cambiamos a modal de éxito
-    setModalConfig({
-      ...modalConfig,
-      type: "success",
-      message: "Inmueble eliminado de tus favoritos correctamente.",
-      idToRemove: null,
-    });
+      // Cambiamos a modal de éxito
+      setModalConfig({
+        ...modalConfig,
+        type: "success",
+        message: "Inmueble eliminado de tus favoritos correctamente.",
+        idToRemove: null,
+      });
+    } catch (error) {
+      console.error("Error removing favorite", error);
+      setModalConfig({
+        ...modalConfig,
+        type: "error",
+        message: "No se pudo eliminar de favoritos.",
+        idToRemove: null,
+      });
+    }
   };
 
   const closeModal = () => {
@@ -120,6 +141,7 @@ const UserFavorites = () => {
               key={property.id}
               property={property}
               onToggleFavorite={() => handleRemoveClick(property.id)}
+              disableAos={true}
             />
           ))
         ) : (

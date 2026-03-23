@@ -6,6 +6,7 @@ import UserPassword from "../components/User/UserPassword";
 import UserAlerts from "../components/User/UserAlerts";
 import UserFavorites from "../components/User/UserFavorites";
 import UserUnsubscribe from "../components/User/UserUnsubscribe";
+import UserNotifications from "../components/User/UserNotifications";
 
 // Importamos la imagen de la marca de agua
 import marcaAgua from "../assets/img/MarcaAgua.png";
@@ -23,6 +24,8 @@ const Perfil = () => {
         return <UserPassword />;
       case "alertas":
         return <UserAlerts />;
+      case "notificaciones":
+        return <UserNotifications />;
       case "favoritos":
         return <UserFavorites />;
       case "baja":

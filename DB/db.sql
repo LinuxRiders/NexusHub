@@ -124,6 +124,23 @@ CREATE TABLE IF NOT EXISTS userdata (
   FOREIGN KEY (updated_by) REFERENCES USER (user_id) ON DELETE SET NULL
 );
 
+-- ===============================================================
+-- =================== LOGICA DE AUDITORIA GLOBAL ================
+-- ===============================================================
+
+CREATE TABLE IF NOT EXISTS activity_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL, -- Quien disparó la acción (puede ser NULL si fue el sistema)
+  action_type VARCHAR(50) NOT NULL, -- Ej: 'USER_REGISTERED', 'PROPERTY_FAVORITED', 'ALERT_MATCH'
+  entity_type VARCHAR(50) NOT NULL, -- Ej: 'user', 'property', 'alert'
+  entity_id INT NULL, -- El id del elemento afectado
+  metadata JSON NULL, -- (OPCIONAL) Datos extra útiles
+  created_at DATETIME NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  INDEX idx_action (action_type),
+  INDEX idx_created (created_at DESC),
+  FOREIGN KEY (user_id) REFERENCES USER(user_id) ON DELETE SET NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
 -- ============ ASIGNACION DE ROLES =============
 
 -- Crear rol "SuperAdministrador"
@@ -152,4 +169,83 @@ INSERT
 VALUES
 	(1, 1, NULL);
 
-  
+ -- ===============================================================
+ -- =================== LOGICA DE INMUEBLES =======================
+ -- ===============================================================
+
+CREATE TABLE IF NOT EXISTS properties (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  avenue VARCHAR(255) NOT NULL,
+  city_country VARCHAR(255) NOT NULL DEFAULT 'Trujillo, Perú',
+  property_type ENUM('Departamento', 'Casa', 'Oficina', 'Local Comercial', 'Terreno', 'Almacén') NOT NULL,
+  operation_type ENUM('COMPRA', 'ALQUILER') NOT NULL,
+  price DECIMAL(10, 2) NOT NULL,
+  rooms INT DEFAULT 0,
+  bathrooms INT DEFAULT 0,
+  levels INT DEFAULT 1,
+  mt2 DECIMAL(10, 2) DEFAULT 0,
+  images JSON,
+  status ENUM('BORRADOR', 'PUBLICADO') DEFAULT 'BORRADOR',
+  created_at DATETIME DEFAULT (UTC_TIMESTAMP()),
+  updated_at DATETIME DEFAULT (UTC_TIMESTAMP()) ON UPDATE (UTC_TIMESTAMP()),
+  created_by INT,
+  updated_by INT,
+  FOREIGN KEY (created_by) REFERENCES USER(user_id) ON DELETE SET NULL,
+  FOREIGN KEY (updated_by) REFERENCES USER(user_id) ON DELETE SET NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS user_favorites (
+  user_id INT NOT NULL,
+  property_id INT NOT NULL,
+  created_at DATETIME DEFAULT (UTC_TIMESTAMP()),
+  PRIMARY KEY (user_id, property_id),
+  FOREIGN KEY (user_id) REFERENCES USER(user_id) ON DELETE CASCADE,
+  FOREIGN KEY (property_id) REFERENCES properties(id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS user_alerts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  is_buy BOOLEAN DEFAULT FALSE,
+  is_rent BOOLEAN DEFAULT FALSE,
+  rooms VARCHAR(10),
+  bathrooms VARCHAR(10),
+  min_price DECIMAL(10, 2),
+  max_price DECIMAL(10, 2),
+  min_mt2 DECIMAL(10, 2),
+  max_mt2 DECIMAL(10, 2),
+  requires_photos BOOLEAN DEFAULT FALSE,
+  location VARCHAR(255),
+  property_types JSON,
+  send_notifications BOOLEAN DEFAULT FALSE,
+  created_at DATETIME DEFAULT (UTC_TIMESTAMP()),
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES USER(user_id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS user_notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  message TEXT NOT NULL,
+  action_url VARCHAR(500),
+  is_read BOOLEAN DEFAULT FALSE,
+  notification_type VARCHAR(50) DEFAULT 'ALERT_MATCH',
+  created_at DATETIME NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  FOREIGN KEY (user_id) REFERENCES USER(user_id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
+
+CREATE TABLE IF NOT EXISTS contact_messages (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NULL,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  phone VARCHAR(50),
+  subject VARCHAR(255),
+  message TEXT NOT NULL,
+  status ENUM('UNREAD', 'READ', 'REPLIED') DEFAULT 'UNREAD',
+  replied_at DATETIME NULL,
+  created_at DATETIME NOT NULL DEFAULT (UTC_TIMESTAMP()),
+  FOREIGN KEY (user_id) REFERENCES USER(user_id) ON DELETE SET NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;

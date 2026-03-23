@@ -5,17 +5,12 @@ import { VerificationToken } from '../models/verification.model.js';
 import { generateResetToken, hashTokenToBuffer } from '../../../utils/token.js';
 import { comparePassword, hashPassword } from '../../../utils/password.js';
 import { mailer } from '../../../config/mailer.js';
-import pool from '../../../config/db.js';
-import MailService from '../../../services/mail.service.js';
+import activityEvents from '../../System-Activity/events/activity.events.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-const TEMPLATE_DIR = path.join(__dirname, '../../Courses/templates');
-const mailService = new MailService({ templateDir: TEMPLATE_DIR });
-const LOGO_PATH = path.join(__dirname, '../../../../assets/logos.png'); // Ajusta según assets
 
 export const createUser = async (req, res, next) => {
   try {
@@ -49,7 +44,7 @@ export const getAllUsers = async (req, res, next) => {
   const created_by = req.user?.sub ?? null;
 
   try {
-    const users = await User.getAll(); // : await User.getChildren(created_by); cuando haya hijos de un usuario
+    const users = await User.getAll(true); // : await User.getChildren(created_by); cuando haya hijos de un usuario
 
     // Obtener roles de todos los usuarios
     const usersWithRoles = await Promise.all(
@@ -68,6 +63,30 @@ export const getAllUsers = async (req, res, next) => {
     next(error);
   }
 };
+
+export const getUserStats = async (req, res, next) => {
+  try {
+    const includeAdmins = req.query.includeAdmins === 'true';
+    
+    // Delegar los cálculos de agregación directamente a la base de datos
+    const stats = await User.getStats(includeAdmins);
+
+    res.json({
+      data: {
+        totalUsers: Number(stats.totalUsers) || 0,
+        activeUsers: Number(stats.activeUsers) || 0,
+        inactiveUsers: Number(stats.inactiveUsers) || 0,
+        googleUsers: Number(stats.googleUsers) || 0
+      }
+    });
+  } catch (error) {
+    logger.error(`UserController:getUserStats Error: ${error.message}`, {
+      stack: error.stack,
+    });
+    next(error);
+  }
+};
+
 
 
 export const getUser = async (req, res, next) => {
@@ -449,21 +468,21 @@ export const sendUserEmail = async (req, res, next) => {
     // 2. Enviar correos
     const emailPromises = users.map(user => {
 
-      return mailService.sendMail({
+      return mailer.sendMail({
         toEmail: user.email,
-        subject: subject || 'Notificación de MedLearn',
-        templateName: 'admin_announcement.html',
-        inlineImages: [
-          // Verificación laxa de logo
-          { varName: 'logo', path: LOGO_PATH }
-        ],
+        subject: subject || 'Notificación de NexusHub',
+        templateName: 'message.template.html',
         variables: {
           username: user.username,
+          message_subject: subject || 'Notificación de NexusHub',
           message_body: message ? message.replace(/\n/g, '<br>') : '',
+          original_message_html: '',
           action_button: '',
           year: new Date().getFullYear()
         },
-        interpolatedKeys: ['message_body'] // Permitimos que el mensaje contenga variables como {{username}}
+        inlineImages: [
+          { path: 'src/modules/Users-Auth/templates/nexus.png', cid: 'logo' }
+        ]
       }).catch(err => {
         logger.error(`sendUserEmail failed for ${user.email}: ${err.message}`);
         return null;
@@ -471,6 +490,16 @@ export const sendUserEmail = async (req, res, next) => {
     });
 
     await Promise.all(emailPromises);
+
+    // 3. Crear las notificaciones internas de manera desacoplada vía Eventos
+    users.forEach(user => {
+      activityEvents.emit('SEND_USER_NOTIFICATION', {
+        user_id: user.user_id,
+        title: subject || 'Notificación del Sistema',
+        message: message ? message.substring(0, 200) : 'Tienes una nueva notificación de un administrador.',
+        notification_type: 'ADMIN_MESSAGE'
+      });
+    });
 
     res.status(200).json({
       message: `Mensaje enviado a ${users.length} usuarios.`

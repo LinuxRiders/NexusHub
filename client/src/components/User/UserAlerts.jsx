@@ -7,12 +7,14 @@ import {
   FaExclamationTriangle,
   FaCheckCircle,
 } from "react-icons/fa";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
 // IMÁGENES CORREGIDAS
 import alerta from "../../assets/img/icons/userCuenta/alerta.png";
 import marcaAgua from "../../assets/img/MarcaAgua.png";
 
 import "./UserAlerts.css";
+import api from "../../api/api";
 
 // Lista de tipos de inmuebles disponibles para la propuesta funcional
 const propertyTypesOptions = [
@@ -23,31 +25,22 @@ const propertyTypesOptions = [
   "Terreno",
   "Almacén",
 ];
-// Lista de ubicaciones para el selector
-const locationsOptions = [
-  "Trujillo (Centro)",
-  "Víctor Larco Herrera",
-  "Huanchaco",
-  "La Esperanza",
-  "Florencia de Mora",
-  "Moche",
-];
 
 const initialAlertState = {
   id: null,
-  titulo: "",
-  compra: false,
-  alquiler: false,
-  habitaciones: "",
-  precioMin: "",
-  precioMax: "",
-  banos: "",
-  superficieMin: "",
-  superficieMax: "",
-  conFotografias: false,
-  ubicacion: "",
-  tipoInmuebleTags: [],
-  enviarNuevos: false,
+  title: "",
+  is_buy: false,
+  is_rent: false,
+  rooms: "",
+  min_price: "",
+  max_price: "",
+  bathrooms: "",
+  min_mt2: "",
+  max_mt2: "",
+  requires_photos: false,
+  location: "",
+  property_types: [],
+  send_notifications: false, // Match backend schema
 };
 
 const UserAlerts = () => {
@@ -61,7 +54,31 @@ const UserAlerts = () => {
     action: null,
   });
 
+  const [locationsOptions, setLocationsOptions] = useState([]);
   const [showTypeSelector, setShowTypeSelector] = useState(false);
+
+  React.useEffect(() => {
+    fetchAlerts();
+    fetchLocations();
+  }, []);
+
+  const fetchLocations = async () => {
+    try {
+      const res = await api.get("/properties/locations");
+      setLocationsOptions(res.data.data || []);
+    } catch (error) {
+      console.error("Error fetching locations", error);
+    }
+  };
+
+  const fetchAlerts = async () => {
+    try {
+      const res = await api.get("/alerts/me");
+      setAlertsList(res.data.data);
+    } catch (error) {
+      console.error("Error fetching alerts", error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -72,10 +89,10 @@ const UserAlerts = () => {
   };
 
   const addPropertyTypeTag = (type) => {
-    if (type && !formData.tipoInmuebleTags.includes(type)) {
+    if (type && !formData.property_types.includes(type)) {
       setFormData((prev) => ({
         ...prev,
-        tipoInmuebleTags: [...prev.tipoInmuebleTags, type],
+        property_types: [...prev.property_types, type],
       }));
     }
     setShowTypeSelector(false);
@@ -84,7 +101,7 @@ const UserAlerts = () => {
   const removePropertyTypeTag = (typeToRemove) => {
     setFormData((prev) => ({
       ...prev,
-      tipoInmuebleTags: prev.tipoInmuebleTags.filter(
+      property_types: prev.property_types.filter(
         (type) => type !== typeToRemove,
       ),
     }));
@@ -104,7 +121,7 @@ const UserAlerts = () => {
 
   const handleSaveForm = (e) => {
     e.preventDefault();
-    if (!formData.titulo.trim()) {
+    if (!formData.title.trim()) {
       setSystemAlert({
         isOpen: true,
         type: "error",
@@ -122,20 +139,37 @@ const UserAlerts = () => {
     });
   };
 
-  const confirmSaveAlert = () => {
-    if (formData.id) {
-      setAlertsList(
-        alertsList.map((a) => (a.id === formData.id ? formData : a)),
-      );
-    } else {
-      setAlertsList([...alertsList, { ...formData, id: Date.now() }]);
+  const confirmSaveAlert = async () => {
+    try {
+      let res;
+      if (formData.id) {
+        res = await api.put(`/alerts/${formData.id}`, formData);
+      } else {
+        res = await api.post("/alerts", formData);
+      }
+
+      await fetchAlerts();
+      setIsFormModalOpen(false);
+
+      setSystemAlert({
+        isOpen: true,
+        type: "success",
+        message: "Alerta gestionada correctamente.",
+      });
+    } catch (error) {
+      console.error("Error saving alert", error);
+      setSystemAlert({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error al gestionar la alerta.",
+      });
     }
-    setIsFormModalOpen(false);
-    setSystemAlert({
-      isOpen: true,
-      type: "success",
-      message: "Alerta gestionada correctamente.",
-    });
+  };
+
+  const handleOverlayClick = (e) => {
+    if (e.target.classList.contains("dark-modal-overlay")) {
+      setIsFormModalOpen(false);
+    }
   };
 
   const handleDeleteClick = (id) => {
@@ -147,9 +181,19 @@ const UserAlerts = () => {
     });
   };
 
-  const confirmDeleteAlert = (id) => {
-    setAlertsList(alertsList.filter((a) => a.id !== id));
-    setSystemAlert({ isOpen: false });
+  const confirmDeleteAlert = async (id) => {
+    try {
+      await api.delete(`/alerts/${id}`);
+      await fetchAlerts();
+      setSystemAlert({ isOpen: false });
+    } catch (error) {
+      console.error("Error deleting alert", error);
+      setSystemAlert({
+        isOpen: true,
+        type: "error",
+        message: "Ocurrió un error al eliminar la alerta.",
+      });
+    }
   };
 
   return (
@@ -204,7 +248,7 @@ const UserAlerts = () => {
          MODAL OSCURO ACTUALIZADO (PRO-PORTRAIT)
          ========================================= */}
       {isFormModalOpen && (
-        <div className="dark-modal-overlay">
+        <div className="dark-modal-overlay" onClick={handleOverlayClick}>
           <div className="dark-modal-content portrait-mode">
             <img
               src={marcaAgua}
@@ -218,134 +262,28 @@ const UserAlerts = () => {
               <FaTimes />
             </button>
             <div className="dark-modal-header">
-              {/* CAMBIADO A LA IMAGEN DE ALERTA */}
               <img src={alerta} alt="Alerta" className="dark-modal-icon-img" />
               <h2>{formData.id ? "Editar alerta" : "Crear alerta"}</h2>
             </div>
 
             <form className="dark-modal-form" onSubmit={handleSaveForm}>
+              {/* FILA 1: Titulo, Ubicacion, Tipo de operación */}
               <div className="form-row row-3-cols">
                 <div className="dark-input-group">
                   <label>Título de la alerta</label>
                   <input
                     type="text"
-                    name="titulo"
+                    name="title"
                     placeholder="Nombre de la alerta"
-                    value={formData.titulo}
+                    value={formData.title}
                     onChange={handleInputChange}
                   />
                 </div>
                 <div className="dark-input-group">
-                  <label>Tipo de operación</label>
-                  <div className="checkbox-row">
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="compra"
-                        checked={formData.compra}
-                        onChange={handleInputChange}
-                      />{" "}
-                      Compra
-                    </label>
-                    <label>
-                      <input
-                        type="checkbox"
-                        name="alquiler"
-                        checked={formData.alquiler}
-                        onChange={handleInputChange}
-                      />{" "}
-                      Alquiler
-                    </label>
-                  </div>
-                </div>
-                <div className="dark-input-group">
-                  <label>Habitaciones</label>
-                  <select
-                    name="habitaciones"
-                    value={formData.habitaciones}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Seleccionar monto</option>
-                    {[1, 2, 3, 4, "5+"].map((n) => (
-                      <option key={n} value={n}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              <div className="form-row row-3-cols">
-                <div className="dark-input-group">
-                  <label>Precio</label>
-                  <div className="double-input">
-                    <input
-                      type="number"
-                      name="precioMin"
-                      placeholder="Monto mínimo"
-                      value={formData.precioMin}
-                      onChange={handleInputChange}
-                    />
-                    <input
-                      type="number"
-                      name="precioMax"
-                      placeholder="Monto máximo"
-                      value={formData.precioMax}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                </div>
-                <div className="dark-input-group">
-                  <label>Baños</label>
-                  <select
-                    name="banos"
-                    value={formData.banos}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Seleccionar monto</option>
-                    {[1, 2, 3, "4+"].map((n) => (
-                      <option key={n} value={n}>
-                        {n}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="dark-input-group">
-                  <label>Superficie</label>
-                  <div className="double-input">
-                    <input
-                      type="number"
-                      name="superficieMin"
-                      placeholder="Mínimo"
-                      value={formData.superficieMin}
-                      onChange={handleInputChange}
-                    />
-                    <input
-                      type="number"
-                      name="superficieMax"
-                      placeholder="Máximo"
-                      value={formData.superficieMax}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <label className="sub-checkbox">
-                    <input
-                      type="checkbox"
-                      name="conFotografias"
-                      checked={formData.conFotografias}
-                      onChange={handleInputChange}
-                    />{" "}
-                    Con fotografías
-                  </label>
-                </div>
-              </div>
-
-              <div className="form-row row-2-cols">
-                <div className="dark-input-group">
                   <label>Ubicación</label>
                   <select
-                    name="ubicacion"
-                    value={formData.ubicacion}
+                    name="location"
+                    value={formData.location}
                     onChange={handleInputChange}
                   >
                     <option value="">Seleccionar ubicación</option>
@@ -356,12 +294,163 @@ const UserAlerts = () => {
                     ))}
                   </select>
                 </div>
+                <div className="dark-input-group">
+                  <label>Tipo de operación</label>
+                  <div
+                    className="custom-checkbox-row"
+                    style={{ paddingTop: "0" }}
+                  >
+                    <FormGroup row>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={formData.is_buy}
+                            onChange={handleInputChange}
+                            name="is_buy"
+                            sx={{
+                              color: "#666",
+                              padding: "5px 9px",
+                              "&.Mui-checked": { color: "#5ed6db" },
+                            }}
+                          />
+                        }
+                        label="Compra"
+                        sx={{
+                          color: "#fff",
+                          marginRight: "25px",
+                          "& .MuiFormControlLabel-label": {
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            fontFamily: '"Nunito", sans-serif',
+                          },
+                        }}
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={formData.is_rent}
+                            onChange={handleInputChange}
+                            name="is_rent"
+                            sx={{
+                              color: "#666",
+                              padding: "5px 9px",
+                              "&.Mui-checked": { color: "#5ed6db" },
+                            }}
+                          />
+                        }
+                        label="Alquiler"
+                        sx={{
+                          color: "#fff",
+                          "& .MuiFormControlLabel-label": {
+                            fontSize: "14px",
+                            fontWeight: "600",
+                            fontFamily: '"Nunito", sans-serif',
+                          },
+                        }}
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+              </div>
 
+              {/* FILA 2: Distribución, Precio, Superficie */}
+              <div className="form-row row-3-cols">
+                <div className="dark-input-group">
+                  <label>Distribución (Mínimo)</label>
+                  <div className="double-input">
+                    <div className="distrib-col">
+                      <span className="mini-label">Habitaciones</span>
+                      <select
+                        name="rooms"
+                        value={formData.rooms}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Cualquiera</option>
+                        {[1, 2, 3, 4, "5+"].map((n) => (
+                          <option key={n} value={n}>
+                            {n} a más
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="distrib-col">
+                      <span className="mini-label">Baños</span>
+                      <select
+                        name="bathrooms"
+                        value={formData.bathrooms}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Cualquiera</option>
+                        {[1, 2, 3, "4+"].map((n) => (
+                          <option key={n} value={n}>
+                            {n} a más
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="dark-input-group">
+                  <label>Precio</label>
+                  <div className="double-input">
+                    <div className="distrib-col">
+                      <span className="mini-label">Mínimo</span>
+                      <input
+                        type="number"
+                        name="min_price"
+                        placeholder="Min"
+                        value={formData.min_price}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="distrib-col">
+                      <span className="mini-label">Máximo</span>
+                      <input
+                        type="number"
+                        name="max_price"
+                        placeholder="Max"
+                        value={formData.max_price}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="dark-input-group">
+                  <label>Superficie (m&sup2;)</label>
+                  <div className="double-input">
+                    <div className="distrib-col">
+                      <span className="mini-label">Mínimo</span>
+                      <input
+                        type="number"
+                        name="min_mt2"
+                        placeholder="Min"
+                        value={formData.min_mt2}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                    <div className="distrib-col">
+                      <span className="mini-label">Máximo</span>
+                      <input
+                        type="number"
+                        name="max_mt2"
+                        placeholder="Max"
+                        value={formData.max_mt2}
+                        onChange={handleInputChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* FILA 3: Tipo de Inmueble, Fotografías */}
+              <div className="form-row row-tipo-inmueble">
                 <div className="dark-input-group property-tags-group">
                   <div className="label-with-action">
                     <label>Tipo de inmueble</label>
                     <span
-                      className="add-action"
+                      className="add-action emphasized-action"
                       onClick={() => setShowTypeSelector(!showTypeSelector)}
                     >
                       {showTypeSelector ? "- Cancelar" : "+ Añadir tipo"}
@@ -369,12 +458,12 @@ const UserAlerts = () => {
                   </div>
 
                   <div className="tags-underline-container">
-                    {formData.tipoInmuebleTags.length === 0 && (
+                    {formData.property_types.length === 0 && (
                       <span className="placeholder-text">
                         Ej. Departamento, Casa...
                       </span>
                     )}
-                    {formData.tipoInmuebleTags.map((tag) => (
+                    {formData.property_types.map((tag) => (
                       <span key={tag} className="property-tag">
                         {tag}{" "}
                         <FaTimes
@@ -399,17 +488,30 @@ const UserAlerts = () => {
                     )}
                   </div>
                 </div>
+
+                <div className="dark-input-group">
+                  <label>Filtro visual</label>
+                  <label className="sub-checkbox highlight-checkbox">
+                    <input
+                      type="checkbox"
+                      name="requires_photos"
+                      checked={formData.requires_photos}
+                      onChange={handleInputChange}
+                    />{" "}
+                    Solo publicaciones con fotografías
+                  </label>
+                </div>
               </div>
 
               <div className="dark-form-footer pushed-down">
-                <label className="main-checkbox">
+                <label className="main-checkbox premium-checkbox">
                   <input
                     type="checkbox"
-                    name="enviarNuevos"
-                    checked={formData.enviarNuevos}
+                    name="send_notifications"
+                    checked={formData.send_notifications}
                     onChange={handleInputChange}
                   />
-                  Enviarme alertas cuando se publique nuevos inmuebles
+                  También enviarme notificaciones a mi correo electrónico
                 </label>
                 <button type="submit" className="btn-dark-submit">
                   {formData.id ? "Guardar cambios" : "Crear alerta"}
@@ -444,7 +546,7 @@ const UserAlerts = () => {
             {alertsList.map((alert) => (
               <div key={alert.id} className="alert-card pro-design">
                 <div className="alert-card-header">
-                  <h3>{alert.titulo}</h3>
+                  <h3>{alert.title}</h3>
                   <div className="alert-card-actions">
                     <button
                       className="btn-icon-action edit"
@@ -466,29 +568,29 @@ const UserAlerts = () => {
                   <div className="alert-detail-row">
                     <span className="alert-label">Ubicación</span>
                     <span className="alert-value">
-                      {alert.ubicacion || "Cualquiera"}
+                      {alert.location || "Cualquiera"}
                     </span>
                   </div>
 
                   <div className="alert-detail-row">
                     <span className="alert-label">Operación</span>
                     <span className="alert-value">
-                      {[alert.compra && "Compra", alert.alquiler && "Alquiler"]
+                      {[alert.is_buy && "Compra", alert.is_rent && "Alquiler"]
                         .filter(Boolean)
                         .map((op, i) => (
                           <span key={i} className="alert-badge highlight">
                             {op}
                           </span>
                         ))}
-                      {!alert.compra && !alert.alquiler && "Cualquiera"}
+                      {!alert.is_buy && !alert.is_rent && "Cualquiera"}
                     </span>
                   </div>
 
                   <div className="alert-detail-row">
                     <span className="alert-label">Inmueble</span>
                     <span className="alert-value">
-                      {alert.tipoInmuebleTags.length > 0
-                        ? alert.tipoInmuebleTags.map((tag) => (
+                      {alert.property_types && alert.property_types.length > 0
+                        ? alert.property_types.map((tag) => (
                             <span key={tag} className="alert-badge">
                               {tag}
                             </span>
@@ -500,8 +602,8 @@ const UserAlerts = () => {
                   <div className="alert-detail-row">
                     <span className="alert-label">Precio</span>
                     <span className="alert-value price">
-                      {alert.precioMin || "0"} -{" "}
-                      {alert.precioMax || "Sin límite"}
+                      {alert.min_price || "0"} -{" "}
+                      {alert.max_price || "Sin límite"}
                     </span>
                   </div>
                 </div>

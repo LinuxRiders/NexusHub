@@ -1,10 +1,69 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./Banner.css";
 import heroImage from "../../assets/img/hero.jpg";
 import logo from "../../assets/img/logoLetra.png"; // Importamos el logo
 import { Box } from "@mui/material";
+import { useAuth } from "../../context/AuthProvider";
+import api from "../../api/api";
 
 const Banner = ({ sx = {} }) => {
+  const { isAuthenticated, user } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [hasAutoFilled, setHasAutoFilled] = useState(false);
+  const [formData, setFormData] = useState({
+    nombres: "",
+    apellidos: "",
+    email: "",
+    numero: "",
+    mensaje: "",
+  });
+
+  const handleFocus = () => {
+    if (isAuthenticated && user && !hasAutoFilled) {
+      setFormData((prev) => ({
+        ...prev,
+        nombres: prev.nombres || user.nombres || user.username || "",
+        apellidos: prev.apellidos || user.apellidos || "",
+        email: prev.email || user.email || "",
+        numero: prev.numero || user.telefono || "",
+      }));
+      setHasAutoFilled(true);
+    }
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      await api.post("/messages", {
+        name: `${formData.nombres} ${formData.apellidos}`.trim(),
+        email: formData.email,
+        phone: formData.numero,
+        message: formData.mensaje,
+        subject: "Contacto desde Banner Principal",
+      });
+      alert("¡Mensaje enviado correctamente! Te contactaremos pronto.");
+      setFormData({
+        nombres: "",
+        apellidos: "",
+        email: "",
+        numero: "",
+        mensaje: "",
+      });
+      setHasAutoFilled(false);
+      if (document.activeElement) document.activeElement.blur();
+    } catch (error) {
+      console.error("Error al enviar mensaje:", error);
+      alert("Ocurrió un error al enviar el mensaje. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section
       className="hero"
@@ -90,7 +149,11 @@ const Banner = ({ sx = {} }) => {
         >
           <div className="hero-form-border"></div>
 
-          <form className="hero-form">
+          <form
+            className="hero-form"
+            onSubmit={handleSubmit}
+            onFocus={handleFocus}
+          >
             <h2>
               Tu espacio ideal <span>aquí</span>
             </h2>
@@ -98,21 +161,57 @@ const Banner = ({ sx = {} }) => {
             <p className="hero-contact">¡Contáctanos!</p>
 
             <label>Nombres*</label>
-            <input type="text" placeholder="Introduce tu nombre" required />
+            <input
+              type="text"
+              name="nombres"
+              value={formData.nombres}
+              onChange={handleChange}
+              placeholder="Introduce tu nombre"
+              required
+            />
 
             <label>Apellidos*</label>
-            <input type="text" placeholder="Introduce tu apellido" required />
+            <input
+              type="text"
+              name="apellidos"
+              value={formData.apellidos}
+              onChange={handleChange}
+              placeholder="Introduce tu apellido"
+              required
+            />
 
             <label>Email*</label>
-            <input type="email" placeholder="Introduce tu email" required />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Introduce tu email"
+              required
+            />
 
             <label>Número*</label>
-            <input type="text" placeholder="Introduce tu número" required />
+            <input
+              type="text"
+              name="numero"
+              value={formData.numero}
+              onChange={handleChange}
+              placeholder="Introduce tu número"
+              required
+            />
 
             <label>Mensaje*</label>
-            <textarea placeholder="Introduce tu mensaje" required></textarea>
+            <textarea
+              name="mensaje"
+              value={formData.mensaje}
+              onChange={handleChange}
+              placeholder="Introduce tu mensaje"
+              required
+            ></textarea>
 
-            <button type="submit">Enviar</button>
+            <button type="submit" disabled={loading}>
+              {loading ? "Enviando..." : "Enviar"}
+            </button>
           </form>
         </div>
       </Box>

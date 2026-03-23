@@ -15,6 +15,7 @@ import { useRef } from "react";
 
 import logo from "../assets/img/logo2.png";
 import { useActiveSection } from "./hooks/ActiveSection";
+import { useAuth } from "../context/AuthProvider";
 
 const pages_base = [
   {
@@ -42,6 +43,7 @@ const pages_base = [
 function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { isAuthenticated, user } = useAuth();
 
   /*------- STICKY FUNCTIONALITY ------ */
   const stickyRef = useRef(null);
@@ -256,7 +258,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
           {/* Botón de perfil/login */}
           <Button
             component={Link}
-            to={"/login"}
+            to={isAuthenticated ? "/perfil" : "/login"}
             disableRipple
             sx={{
               height: "fit-content",
@@ -304,12 +306,20 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
             </Box>
             <Typography
               sx={{
-                fontSize: { md: "1.1rem", lg: "1.25rem" },
-                fontWeight: 400,
+                fontSize: isAuthenticated
+                  ? { md: "0.9rem", lg: "1.05rem" }
+                  : { md: "1.1rem", lg: "1.25rem" },
+                fontWeight: isAuthenticated ? 600 : 400,
                 fontFamily: "inherit",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                maxWidth: "110px",
               }}
             >
-              Login
+              {isAuthenticated
+                ? user?.username || user?.nombres || "Perfil"
+                : "Login"}
             </Typography>
           </Button>
         </Box>
@@ -439,7 +449,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               <Button
                 fullWidth
                 component={Link}
-                to="/login"
+                to={isAuthenticated ? "/perfil" : "/login"}
                 variant="contained"
                 startIcon={<Person />}
                 onClick={handleMenuClick}
@@ -448,6 +458,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                   color: "white",
                   py: 1.2,
                   fontWeight: "600",
+                  fontSize: isAuthenticated ? "0.9rem" : "1rem",
                   textTransform: "none",
                   borderRadius: "8px",
                   "&:hover": {
@@ -455,7 +466,9 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                   },
                 }}
               >
-                Iniciar Sesión
+                {isAuthenticated
+                  ? user?.username || user?.nombres || "Mi Perfil"
+                  : "Iniciar Sesión"}
               </Button>
             </Box>
           </Box>

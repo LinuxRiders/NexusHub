@@ -500,3 +500,76 @@
     justify-content: center;
   }
 }
+
+/* =========================================
+   MODERN TOGGLE SWITCH (NUEVO DISEÑO)
+   ========================================= */
+.modern-status-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 110px;
+  height: 32px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  padding: 0 5px;
+  font-family: "Nunito", sans-serif;
+  font-size: 11px;
+  font-weight: 800;
+  transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  overflow: hidden;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+}
+
+.modern-status-toggle.is-draft {
+  background-color: #fce3e3;
+  color: #e94b4b;
+}
+
+.modern-status-toggle.is-published {
+  background-color: #e6f6ee;
+  color: #17a45e;
+}
+
+.toggle-slider-circle {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+  left: 4px;
+  z-index: 2;
+}
+
+.modern-status-toggle.is-published .toggle-slider-circle {
+  transform: translateX(78px);
+}
+
+.toggle-text {
+  flex: 1;
+  text-align: right;
+  z-index: 1;
+  position: relative;
+  padding-right: 8px;
+  transition: all 0.3s;
+}
+
+.modern-status-toggle.is-published .toggle-text {
+  text-align: left;
+  padding-right: 0;
+  padding-left: 8px;
+}
+
+/* Hover effects */
+.modern-status-toggle:hover {
+  transform: scale(1.03);
+}
+
+.modern-status-toggle:active {
+  transform: scale(0.97);
+}
