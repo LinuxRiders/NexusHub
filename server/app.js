@@ -12,6 +12,10 @@ const PORT = process.env.PORT || 4000;
 
 const app = express();
 
+// Confiar en el proxy si está detrás de un Load Balancer / Nginx
+// Esto soluciona problemas con el rate limiter y las IPs de los clientes.
+app.set('trust proxy', 1);
+
 const server = createServer(app); // Crear el servidor HTTP
 
 // Configuración dinámica de CORS

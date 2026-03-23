@@ -26,7 +26,7 @@ export default class MailService {
         this.templateDir = templateDir;
 
         const transportCfg = transporterOptions || {
-            host: 'cicass.com.pe',
+            host: 'nexushubcorp.com',
             port: 465,
             secure: true,
             auth: {
@@ -90,7 +90,7 @@ export default class MailService {
         }
 
         // 4️⃣ Preparar opciones para nodemailer
-        const fromAddress = from || process.env.MAIL_FROM || `"CICASS WEB" <${process.env.MAIL_USER}>`;
+        const fromAddress = from || process.env.MAIL_FROM || `"NexusHub Web" <${process.env.MAIL_USER}>`;
         const mailOptions = {
             from: fromAddress,
             to: toEmail,
