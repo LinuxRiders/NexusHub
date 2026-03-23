@@ -31,14 +31,45 @@ export const User = {
     }
   },
 
-  findById: async (id, connection = pool) => {
+  /**
+   * Crea un registro en la tabla userdata. 
+   * Usado principalmente despues de crear un usuario.
+   */
+  createUserData: async ({
+    user_id,
+    nombres,
+    apellidos,
+    telefono = null,
+    pais = null,
+    created_by = null
+  }, connection = pool) => {
     try {
-      // Agregamos is_verified y password_changed_at al SELECT
-      const [rows] = await connection.execute(
-        `SELECT user_id, username, email, status, is_verified, password_changed_at, created_at, created_by, updated_at 
-         FROM USER WHERE user_id = ? AND deleted_at IS NULL`,
-        [id]
+      const [result] = await connection.execute(
+        `INSERT INTO userdata (user_id, nombres, apellidos, telefono, pais, created_by) 
+         VALUES (?, ?, ?, ?, ?, ?)`,
+        [user_id, nombres, apellidos, telefono, pais, created_by]
       );
+      return result.insertId;
+    } catch (error) {
+      logger.error(`[Model]:User:createUserData Error: ${error.message}`, { stack: error.stack });
+      throw error;
+    }
+  },
+
+  findById: async ({id, includeUserData = false}, connection = pool) => {
+    try {
+      let query = `SELECT u.user_id, u.username, u.email, u.status, u.is_verified, u.password_changed_at, u.created_at, u.created_by, u.updated_at 
+                   FROM USER u WHERE u.user_id = ? AND u.deleted_at IS NULL`;
+                   
+      if (includeUserData) {
+        query = `SELECT u.user_id, u.username, u.email, u.status, u.is_verified, u.password_changed_at, u.created_at, u.created_by, u.updated_at,
+                        ud.nombres, ud.apellidos, ud.telefono, ud.pais
+                 FROM USER u
+                 LEFT JOIN userdata ud ON u.user_id = ud.user_id 
+                 WHERE u.user_id = ? AND u.deleted_at IS NULL`;
+      }
+
+      const [rows] = await connection.execute(query, [id]);
       return rows[0] || null;
     } catch (error) {
       logger.error(`[Model]:User:findById Error: ${error.message}`, {
@@ -122,6 +153,55 @@ export const User = {
       logger.error(`[Model]:User:update Error: ${error.message}`, {
         stack: error.stack,
       });
+      throw error;
+    }
+  },
+
+  /**
+   * Actualización dinámica del Perfil (USER y userdata).
+   * @param {Object} param0 Identificadores del usuario y quien actualiza
+   * @param {Object} userFields Campos a actualizar en tabla USER
+   * @param {Object} userDataFields Campos a actualizar en tabla userdata
+   * @param {Object} connection (Opcional) Conexión para transacciones
+   */
+  updateProfile: async ({ id, updated_by }, userFields = {}, userDataFields = {}, connection = pool) => {
+    try {
+      const userKeys = Object.keys(userFields);
+      const userDataKeys = Object.keys(userDataFields);
+
+      if (userKeys.length === 0 && userDataKeys.length === 0) return 0;
+
+      let affectedRows = 0;
+
+      // 1. Actualizar tabla USER si hay campos
+      if (userKeys.length > 0) {
+        const userValues = Object.values(userFields);
+        const setClause = userKeys.map((k) => `\`${k}\` = ?`).join(", ");
+        userValues.push(updated_by, id);
+
+        const [userResult] = await connection.execute(
+          `UPDATE USER SET ${setClause}, updated_at = NOW(), updated_by = ? WHERE user_id = ?`,
+          userValues
+        );
+        affectedRows += userResult.affectedRows;
+      }
+
+      // 2. Actualizar tabla userdata si hay campos
+      if (userDataKeys.length > 0) {
+        const userDataValues = Object.values(userDataFields);
+        const setClauseUD = userDataKeys.map((k) => `\`${k}\` = ?`).join(", ");
+        userDataValues.push(updated_by, id);
+
+        const [udResult] = await connection.execute(
+          `UPDATE userdata SET ${setClauseUD}, updated_at = NOW(), updated_by = ? WHERE user_id = ?`,
+          userDataValues
+        );
+        affectedRows += udResult.affectedRows;
+      }
+
+      return affectedRows;
+    } catch (error) {
+      logger.error(`[Model]:User:updateProfile Error: ${error.message}`, { stack: error.stack });
       throw error;
     }
   },

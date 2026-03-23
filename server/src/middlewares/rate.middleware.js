@@ -48,6 +48,14 @@ export const rateLimiter = (
         max,
         standardHeaders: true,
         legacyHeaders: false,
+        keyGenerator: (req) => {
+            // Intenta obtener la IP real si está detrás de un proxy (nginx, cloudflare, etc)
+            // x-forwarded-for puede ser una lista "client, proxy1, proxy2", tomamos la primera
+            if (req.headers['x-forwarded-for']) {
+                return req.headers['x-forwarded-for'].split(',')[0].trim();
+            }
+            return req.ip;
+        },
         handler: (req, res) => {
             logger.warn(`RateLimit Exceeded [${actionName}]: IP=${req.ip} has reached the limit.`);
             return res.status(429).json({ error: message });

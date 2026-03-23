@@ -23,15 +23,17 @@ export const registerValidation = [
         .trim()
 ];
 
-export const verifyValidation = [
+export const verifyActionValidation = [
     query('token')
         .notEmpty().withMessage('El token es obligatorio')
-        .isHexadecimal().withMessage('Formato de token inválido') // Asumiendo que envías hex en la URL
+        .isHexadecimal().withMessage('Formato de token inválido') 
         .trim(),
-    query('email')
-        .isEmail().withMessage('Email inválido')
-        .normalizeEmail()
+    query('action_type')
+        .notEmpty().withMessage('El tipo de acción es obligatorio')
+        .isString()
+        .trim()
 ];
+
 
 export const resendValidation = [
     body('email')
@@ -47,7 +49,6 @@ export const forgotPasswordValidation = [
 
 export const resetPasswordValidation = [
     body('token').notEmpty().withMessage('Token requerido'),
-    body('email').trim().isEmail().withMessage('Email inválido').normalizeEmail(),
     body('newPassword')
         .isString()
         .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')

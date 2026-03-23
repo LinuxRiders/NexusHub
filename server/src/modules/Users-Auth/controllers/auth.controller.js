@@ -1,5 +1,6 @@
 import { User } from '../models/user.model.js';
-import { AccountVerification, PasswordReset, RefreshToken } from '../models/token.model.js';
+import { RefreshToken } from '../models/token.model.js';
+import { VerificationToken } from '../models/verification.model.js';
 import { comparePassword, hashPassword } from '../../../utils/password.js';
 import { generateRefreshTokenPair, generateResetToken, hashTokenToBuffer, parseDuration } from '../../../utils/token.js';
 import logger from '../../../utils/logger.js';
@@ -83,7 +84,7 @@ const VERIFY_EXPIRES_HOURS = 24; // Expiración token verificación email
 //   REGISTRO (Enviar correo de verificación)
 // ----------------------------------------------------------------------
 export const register = async (req, res, next) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, nombres, apellidos, telefono = null, pais = null } = req.body;
     const connection = await pool.getConnection();
 
     console.log(email);
@@ -112,31 +113,45 @@ export const register = async (req, res, next) => {
         // 2.1 Asignar rol "user" por defecto
         await UserRole.assign({ user_id: userId, role_id: 2 }, connection);
 
+        // 2.2 Guardar datos adicionales en userdata
+        await User.createUserData({
+            user_id: userId,
+            nombres,
+            apellidos,
+            telefono,
+            pais
+        }, connection);
+
         // 3. Generar Token
         const verifyToken = generateResetToken(); // String aleatorio (hex)
         const tokenHash = hashTokenToBuffer(verifyToken);
         const expiresAt = new Date(Date.now() + VERIFY_EXPIRES_HOURS * 60 * 60 * 1000);
 
         // 4. Guardar Token
-        await AccountVerification.create({
+        await VerificationToken.createVerification({
             user_id: userId,
+            action_type: 'verify_account',
             token_hash: tokenHash,
+            payload: null,
             expires_at: expiresAt,
             ip: req.ip
         }, connection);
 
         // 5. Enviar Email
-        const verifyLink = `${process.env.APP_URL}/verify-account?token=${verifyToken}&email=${email}`;
+        const verifyLink = `${process.env.APP_URL}/verify-account?token=${encodeURIComponent(verifyToken)}`;
 
         await mailer.sendMail({
             toEmail: email,
             subject: 'Bienvenido - Verifica tu cuenta',
-            templateName: 'verify.template.html', // Nombre del archivo en src/templates
+            templateName: 'verify.template.html', 
             variables: {
                 nombre: username,
                 verify_url: verifyLink,
                 anio: new Date().getFullYear()
             },
+            inlineImages: [
+                { path: 'src/modules/Users-Auth/templates/nexus.png', cid: 'logo' }
+            ]
             // Opcional: Si quieres mandar logo inline
             /*
             inlineImages: [
@@ -161,62 +176,7 @@ export const register = async (req, res, next) => {
     }
 };
 
-export const verifyAccount = async (req, res, next) => {
-    const { token, email } = req.query; // Viene de la URL (?token=...&email=...)
-    const connection = await pool.getConnection();
 
-    try {
-        await connection.beginTransaction();
-
-        // 1. Validar Usuario
-        const user = await User.findByEmail(email, connection);
-        if (!user) {
-            await connection.commit();
-            return res.status(400).json({ error: 'Enlace de verificación inválido.' });
-        }
-
-        if (user.is_verified) {
-            await connection.commit();
-            return res.status(200).json({ message: 'Tu cuenta ya está verificada. Puedes iniciar sesión.' });
-        }
-
-        // 2. Validar Token
-        const tokenHash = hashTokenToBuffer(token);
-        const tokenRow = await AccountVerification.findValidByHash(user.user_id, tokenHash, connection);
-
-        if (!tokenRow) {
-            await connection.commit();
-            return res.status(400).json({ error: 'El enlace es inválido o ha expirado.' });
-        }
-
-        // 3. Verificar Expiración
-        if (new Date(tokenRow.expires_at).getTime() <= Date.now()) {
-            await AccountVerification.markAsUsed(tokenRow.verification_id, connection);
-            await connection.commit();
-            return res.status(400).json({ error: 'El enlace ha expirado. Solicita uno nuevo.' });
-        }
-
-        // 4. Éxito: Activar Usuario
-        await User.update({ id: user.user_id, updated_by: null }, { is_verified: 1 }, connection);
-
-        // 5. Quemar el token
-        await AccountVerification.markAsUsed(tokenRow.verification_id, connection);
-
-        await connection.commit();
-        logger.info(`AuthController:verifyAccount Success for email=${email}`);
-
-        return res.status(200).json({ message: '¡Cuenta verificada con éxito! Ya puedes iniciar sesión.' });
-
-    } catch (error) {
-        await connection.rollback();
-        logger.error(`AuthController:verifyAccount Error: ${error.message}`);
-        next(error);
-    } finally {
-        connection.release();
-    }
-};
-
-// ----------------------------------------------------------------------
 //  REENVIAR VERIFICACIÓN
 // ----------------------------------------------------------------------
 export const resendVerificationEmail = async (req, res, next) => {
@@ -237,22 +197,24 @@ export const resendVerificationEmail = async (req, res, next) => {
         }
 
         // 1. Revocar tokens viejos (CRÍTICO)
-        await AccountVerification.revokeAllForUser(user.user_id, connection);
+        await VerificationToken.revokePendingActions(user.user_id, 'verify_account', connection);
 
         // 2. Crear nuevo token
         const verifyToken = generateResetToken();
         const tokenHash = hashTokenToBuffer(verifyToken);
         const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-        await AccountVerification.create({
+        await VerificationToken.createVerification({
             user_id: user.user_id,
+            action_type: 'verify_account',
             token_hash: tokenHash,
+            payload: null,
             expires_at: expiresAt,
             ip: req.ip
         }, connection);
 
         // 3. Reenviar Email
-        const verifyLink = `${process.env.APP_URL}/verify-account?token=${verifyToken}&email=${email}`;
+        const verifyLink = `${process.env.APP_URL}/verify-account?token=${encodeURIComponent(verifyToken)}`;
 
         await mailer.sendMail({
             toEmail: email,
@@ -262,7 +224,10 @@ export const resendVerificationEmail = async (req, res, next) => {
                 nombre: user.username,
                 verify_url: verifyLink,
                 anio: new Date().getFullYear()
-            }
+            },
+            inlineImages: [
+                { path: 'src/modules/Users-Auth/templates/nexus.png', cid: 'logo' }
+            ]
         });
 
         await connection.commit();
@@ -379,7 +344,7 @@ export const refresh = async (req, res, next) => {
             return res.status(401).json({ error: 'Invalid or revoked refresh token' });
         }
 
-        const user = await User.findById(storedRefreshToken.user_id, connection);
+        const user = await User.findById({id: storedRefreshToken.user_id }, connection);
         if (!user) {
             await connection.rollback();
             // logger.warn(`AuthController:refresh User not found for refresh_token`);
@@ -506,23 +471,25 @@ export const requestPasswordReset = async (req, res, next) => {
         const userId = user.user_id;
 
         // Revocar tokens anteriores (si existen)
-        await PasswordReset.revokeAllForUser(userId, connection);
+        await VerificationToken.revokePendingActions(userId, 'reset_password', connection);
 
         // Generar token y guardar hash
         const reset_token = generateResetToken();
         const tokenHash = hashTokenToBuffer(reset_token);
         const expiresAt = new Date(Date.now() + RESET_EXPIRES_MIN * 60 * 1000);
 
-        await PasswordReset.create({
+        await VerificationToken.createVerification({
             user_id: userId,
+            action_type: 'reset_password',
             token_hash: tokenHash,
+            payload: null,
             expires_at: expiresAt,
             ip: req.ip,
             user_agent: req.headers['user-agent'] || null
         }, connection);
 
         // ===== Enviar Email  (token crudo en link) ===== TODO: Arreglar servicio email
-        const resetLink = `${process.env.APP_URL}/reset-password?token=${encodeURIComponent(reset_token)}&email=${encodeURIComponent(email)}`;
+        const resetLink = `${process.env.APP_URL}/reset-password?token=${encodeURIComponent(reset_token)}`;
         await mailer.sendMail({
             toEmail: email,
             subject: 'Recuperación de Contraseña',
@@ -532,7 +499,10 @@ export const requestPasswordReset = async (req, res, next) => {
                 reset_url: resetLink,
                 time: RESET_EXPIRES_MIN,
                 anio: new Date().getFullYear()
-            }
+            },
+            inlineImages: [
+                { path: 'src/modules/Users-Auth/templates/nexus.png', cid: 'logo' }
+            ]
         });
 
         // Confirmar la transacción si todo es exitoso
@@ -553,7 +523,7 @@ export const requestPasswordReset = async (req, res, next) => {
 
 // Cambiar Contraseña verificando autenticidad
 export const resetPassword = async (req, res, next) => {
-    const { token, email, newPassword } = req.body;
+    const { token, newPassword } = req.body;
 
     const tokenHash = hashTokenToBuffer(token);
 
@@ -561,27 +531,20 @@ export const resetPassword = async (req, res, next) => {
     try {
         await connection.beginTransaction(); // Iniciar Transaccion
 
-        // Obtener usuario
-        const user = await User.findByEmail(email, connection);
-        if (!user) {
-            await connection.commit();
-            return res.status(400).json({ error: 'Token Reset inválido o expirado.' });
-        }
-        const userId = user.user_id;
-
-        // Buscar token válido
-        const tokenRow = await PasswordReset.findValidByHash(userId, tokenHash, connection);
+        // Buscar token válido primero
+        const tokenRow = await VerificationToken.findValidToken(tokenHash, 'reset_password', connection);
         if (!tokenRow) {
-            // intento de uso de token inválido: por seguridad podemos revocar sessions si detectamos reuse (opcional)
+            // intento de uso de token inválido
             await connection.commit();
-            logger.warn(`AuthController:resetPassword Invalid or used token for user_id=${userId}`);
+            logger.warn(`AuthController:resetPassword Invalid or used token`);
             return res.status(400).json({ error: 'Token Reset inválido o expirado.' });
         }
+        
+        const userId = tokenRow.user_id;
 
         // Verificar expiración
         if (new Date(tokenRow.expires_at).getTime() <= Date.now()) {
-            // marcar como usado para evitar reintentos
-            await PasswordReset.markUsed(tokenRow.password_reset_id, connection);
+            await VerificationToken.markAsUsed(tokenRow.verification_id, connection);
 
             await connection.commit();
             return res.status(400).json({ error: 'Token expirado.' });
@@ -591,11 +554,12 @@ export const resetPassword = async (req, res, next) => {
 
         // Hashear nueva contraseña y actualizar en BD, Activar usuario si es que no lo estaba
         const password_hash = await hashPassword(newPassword);
-        await User.update({ id: userId, updated_by: null }, { password_hash, is_verified: 1 }, connection);
+        await User.update({ id: userId, updated_by: null }, { password_hash: password_hash, password_changed_at: new Date() }, connection);
 
-        // Marcar token como usado y revocar otros resets
-        await PasswordReset.markUsed(tokenRow.password_reset_id, connection);
-        await PasswordReset.revokeAllForUser(userId, connection);
+        // Invalidar tokens: 
+        await RefreshToken.revokeAllForUser(userId, connection);
+        await VerificationToken.markAsUsed(tokenRow.verification_id, connection);
+        await VerificationToken.revokePendingActions(userId, 'reset_password', connection);
 
         // Logout global: revocar todos los refresh tokens para el usuario
         // (usa tu modelo RefreshToken que ya tiene revokeAllForUser)
@@ -617,5 +581,100 @@ export const resetPassword = async (req, res, next) => {
         next(error);
     } finally {
         connection.release(); // Liberamos la conexion
+    }
+};
+
+// HELPERS PARA ACCIONES ESPECÍFICAS
+const handleVerifyAccount = async (tokenRow, connection) => {
+    const user = await User.findById({ id: tokenRow.user_id }, connection);
+    if (!user) throw new Error("Usuario no encontrado");
+    if (user.is_verified) return { message: 'Tu cuenta ya está verificada. Puedes iniciar sesión.' };
+
+    await User.update({ id: tokenRow.user_id, updated_by: null }, { is_verified: 1 }, connection);
+    return { message: '¡Cuenta verificada con éxito! Ya puedes iniciar sesión.' };
+};
+
+const handleChangeEmail = async (tokenRow, connection) => {
+    const { new_email } = tokenRow.payload || {};
+    if (!new_email) throw new Error("Datos de actualización corruptos.");
+
+    const existingEmail = await User.findByEmail(new_email, connection);
+    if (existingEmail && existingEmail.user_id !== tokenRow.user_id) {
+        throw new Error("El nuevo correo ya está en uso. Solicitud cancelada.");
+    }
+
+    await User.update({ id: tokenRow.user_id, updated_by: null }, { email: new_email }, connection);
+    
+    await RefreshToken.revokeAllForUser(tokenRow.user_id, connection);
+    
+    return { message: 'El cambio de correo se ha confirmado con éxito. Por favor inicia sesión.' };
+};
+
+const handleChangePassword = async (tokenRow, connection) => {
+    const { new_password_hash } = tokenRow.payload || {};
+    if (!new_password_hash) throw new Error("Datos de actualización corruptos.");
+
+    await User.update({ id: tokenRow.user_id, updated_by: null }, { password_hash: new_password_hash, password_changed_at: new Date() }, connection);
+    
+    await RefreshToken.revokeAllForUser(tokenRow.user_id, connection);
+    
+    return { message: 'Tu nueva contraseña se ha guardado exitosamente. Por favor inicia sesión.' };
+};
+
+// ----------------------------------------------------------------------
+//  ACCIÓN DE VERIFICACIÓN GENÉRICA (e.g. Cambio de Email)
+// ----------------------------------------------------------------------
+export const verifyAction = async (req, res, next) => {
+    const { token, action_type } = req.query; // Esperamos ?token=...&action_type=...
+    const connection = await pool.getConnection();
+
+    try {
+        await connection.beginTransaction();
+
+        const tokenHash = hashTokenToBuffer(token);
+        const tokenRow = await VerificationToken.findValidToken(tokenHash, action_type, connection);
+
+        if (!tokenRow) {
+            await connection.commit();
+            return res.status(400).json({ error: 'El enlace es inválido o ha expirado.' });
+        }
+
+        if (new Date(tokenRow.expires_at).getTime() <= Date.now()) {
+            await VerificationToken.markAsUsed(tokenRow.verification_id, connection);
+            await connection.commit();
+            return res.status(400).json({ error: 'El enlace es inválido o ha expirado.' });
+        }
+
+        let resultMessage = { message: 'Acción completada con éxito.' };
+
+        // EJECUTAR ACCIÓN SEGÚN TIPO 
+        switch (action_type) {
+            case 'verify_account':
+                resultMessage = await handleVerifyAccount(tokenRow, connection);
+                break;
+            case 'change_email':
+                resultMessage = await handleChangeEmail(tokenRow, connection);
+                break;
+            case 'change_password':
+                resultMessage = await handleChangePassword(tokenRow, connection);
+                break;
+            default:
+                await connection.rollback();
+                return res.status(400).json({ error: 'Acción no soportada.' });
+        }
+
+        // Marcar token usado
+        await VerificationToken.markAsUsed(tokenRow.verification_id, connection);
+
+        await connection.commit();
+        logger.info(`AuthController:verifyAction Success for action_type=${action_type}, user_id=${tokenRow.user_id}`);
+
+        return res.status(200).json(resultMessage);
+    } catch (error) {
+        await connection.rollback();
+        logger.error(`AuthController:verifyAction Error: ${error.message}`);
+        next(error);
+    } finally {
+        connection.release();
     }
 };

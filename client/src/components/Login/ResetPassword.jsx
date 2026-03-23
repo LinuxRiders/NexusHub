@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-// import api from "../../api/api";
+import api from "../../api/api";
 import {
   Box,
   Button,
@@ -47,7 +47,6 @@ const ResetPassword = () => {
   const navigate = useNavigate();
 
   const token = searchParams.get("token");
-  const email = searchParams.get("email");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -61,7 +60,7 @@ const ResetPassword = () => {
     if (!password || password.length < 8)
       return "La contraseña debe tener al menos 8 caracteres.";
     if (password !== confirmPassword) return "Las contraseñas no coinciden.";
-    if (!token || !email) return "Token inválido. Solicita un nuevo enlace.";
+    if (!token) return "Token inválido. Solicita un nuevo enlace.";
     return null;
   };
 
@@ -76,11 +75,12 @@ const ResetPassword = () => {
     setError("");
 
     try {
-      // await api.post("/auth/reset-password", { token, email, newPassword: password });
-      setTimeout(() => {
-        setSuccess(true);
-        setTimeout(() => navigate("/login"), 3000);
-      }, 1000);
+      await api.post("/auth/reset-password", {
+        token,
+        newPassword: password,
+      });
+      setSuccess(true);
+      setTimeout(() => navigate("/login"), 3000);
     } catch (err) {
       setError(
         err.response?.data?.error || "El enlace ha expirado o es inválido.",

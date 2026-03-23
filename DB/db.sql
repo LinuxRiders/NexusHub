@@ -46,20 +46,6 @@ END$$
 
 DELIMITER ;
 
-CREATE TABLE account_verifications (
-  verification_id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT NOT NULL,
-  token_hash BINARY(32) NOT NULL,
-  expires_at DATETIME NOT NULL,
-  used TINYINT (1) DEFAULT 0,
-  -- Auditoria
-  ip VARCHAR(45) NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (user_id) REFERENCES USER (user_id) ON DELETE CASCADE,
-  INDEX idx_verif_lookup (user_id, token_hash, used) -- Índice compuesto para búsquedas rápidas
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
-
-
 -- DROP TABLE REFRESH_TOKEN;
 CREATE TABLE IF NOT EXISTS `REFRESH_TOKEN` (
   `refresh_token_id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -76,19 +62,19 @@ CREATE TABLE IF NOT EXISTS `REFRESH_TOKEN` (
   FOREIGN KEY (`user_id`) REFERENCES `USER` (`user_id`) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
-CREATE TABLE password_reset (
-  password_reset_id INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE pending_verifications (
+  verification_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
+  action_type VARCHAR(50) NOT NULL, -- Ej: 'change_email', 'change_password'
   token_hash BINARY(32) NOT NULL,
+  payload JSON NULL,                -- Almacena dinámicamente datos JSON
   expires_at DATETIME NOT NULL,
   used TINYINT(1) DEFAULT 0,
-  -- Auditoria
   ip VARCHAR(45) NULL,
   user_agent VARCHAR(255) NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES USER (user_id) ON DELETE CASCADE,
-  INDEX (token_hash),
-  INDEX (user_id)
+  INDEX idx_action_token (token_hash, action_type, used)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4;
 
 -- //////////////////////////////////////////// GRUPO ROLES y PERMISOS ///////////////////////////////////////
@@ -121,15 +107,12 @@ CREATE TABLE user_roles (
   FOREIGN KEY (updated_by) REFERENCES USER (user_id) ON DELETE SET NULL
 );
 
-
 CREATE TABLE IF NOT EXISTS userdata (
   userdata_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   nombres VARCHAR(100) NOT NULL,
   apellidos VARCHAR(100) NOT NULL,
   telefono VARCHAR(20) DEFAULT NULL,
-  dni VARCHAR(20) NOT NULL UNIQUE,
-  ciudad VARCHAR(30) DEFAULT NULL,
-  centro_estudios VARCHAR(100) DEFAULT NULL,
+  pais VARCHAR(30) DEFAULT NULL,
   user_id INT NOT NULL UNIQUE,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP  ,
   created_by INT NULL,
@@ -140,8 +123,6 @@ CREATE TABLE IF NOT EXISTS userdata (
   FOREIGN KEY (created_by) REFERENCES USER (user_id) ON DELETE SET NULL,
   FOREIGN KEY (updated_by) REFERENCES USER (user_id) ON DELETE SET NULL
 );
-
-
 
 -- ============ ASIGNACION DE ROLES =============
 

@@ -19,7 +19,19 @@ import {
   InputAdornment,
   Checkbox,
   FormControlLabel,
+  MenuItem,
 } from "@mui/material";
+
+import countries from "i18n-iso-countries";
+import esLocale from "i18n-iso-countries/langs/es.json";
+countries.registerLocale(esLocale);
+const countryObj = countries.getNames("es", { select: "official" });
+const countryList = Object.entries(countryObj)
+  .map(([key, value]) => ({
+    value: key,
+    label: value,
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -91,6 +103,10 @@ const Login = () => {
     email: "",
     password: "",
     confirmPassword: "",
+    nombres: "",
+    apellidos: "",
+    telefono: "",
+    pais: "",
     termsAccepted: false,
   });
 
@@ -148,6 +164,9 @@ const Login = () => {
     // Validaciones exclusivas de REGISTRO
     if (formType === "register") {
       if (!formData.username) newErrors.username = "El usuario es obligatorio";
+      if (!formData.nombres) newErrors.nombres = "Los nombres son obligatorios";
+      if (!formData.apellidos)
+        newErrors.apellidos = "Los apellidos son obligatorios";
       if (formData.password.length < 8)
         newErrors.password = "Mínimo 8 caracteres";
       if (formData.password !== formData.confirmPassword) {
@@ -198,6 +217,10 @@ const Login = () => {
         username: formData.username,
         email: formData.email,
         password: formData.password,
+        nombres: formData.nombres,
+        apellidos: formData.apellidos,
+        telefono: formData.telefono,
+        pais: formData.pais,
       });
       if (response.status === 201) {
         // Al registrarse exitosamente, cambiamos a la vista de pendiente
@@ -483,6 +506,65 @@ const Login = () => {
         />
       </Box>
 
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="nombres"
+        label="Nombres"
+        name="nombres"
+        value={formData.nombres}
+        onChange={handleChange}
+        error={!!errors.nombres}
+        helperText={errors.nombres}
+        sx={darkTextFieldStyle}
+      />
+      <TextField
+        margin="normal"
+        required
+        fullWidth
+        id="apellidos"
+        label="Apellidos"
+        name="apellidos"
+        value={formData.apellidos}
+        onChange={handleChange}
+        error={!!errors.apellidos}
+        helperText={errors.apellidos}
+        sx={darkTextFieldStyle}
+      />
+      <Box sx={{ display: "flex", gap: 2 }}>
+        <TextField
+          margin="normal"
+          fullWidth
+          id="telefono"
+          label="Teléfono"
+          name="telefono"
+          value={formData.telefono}
+          onChange={handleChange}
+          error={!!errors.telefono}
+          helperText={errors.telefono}
+          sx={darkTextFieldStyle}
+        />
+        <TextField
+          select
+          margin="normal"
+          fullWidth
+          id="pais"
+          label="País"
+          name="pais"
+          value={formData.pais}
+          onChange={handleChange}
+          error={!!errors.pais}
+          helperText={errors.pais}
+          sx={darkTextFieldStyle}
+        >
+          {countryList.map((c) => (
+            <MenuItem key={c.value} value={c.label}>
+              {c.label}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Box>
       <TextField
         margin="normal"
         required

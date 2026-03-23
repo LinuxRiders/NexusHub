@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import api from "../../api/api";
+import { useAuth } from "../../context/AuthProvider";
 import {
   Box,
   Typography,
@@ -16,34 +17,55 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import logo from "../../assets/img/logo2.png";
 import bgBottom from "../../assets/img/MarcaAgua2.png";
 
-const VerifyAccount = () => {
+const ResetEmail = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { logout } = useAuth(); // Usamos logout del contexto
 
   const [status, setStatus] = useState("loading");
-  const [message, setMessage] = useState("Verificando tu cuenta...");
+
+  const type = searchParams.get("type"); // "email" o "password"
+  const isEmail = type !== "password";
+
+  const [message, setMessage] = useState(
+    isEmail
+      ? "Confirmando tu nuevo correo..."
+      : "Confirmando tu nueva contraseña...",
+  );
   const hasRequested = useRef(false);
 
   useEffect(() => {
     if (hasRequested.current) return;
     hasRequested.current = true;
 
-    const verifyToken = async () => {
+    const verifyEmailChange = async () => {
       const token = searchParams.get("token");
 
       if (!token) {
         setStatus("error");
-        setMessage("Enlace de verificación inválido.");
+        setMessage("Enlace de cambio de correo inválido o ausente.");
         return;
       }
 
       try {
+        const actionType = isEmail ? "change_email" : "change_password";
         const response = await api.get(
-          `/auth/verify-action?token=${token}&action_type=verify_account`,
+          `/auth/verify-action?token=${token}&action_type=${actionType}`,
         );
+
+        // Cerramos la sesión actual de manera segura ya que las credenciales cambiaron
+        try {
+          await logout();
+        } catch (logoutError) {
+          console.error("Logout silencioso pre-redirect:", logoutError);
+        }
+
         setStatus("success");
         setMessage(
-          response.data.message || "¡Cuenta verificada correctamente!",
+          response.data.message ||
+            (isEmail
+              ? "¡Tu correo ha sido actualizado correctamente!"
+              : "¡Tu contraseña ha sido actualizada correctamente!"),
         );
       } catch (error) {
         setStatus("error");
@@ -54,8 +76,8 @@ const VerifyAccount = () => {
       }
     };
 
-    verifyToken();
-  }, [searchParams]);
+    verifyEmailChange();
+  }, [searchParams, logout]);
 
   return (
     <Box
@@ -70,16 +92,16 @@ const VerifyAccount = () => {
       }}
     >
       {/* IMÁGENES DE FONDO DUPLICADAS */}
-      {/* Imagen Izquierda (Muestra mitad Derecha visible) */}
+      {/* Imagen Izquierda */}
       <Box
         sx={{
           position: "absolute",
           bottom: 0,
           left: 0,
-          height: { xs: "20vh", sm: "40vh" }, // Responsive height
-          width: { xs: "170px", sm: "340px" }, // Ancho visible (mitad)
-          overflow: "hidden", // Recorte
-          opacity: { xs: 0.1, sm: 0.25 }, // Responsive opacity
+          height: { xs: "20vh", sm: "40vh" },
+          width: { xs: "170px", sm: "340px" },
+          overflow: "hidden",
+          opacity: { xs: 0.1, sm: 0.25 },
           zIndex: 0,
           pointerEvents: "none",
         }}
@@ -90,14 +112,14 @@ const VerifyAccount = () => {
           alt="Fondo Ciudad Der"
           sx={{
             height: "100%",
-            width: "200%", // Imagen completa tiene el doble de ancho que la ventana
+            width: "200%",
             objectFit: "cover",
-            transform: "translateX(-50%)", // Mueve la imagen para mostrar la mitad derecha (centro a derecha)
+            transform: "translateX(-50%)",
           }}
         />
       </Box>
 
-      {/* Imagen Derecha (Muestra mitad Izquierda visible) */}
+      {/* Imagen Derecha */}
       <Box
         sx={{
           position: "absolute",
@@ -119,7 +141,7 @@ const VerifyAccount = () => {
             height: "100%",
             width: "200%",
             objectFit: "cover",
-            transform: "translateX(0%)", // Mueve la imagen para mostrar la mitad izquierda
+            transform: "translateX(0%)",
           }}
         />
       </Box>
@@ -151,7 +173,7 @@ const VerifyAccount = () => {
               mb: 2,
             }}
           >
-            Verificación de Cuenta
+            {isEmail ? "Cambio de Correo" : "Cambio de Contraseña"}
           </Typography>
           <Divider
             sx={{
@@ -182,7 +204,7 @@ const VerifyAccount = () => {
               <Typography
                 sx={{ fontFamily: "'Nunito', sans-serif", fontSize: "1.2rem" }}
               >
-                Verificando...
+                Confirmando...
               </Typography>
             </>
           )}
@@ -197,7 +219,7 @@ const VerifyAccount = () => {
                 gutterBottom
                 sx={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}
               >
-                ¡Verificación Exitosa!
+                ¡Cambio Exitoso!
               </Typography>
               <Typography
                 sx={{
@@ -207,6 +229,10 @@ const VerifyAccount = () => {
                 }}
               >
                 {message}
+                <br />
+                <br />
+                Por seguridad, tu sesión ha sido cerrada. Por favor ingresa
+                utilizando tus nuevas credenciales.
               </Typography>
               <Button
                 variant="contained"
@@ -237,7 +263,7 @@ const VerifyAccount = () => {
                 gutterBottom
                 sx={{ fontFamily: "'Nunito', sans-serif", fontWeight: 700 }}
               >
-                Error de Verificación
+                Error de Confirmación
               </Typography>
               <Typography
                 sx={{
@@ -275,4 +301,4 @@ const VerifyAccount = () => {
   );
 };
 
-export default VerifyAccount;
+export default ResetEmail;

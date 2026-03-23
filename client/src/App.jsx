@@ -9,6 +9,7 @@ import Login from "./components/Login/Login";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import VerifyAccount from "./components/Login/VerifyAccount";
 import ResetPassword from "./components/Login/ResetPassword";
+import ResetEmail from "./components/Login/ResetEmail";
 
 import Admin from "./pages/Admin";
 
@@ -20,7 +21,6 @@ function App() {
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
-      <Route path="/admin" element={<Admin />} />
 
       {/* 
         #################################################################
@@ -36,6 +36,7 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="verify-account" element={<VerifyAccount />} />
           <Route path="reset-password" element={<ResetPassword />} />
+          <Route path="reset-mail" element={<ResetEmail />} />
         </Route>
       </Route>
 
@@ -47,7 +48,9 @@ function App() {
       <Route
         path="/admin"
         element={<ProtectedRoute to="/login" roles={["dev", "admin"]} />}
-      ></Route>
+      >
+        <Route path="" element={<Admin />} />
+      </Route>
 
       {/* 
         #################################################################

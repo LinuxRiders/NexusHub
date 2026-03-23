@@ -1,18 +1,55 @@
 // src/components/User/UserData/UserData.jsx
-import React, { useState } from "react";
-import { FaEdit, FaCheckCircle, FaExclamationTriangle } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import {
+  FaEdit,
+  FaCheckCircle,
+  FaExclamationTriangle,
+  FaTimesCircle,
+} from "react-icons/fa";
+import { CircularProgress } from "@mui/material";
 import "./UserData.css";
 import login from "../../assets/img/icons/userCuenta/login.png";
+import { useAuth } from "../../context/AuthProvider";
+import api from "../../api/api";
+import countries from "i18n-iso-countries";
+import esLocale from "i18n-iso-countries/langs/es.json";
+
+countries.registerLocale(esLocale);
+const countryObj = countries.getNames("es", { select: "official" });
+const countryList = Object.entries(countryObj)
+  .map(([key, value]) => ({
+    value: key,
+    label: value,
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));
 
 const UserData = () => {
+  const { user } = useAuth(); // Extraemos user del context
+
   const [formData, setFormData] = useState({
-    nombres: "Sofia",
-    apellidos: "Nolasco",
-    pais: "Perú",
-    gmail: "qwert@gmail.com",
-    telefono: "000 000 000",
+    nombres: "",
+    apellidos: "",
+    pais: "",
+    email: "",
+    telefono: "",
     avisos: false,
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Precargar formData cuando the user changes
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        nombres: user.nombres || "",
+        apellidos: user.apellidos || "",
+        pais: user.pais || "",
+        email: user.email || "",
+        telefono: user.telefono || "",
+        avisos: false,
+      });
+    }
+  }, [user]);
 
   const [isEditing, setIsEditing] = useState(false);
 
@@ -49,14 +86,39 @@ const UserData = () => {
     });
   };
 
-  const confirmSave = () => {
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: "Tus datos se han actualizado correctamente.",
-    });
+  const confirmSave = async () => {
+    setIsLoading(true);
+    try {
+      // Patch al nuevo endpoint (asume /users/me según routes)
+      const payload = {
+        nombres: formData.nombres,
+        apellidos: formData.apellidos,
+        pais: formData.pais,
+        email: formData.email,
+        telefono: formData.telefono,
+      };
 
-    setIsEditing(false);
+      const response = await api.patch("/users/me", payload);
+
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message:
+          response.data.message ||
+          "Tus datos se han actualizado correctamente.",
+      });
+
+      setIsEditing(false);
+    } catch (error) {
+      setModalConfig({
+        isOpen: true,
+        type: "error", // Necesitamos soportar type="error" en el render o mapearlo a confirm
+        message:
+          error.response?.data?.error || "Error al actualizar los datos.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -68,13 +130,19 @@ const UserData = () => {
             <div className="modal-icon-wrapper">
               {modalConfig.type === "confirm" ? (
                 <FaExclamationTriangle className="modal-icon confirm-icon" />
-              ) : (
+              ) : modalConfig.type === "success" ? (
                 <FaCheckCircle className="modal-icon success-icon" />
+              ) : (
+                <FaTimesCircle className="modal-icon error-icon" />
               )}
             </div>
 
             <h3 className="modal-title">
-              {modalConfig.type === "confirm" ? "Confirmar Acción" : "¡Éxito!"}
+              {modalConfig.type === "confirm"
+                ? "Confirmar Acción"
+                : modalConfig.type === "error"
+                  ? "Error"
+                  : "¡Éxito!"}
             </h3>
 
             <p className="modal-message">{modalConfig.message}</p>
@@ -83,6 +151,7 @@ const UserData = () => {
               {modalConfig.type === "confirm" && (
                 <button
                   className="btn-modal btn-cancel"
+                  disabled={isLoading}
                   onClick={() =>
                     setModalConfig({ ...modalConfig, isOpen: false })
                   }
@@ -92,14 +161,23 @@ const UserData = () => {
               )}
 
               <button
-                className="btn-modal btn-accept"
+                className={`btn-modal ${modalConfig.type === "error" ? "btn-cancel" : "btn-accept"}`}
+                disabled={isLoading}
                 onClick={
                   modalConfig.type === "confirm"
                     ? confirmSave
-                    : () => setModalConfig({ ...modalConfig, isOpen: false })
+                    : () => {
+                        setModalConfig({ ...modalConfig, isOpen: false });
+                        if (modalConfig.type === "success")
+                          window.location.reload(); // Quick refresh to update context
+                      }
                 }
               >
-                Aceptar
+                {isLoading ? (
+                  <CircularProgress size={20} color="inherit" />
+                ) : (
+                  "Aceptar"
+                )}
               </button>
             </div>
           </div>
@@ -146,21 +224,47 @@ const UserData = () => {
 
         <div className={`input-box ${isEditing ? "editable" : "locked"}`}>
           <span className="input-label">País:</span>
-          <input
-            type="text"
-            name="pais"
-            value={formData.pais}
-            onChange={handleInputChange}
-            readOnly={!isEditing}
-          />
+          {isEditing ? (
+            <select
+              name="pais"
+              value={formData.pais || ""}
+              onChange={handleInputChange}
+              style={{
+                width: "100%",
+                backgroundColor: "transparent",
+                color: "inherit",
+                border: "none",
+                outline: "none",
+                fontSize: "inherit",
+                fontFamily: "inherit",
+                padding: "0",
+              }}
+            >
+              <option value="" disabled>
+                Seleccione un país
+              </option>
+              {countryList.map((c) => (
+                <option key={c.value} value={c.label} style={{ color: "#333" }}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              type="text"
+              name="pais"
+              value={formData.pais || "No especificado"}
+              readOnly
+            />
+          )}
         </div>
 
         <div className={`input-box ${isEditing ? "editable" : "locked"}`}>
-          <span className="input-label">Gmail:</span>
+          <span className="input-label">Email:</span>
           <input
             type="email"
-            name="gmail"
-            value={formData.gmail}
+            name="email"
+            value={formData.email}
             onChange={handleInputChange}
             readOnly={!isEditing}
           />

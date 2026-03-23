@@ -1,6 +1,7 @@
 // src/components/Admin/AdminSidebarMenu.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthProvider";
 import {
   FaChevronDown,
   FaChevronUp,
@@ -17,6 +18,7 @@ import "./AdminSidebarMenu.css";
 
 const AdminSidebarMenu = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   // Nuevo estado para controlar si el menú está abierto en móviles
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -38,8 +40,9 @@ const AdminSidebarMenu = ({ activeTab, setActiveTab }) => {
     { id: "salir", label: "Salir", icon: <FaSignOutAlt size={22} /> },
   ];
 
-  const handleMenuClick = (id) => {
+  const handleMenuClick = async (id) => {
     if (id === "salir") {
+      await logout();
       navigate("/");
     } else {
       setActiveTab(id);

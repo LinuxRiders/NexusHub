@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Verifica tu cuenta</title>
+    <title>Confirmación de Cambio de Correo</title>
     <style>
       body {
         margin: 0;
@@ -53,6 +53,15 @@
         color: #90caf9;
         word-break: break-all;
       }
+      .alert-box {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin: 20px 0;
+        font-size: 14px;
+        color: #ffffff;
+        text-align: left;
+      }
       h2 { margin-top: 0; font-size: 24px; font-weight: 800; }
     </style>
   </head>
@@ -68,24 +77,27 @@
             </tr>
             <tr>
               <td class="content">
-                <h2>¡Bienvenido a NexusHub!</h2>
+                <h2>Cambio de Correo Electrónico</h2>
                 <p>Hola <strong>{{nombre}}</strong>,</p>
-                <p>Gracias por registrarte en nuestra plataforma. Para comenzar a explorar todas nuestras funcionalidades, necesitamos confirmar que este correo electrónico te pertenece.</p>
+                <p>Has solicitado cambiar la dirección de correo electrónico asociada a tu cuenta. Para aplicar este cambio, debes confirmarlo usando el botón a continuación.</p>
 
                 <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%">
                   <tr>
                     <td align="center">
-                      <a href="{{verify_url}}" class="button">Verificar mi Cuenta</a>
+                      <a href="{{verify_url}}" class="button">Confirmar Cambio</a>
                     </td>
                   </tr>
                 </table>
 
+                <div class="alert-box">
+                  <strong>Atención:</strong> Al confirmar, tu nuevo correo será el que utilizarás para iniciar sesión a partir de este momento.
+                </div>
+
                 <p style="font-size: 14px; color: rgba(255, 255, 255, 0.7);">
-                  Si no creaste esta cuenta, puedes ignorar este mensaje de forma segura.
+                  Si no solicitaste este cambio de perfil, comunícate con soporte inmediatamente. Tu correo electrónico original no será modificado hasta que no confirmes esta acción.
                 </p>
 
                 <hr style="border: 0; border-top: 1px solid rgba(255, 255, 255, 0.1); margin: 30px 0;" />
-
                 <p style="font-size: 12px; color: rgba(255, 255, 255, 0.5);">
                   Si el botón no funciona, copia y pega el siguiente enlace en tu navegador:
                 </p>
@@ -97,7 +109,6 @@
             <tr>
               <td class="footer">
                 <p>&copy; {{anio}} NexusHub. Todos los derechos reservados.</p>
-                <p>Has recibido este correo porque te has registrado en nuestra plataforma.</p>
               </td>
             </tr>
           </table>

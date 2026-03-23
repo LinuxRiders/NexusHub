@@ -6,6 +6,7 @@ import {
   FaTimesCircle,
 } from "react-icons/fa";
 import candado from "../../assets/img/icons/userCuenta/candado.png";
+import api from "../../api/api";
 
 import "./UserPassword.css";
 
@@ -33,7 +34,7 @@ const UserPassword = () => {
   const handleSaveClick = (e) => {
     e.preventDefault();
 
-    if (!passwords.actual || !passwords.nueva || !passwords.repetir) {
+    if (!passwords.nueva || !passwords.repetir) {
       setModalConfig({
         isOpen: true,
         type: "error",
@@ -58,14 +59,31 @@ const UserPassword = () => {
     });
   };
 
-  const confirmSave = () => {
-    setModalConfig({
-      isOpen: true,
-      type: "success",
-      message: "Tu contraseña se ha actualizado correctamente.",
-    });
+  const confirmSave = async () => {
+    try {
+      const response = await api.patch("/users/me", {
+        currentPassword: passwords.actual,
+        newPassword: passwords.nueva,
+      });
 
-    setPasswords({ actual: "", nueva: "", repetir: "" });
+      setModalConfig({
+        isOpen: true,
+        type: "success",
+        message:
+          response.data?.message ||
+          "Revisa tu correo actual para confirmar el cambio.",
+      });
+
+      setPasswords({ actual: "", nueva: "", repetir: "" });
+    } catch (error) {
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message:
+          error.response?.data?.error ||
+          "Ocurrió un error al actualizar la contraseña.",
+      });
+    }
   };
 
   return (
@@ -129,17 +147,18 @@ const UserPassword = () => {
 
       {/* FORM */}
       <form className="password-form" onSubmit={handleSaveClick}>
-        <div className="form-group full-width">
-          <label className="form-label">Contraseña actual</label>
-          <input
-            type="password"
-            name="actual"
-            placeholder="abcdefg"
-            value={passwords.actual}
-            onChange={handleInputChange}
-          />
+        <div className="password-row">
+          <div className="form-group half-width" style={{ width: "100%" }}>
+            <label className="form-label">Contraseña actual</label>
+            <input
+              type="password"
+              name="actual"
+              placeholder="123456"
+              value={passwords.actual}
+              onChange={handleInputChange}
+            />
+          </div>
         </div>
-
         <div className="password-row">
           <div className="form-group half-width">
             <label className="form-label">Contraseña nueva</label>

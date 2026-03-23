@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa"; // Añadimos iconos para el botón móvil
+import { useAuth } from "../../context/AuthProvider";
 
 import user from "../../assets/img/icons/userCuenta/user.png";
 import user2 from "../../assets/img/icons/userCuenta/user2.png";
@@ -20,6 +21,7 @@ import "./SidebarMenu.css";
 
 const SidebarMenu = ({ activeTab, setActiveTab }) => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   // Nuevo estado para controlar si el menú está abierto en móviles
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -47,9 +49,13 @@ const SidebarMenu = ({ activeTab, setActiveTab }) => {
     { id: "salir", label: "Salir", icon: salir, iconHover: salir2 },
   ];
 
-  const handleMenuClick = (id) => {
+  const handleMenuClick = async (id) => {
     if (id === "salir") {
-      navigate("/");
+      try {
+        await logout();
+      } catch (error) {
+        console.error("Error al cerrar sesión", error);
+      }
     } else {
       setActiveTab(id);
       setIsMobileMenuOpen(false); // Cierra el menú al elegir una opción en móvil
