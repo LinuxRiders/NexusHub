@@ -35,10 +35,10 @@ const pages_base = [
 
 /**
  * Componente de barra de navegación responsivo con soporte para:
- *  - Sticky (se queda fijo al hacer scroll)
- *  - Detección de la sección activa según el scroll
- *  - Navegación por hash (#id) con scroll suave
- *  - Adaptación completa a dispositivos móviles
+ * - Sticky (se queda fijo al hacer scroll)
+ * - Detección de la sección activa según el scroll
+ * - Navegación por hash (#id) con scroll suave
+ * - Adaptación completa a dispositivos móviles
  */
 function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
   const theme = useTheme();
@@ -156,7 +156,6 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
   return (
     <Box
       sx={{
-        maxWidth: "100vw",
         width: "100%",
         display: "flex",
         justifyContent: "center",
@@ -171,10 +170,11 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
         component="nav"
         sx={{
           width: "100%",
+          boxSizing: "border-box",
           height: { xs: "60px", md: barHeight },
           position: "fixed",
           top: 0,
-          zIndex: 100,
+          zIndex: 100, // Z-Index de la barra principal
           display: "flex",
           textAlign: "center",
           justifyContent: "space-between",
@@ -220,7 +220,6 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
             display: { xs: "none", md: "flex" },
             justifyContent: "space-between",
             alignItems: "center",
-            // gap: { md: 2, lg: 3 },
             flexGrow: 0,
             borderBottom: "2px solid #fdfdfda6",
             px: "1.5%",
@@ -332,10 +331,18 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
           onClick={toggleMenu}
           sx={{
             display: { xs: "flex", md: "none" },
-            color: "var(--text-secondary-color)",
-            transition: "transform 0.3s ease",
+            // CORRECCIÓN: Separamos el botón un poco más del borde derecho
+            mr: { xs: 1.5, sm: 2 },
+            color: sticky ? "white" : "#206b6f",
+            backgroundColor: sticky
+              ? "transparent"
+              : "rgba(255, 255, 255, 0.6)",
+            transition: "all 0.3s ease",
             "&:hover": {
               transform: "scale(1.1)",
+              backgroundColor: sticky
+                ? "transparent"
+                : "rgba(255, 255, 255, 0.9)",
             },
           }}
         >
@@ -353,7 +360,8 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
           width: "100%",
           height: "100vh",
           backgroundColor: "rgba(0, 0, 0, 0.5)",
-          zIndex: 99,
+          // CORRECCIÓN: zIndex a 105 para que cubra la NavBar (que tiene 100)
+          zIndex: 105,
           opacity: open ? 1 : 0,
           visibility: open ? "visible" : "hidden",
           transition: "opacity 0.3s ease, visibility 0.3s ease",
@@ -368,7 +376,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
             width: { xs: "80%", sm: "70%" },
             maxWidth: "400px",
             height: "100%",
-            backgroundColor: "var(--essential-background-color)",
+            backgroundColor: "white",
             boxShadow: "-2px 0 15px rgba(0, 0, 0, 0.2)",
             transform: open ? "translateX(0)" : "translateX(100%)",
             transition: "transform 0.3s ease-in-out",
@@ -386,7 +394,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               alignItems: "center",
               padding: "1.2rem 1rem",
               borderBottom: "1px solid rgba(0,0,0,0.1)",
-              backgroundColor: "var(--primary-color)",
+              backgroundColor: "#206b6f",
               color: "white",
             }}
           >
@@ -419,24 +427,22 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                   justifyContent: "flex-start",
                   padding: "1rem 1.5rem",
                   marginBottom: "0.5rem",
-                  color:
-                    activeRoute === page.to
-                      ? "var(--secondary-color)"
-                      : "var(--text-secondary-color)",
+                  color: activeRoute === page.to ? "#206b6f" : "#444",
                   fontWeight: activeRoute === page.to ? "700" : "500",
                   fontSize: "1rem",
                   backgroundColor:
                     activeRoute === page.to
-                      ? "rgba(0,0,0,0.05)"
+                      ? "rgba(32, 107, 111, 0.08)"
                       : "transparent",
                   borderLeft:
                     activeRoute === page.to
-                      ? "4px solid var(--secondary-color)"
+                      ? "4px solid #206b6f"
                       : "4px solid transparent",
                   transition: "all 0.2s ease",
                   "&:hover": {
-                    backgroundColor: "rgba(0,0,0,0.05)",
+                    backgroundColor: "rgba(32, 107, 111, 0.05)",
                     paddingLeft: "2rem",
+                    color: "#206b6f",
                   },
                 }}
               >
@@ -454,7 +460,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                 startIcon={<Person />}
                 onClick={handleMenuClick}
                 sx={{
-                  backgroundColor: "var(--primary-color)",
+                  backgroundColor: "#206b6f",
                   color: "white",
                   py: 1.2,
                   fontWeight: "600",
@@ -462,7 +468,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                   textTransform: "none",
                   borderRadius: "8px",
                   "&:hover": {
-                    backgroundColor: "var(--secondary-color)",
+                    backgroundColor: "#164d50",
                   },
                 }}
               >
@@ -480,11 +486,11 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               borderTop: "1px solid rgba(0,0,0,0.1)",
               textAlign: "center",
               color: "white",
-              backgroundColor: "var(--primary-color)",
+              backgroundColor: "#206b6f",
             }}
           >
             <Typography variant="body2" sx={{ fontSize: "0.85rem" }}>
-              © {new Date().getFullYear()} CICASS
+              © {new Date().getFullYear()} NEXUS HUB
             </Typography>
           </Box>
         </Box>
