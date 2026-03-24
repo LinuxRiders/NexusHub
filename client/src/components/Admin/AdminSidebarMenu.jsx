@@ -34,7 +34,7 @@ const AdminSidebarMenu = ({ activeTab, setActiveTab }) => {
       label: "Gestión de Usuarios",
       icon: <FaUsers size={22} />,
     },
-    { id: "favoritos", label: "Mis favoritos", icon: <FaHeart size={22} /> },
+    { id: "favoritos", label: "Favoritos", icon: <FaHeart size={22} /> },
     { id: "mensajes", label: "Mensajes", icon: <FaEnvelope size={22} /> },
     { id: "alertas", label: "Alertas", icon: <FaBell size={22} /> },
     { id: "salir", label: "Salir", icon: <FaSignOutAlt size={22} /> },

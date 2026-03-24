@@ -5,6 +5,7 @@
   width: 100%;
   font-family: "Nunito", sans-serif;
   animation: amFadeIn 0.4s ease;
+  box-sizing: border-box;
 }
 @keyframes amFadeIn {
   from {
@@ -68,11 +69,17 @@
   font-weight: 800;
   color: #111827;
 }
-.am-text-red {
-  color: #ef4444;
-}
 .am-text-green {
   color: #059669;
+}
+.am-text-red {
+  color: #dc2626;
+}
+.am-text-corp {
+  color: #1c6a6e;
+}
+.am-text-gray {
+  color: #9ca3af;
 }
 
 /* =========================================
@@ -95,7 +102,6 @@
   height: 44px;
   transition: all 0.3s ease;
   flex-grow: 1;
-  min-width: 200px;
 }
 .am-search-bar:focus-within,
 .am-filter-bar:focus-within {
@@ -124,7 +130,96 @@
 }
 
 /* =========================================
-   TABLA DE INBOX
+   PAGINACIÓN Y CONTROLES (NUEVOS)
+   ========================================= */
+.am-pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+}
+
+.am-count-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.am-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 700;
+}
+
+.items-per-page-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #2f3339;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.items-per-page-select:focus {
+  border-color: #1c6a6e;
+  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 25px;
+  padding-top: 20px;
+}
+
+.page-btn {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  border-radius: 6px;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #1c6a6e;
+  color: #1c6a6e;
+  background-color: #f0fdfa;
+}
+
+.page-btn.active {
+  background-color: #1c6a6e;
+  color: white;
+  border-color: #1c6a6e;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+/* =========================================
+   TABLA DE MENSAJES (INBOX)
    ========================================= */
 .am-table-container {
   width: 100%;
@@ -152,115 +247,81 @@
 .am-table td {
   padding: 16px 20px;
   border-bottom: 1px solid #e5e7eb;
-  color: #2f3339;
+  color: #4b5563;
   font-size: 14px;
   vertical-align: middle;
 }
-
-/* Efectos Fila INBOX */
 .am-tr-message {
   cursor: pointer;
-  transition:
-    background-color 0.2s ease,
-    box-shadow 0.2s;
+  transition: background-color 0.2s;
 }
 .am-tr-message:hover {
   background-color: #f4f8f8;
-  box-shadow: inset 3px 0 0 #1c6a6e;
 }
 .am-tr-unread {
   background-color: #f0fdfa;
+  border-left: 3px solid #1c6a6e;
 }
-.am-text-bold {
-  font-weight: 800 !important;
-  color: #111827 !important;
+.am-tr-unread:hover {
+  background-color: #e6f6ee;
 }
 
-/* Contenidos de celda */
-.am-status-icon {
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.am-text-corp {
-  color: #1c6a6e;
-}
-.am-text-gray {
-  color: #9ca3af;
-}
+/* Celdas y Textos */
 .am-th-status {
   width: 50px;
   text-align: center;
 }
-.am-th-center {
-  text-align: center;
+.am-status-icon {
+  font-size: 18px;
 }
-
 .am-td-contact {
   display: flex;
   flex-direction: column;
 }
-.am-td-contact strong {
-  color: #4b5563;
-  font-weight: 600;
-  font-size: 14px;
-}
 .am-td-contact span {
-  color: #6b7280;
   font-size: 12px;
+  color: #6b7280;
 }
-
 .am-td-content {
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-}
-.am-td-content strong {
-  color: #4b5563;
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 2px;
 }
 .am-text-truncate {
-  color: #6b7280;
-  font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.am-date-text {
-  color: #6b7280;
+  max-width: 350px;
   font-size: 13px;
-  font-weight: 600;
+  color: #6b7280;
+}
+.am-text-bold {
+  color: #111827;
+  font-weight: 800;
+}
+.am-date-text {
+  font-size: 13px;
 }
 
+/* Acciones en tabla */
 .am-col-actions {
   text-align: center;
-  vertical-align: middle;
-  /* Eliminamos el display: flex y justify-content: center para no romper la celda */
 }
-
 .am-btn-icon {
   width: 34px;
   height: 34px;
   border: none;
   border-radius: 6px;
-  display: inline-flex; /* Cambiamos flex por inline-flex */
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.2s;
-  font-size: 15px;
-  margin: 0 auto; /* Asegura el centrado perfecto del botón dentro de la celda */
+  font-size: 14px;
 }
-
 .am-delete {
   background-color: transparent;
   color: #9ca3af;
 }
-
 .am-delete:hover {
   background-color: #fee2e2;
   color: #dc2626;
@@ -274,7 +335,7 @@
 }
 
 /* =========================================
-   MODAL VISOR DE MENSAJES (FORMULARIO)
+   MODAL VISOR DE MENSAJES Y RESPUESTA (FIX MOBILE)
    ========================================= */
 .am-message-overlay {
   position: fixed;
@@ -283,25 +344,26 @@
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 10px;
+  backdrop-filter: blur(2px);
+  padding: 15px;
   box-sizing: border-box;
 }
+
 .am-message-box {
   background: #ffffff;
   width: 100%;
   max-width: 650px;
-  max-height: 95vh;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  max-height: 90vh; /* LIMITE DE ALTURA PARA CELULARES */
+  border-radius: 8px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
   display: flex;
-  flex-direction: column;
-  animation: amZoomIn 0.3s ease;
+  flex-direction: column; /* FLEX PARA QUE HEADER Y FOOTER SE QUEDEN FIJOS */
   overflow: hidden;
+  animation: amZoomIn 0.3s ease;
 }
 
 @keyframes amZoomIn {
@@ -315,38 +377,40 @@
   }
 }
 
+/* Cabecera del modal */
 .am-msg-header {
   padding: 20px 25px;
-  background-color: #f9fafb;
   border-bottom: 1px solid #e5e7eb;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  background-color: #f9fafb;
 }
 .am-msg-header-titles {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  gap: 8px;
 }
 .am-msg-badge {
+  align-self: flex-start;
   background-color: #1c6a6e;
   color: white;
   padding: 4px 10px;
   border-radius: 4px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
 }
 .am-msg-header h3 {
   margin: 0;
-  font-size: 18px;
+  font-size: 20px;
   color: #111827;
   font-weight: 800;
 }
 .am-msg-close {
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 24px;
   color: #9ca3af;
   cursor: pointer;
   transition: color 0.2s;
@@ -356,30 +420,27 @@
   color: #dc2626;
 }
 
+/* Cuerpo del modal (SCROLLEABLE EN MÓVIL) */
 .am-msg-body {
   padding: 25px;
-  overflow-y: auto;
-  flex-grow: 1;
+  overflow-y: auto; /* ESTO PERMITE EL SCROLL INTERNO SI EL MENSAJE ES LARGO */
+  flex: 1; /* OCUPA EL ESPACIO RESTANTE ENTRE HEADER Y FOOTER */
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 
-/* Detalles del Contacto */
 .am-client-info {
   display: flex;
   align-items: center;
   gap: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px dashed #e5e7eb;
-  position: relative;
 }
 .am-client-avatar {
   width: 45px;
   height: 45px;
   border-radius: 50%;
-  background-color: #1c6a6e;
-  color: white;
+  background-color: #e5e7eb;
+  color: #6b7280;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -388,103 +449,90 @@
 .am-client-details {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex: 1;
 }
 .am-client-details strong {
-  font-size: 16px;
   color: #111827;
+  font-size: 15px;
   font-weight: 800;
 }
 .am-client-details span {
-  font-size: 13px;
   color: #6b7280;
+  font-size: 13px;
   display: flex;
   align-items: center;
   gap: 5px;
-  margin-top: 2px;
 }
 .am-small-icon {
   font-size: 11px;
 }
 .am-msg-date {
-  position: absolute;
-  right: 0;
-  top: 0;
   font-size: 12px;
   color: #9ca3af;
   font-weight: 700;
+  align-self: flex-start;
 }
 
-/* Contenedores de Mensajes */
 .am-label-title {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
-  color: #6b7280;
-  text-transform: uppercase;
+  color: #1c6a6e;
   margin-bottom: 8px;
-  letter-spacing: 0.5px;
-}
-
-.am-original-message {
-  background-color: #f9fafb;
-  padding: 15px 20px;
-  border-radius: 6px;
-  border-left: 4px solid #9ca3af;
+  text-transform: uppercase;
 }
 .am-original-message p {
   margin: 0;
-  color: #374151;
-  font-size: 15px;
-  line-height: 1.5;
-}
-
-.am-admin-response {
-  background-color: #f0fdfa;
-  padding: 15px 20px;
+  background-color: #f9fafb;
+  padding: 15px;
   border-radius: 6px;
-  border-left: 4px solid #1c6a6e;
-}
-.am-admin-response .am-label-title {
-  color: #1c6a6e;
-  display: flex;
-  align-items: center;
-}
-.am-admin-response p {
-  margin: 0;
-  color: #115e59;
-  font-size: 15px;
-  line-height: 1.5;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  color: #2f3339;
+  line-height: 1.6;
 }
 
-/* Área de respuesta final */
-.am-reply-section label {
+/* Área de respuesta */
+.am-reply-section {
   display: flex;
-  align-items: center;
-  font-size: 14px;
-  font-weight: 800;
-  color: #111827;
-  margin-bottom: 10px;
+  flex-direction: column;
+  gap: 10px;
 }
 .am-reply-textarea {
   width: 100%;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 15px;
   font-family: "Nunito", sans-serif;
   font-size: 14px;
   outline: none;
+  resize: vertical;
   transition: all 0.3s;
   box-sizing: border-box;
-  resize: vertical;
-  background-color: #ffffff;
+  min-height: 120px;
 }
 .am-reply-textarea:focus {
   border-color: #1c6a6e;
   box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
 }
 
-/* Footer del modal */
+/* Estado de respuesta enviada */
+.am-admin-response {
+  background-color: #f0fdfa;
+  border: 1px solid #a7f3d0;
+  padding: 15px;
+  border-radius: 6px;
+}
+.am-admin-response .am-label-title {
+  color: #059669;
+}
+.am-text-muted {
+  margin: 0;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+/* Footer del modal (FIJO EN LA PARTE INFERIOR) */
 .am-msg-footer {
   padding: 15px 25px;
   background-color: #f9fafb;
@@ -492,12 +540,14 @@
   display: flex;
   justify-content: flex-end;
   gap: 15px;
+  flex-shrink: 0;
 }
+
 .am-btn-cancel,
 .am-btn-accept {
   padding: 12px 24px;
   border-radius: 6px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   transition: 0.2s;
@@ -527,13 +577,92 @@
   cursor: not-allowed;
 }
 
+/* MODALES GLOBALES */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+  padding: 20px;
+}
+.custom-modal-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", sans-serif;
+}
+.modal-icon-wrapper {
+  margin-bottom: 20px;
+}
+.modal-icon {
+  font-size: 50px;
+}
+.confirm-icon {
+  color: #f59e0b;
+}
+.success-icon {
+  color: #10b981;
+}
+
+.modal-title {
+  color: #111827;
+  font-size: 22px;
+  margin: 0 0 15px 0;
+  font-weight: 800;
+}
+.modal-message {
+  color: #666666;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+.btn-modal {
+  padding: 12px 25px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+  font-family: "Nunito", sans-serif;
+}
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+.btn-cancel:hover {
+  background-color: #d0d0d0;
+}
+.btn-accept {
+  background-color: #1c6a6e;
+  color: white;
+}
+.btn-accept:hover {
+  background-color: #154e52;
+}
+
 /* =========================================
    RESPONSIVE
    ========================================= */
 @media (max-width: 768px) {
   .am-stats-bar {
     grid-template-columns: 1fr;
-    gap: 10px;
   }
   .am-toolbar {
     flex-direction: column;
@@ -545,19 +674,39 @@
   .am-hide-mobile {
     display: none;
   }
+  .am-text-truncate {
+    max-width: 200px;
+  }
 
-  .am-msg-date {
-    position: relative;
-    margin-top: 10px;
+  /* Controles Paginación en Móvil */
+  .am-pagination-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  /* Ajustes del modal en móvil */
+  .am-msg-header {
+    padding: 15px;
+  }
+  .am-msg-body {
+    padding: 15px;
+  }
+  .am-msg-footer {
+    padding: 15px;
+    flex-direction: column;
+  }
+  .am-btn-cancel,
+  .am-btn-accept {
+    width: 100%;
+    justify-content: center;
   }
   .am-client-info {
     flex-direction: column;
     align-items: flex-start;
   }
-  .am-msg-footer {
-    flex-direction: column-reverse;
-  }
-  .am-msg-footer button {
-    width: 100%;
+  .am-msg-date {
+    align-self: flex-start;
+    margin-top: 5px;
   }
 }

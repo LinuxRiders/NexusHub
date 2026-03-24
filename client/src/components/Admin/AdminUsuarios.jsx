@@ -11,6 +11,8 @@ import {
   FaCalendarAlt,
   FaExclamationTriangle,
   FaCheckCircle,
+  FaChevronLeft, // Añadido para paginación
+  FaChevronRight, // Añadido para paginación
 } from "react-icons/fa";
 import api from "../../api/api";
 import "./AdminUsuarios.css";
@@ -23,6 +25,10 @@ const AdminUsuarios = () => {
     inactiveUsers: 0,
     googleUsers: 0,
   });
+
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Por defecto 10 usuarios por página
 
   useEffect(() => {
     const fetchUsersAndStats = async () => {
@@ -86,9 +92,17 @@ const AdminUsuarios = () => {
   const { totalUsers, activeUsers, inactiveUsers, googleUsers } = stats;
 
   // ==========================================
-  // FILTROS
+  // FILTROS Y BÚSQUEDA
   // ==========================================
-  const handleSearchChange = (e) => setSearchTerm(e.target.value);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reiniciar a la página 1 al buscar
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterType(e.target.value);
+    setCurrentPage(1); // Reiniciar a la página 1 al cambiar de filtro
+  };
 
   const filteredUsers = users.filter((user) => {
     const matchesSearch =
@@ -106,6 +120,14 @@ const AdminUsuarios = () => {
 
     return matchesSearch && matchesFilter;
   });
+
+  // Efecto de seguridad para la paginación
+  useEffect(() => {
+    const maxPage = Math.ceil(filteredUsers.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [filteredUsers.length, itemsPerPage, currentPage]);
 
   // ==========================================
   // ACCIONES ADMINISTRATIVAS
@@ -197,6 +219,24 @@ const AdminUsuarios = () => {
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
 
+  // ==========================================
+  // LÓGICA DE PAGINACIÓN MATEMÁTICA
+  // ==========================================
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Volver a la primera página al cambiar cantidad
+  };
+
   return (
     <div className="au-container">
       {/* MODAL GLOBAL MULTIUSO */}
@@ -263,7 +303,7 @@ const AdminUsuarios = () => {
                 }
                 onClick={
                   modalConfig.type === "confirm-delete"
-                    ? confirmDelete
+                    ? confirmDelete // Nota: Esta función parece no estar definida en este componente, asumo que era para futura implementación.
                     : modalConfig.type === "confirm-toggle-status"
                       ? confirmToggleStatus
                       : modalConfig.type === "send-message"
@@ -332,7 +372,7 @@ const AdminUsuarios = () => {
             <FaFilter className="au-search-icon" />
             <select
               value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
+              onChange={handleFilterChange}
               className="au-filter-select"
             >
               <option value="TODOS">Todos los usuarios</option>
@@ -348,6 +388,29 @@ const AdminUsuarios = () => {
           </div>
         </div>
 
+        {/* CONTROLES DE PAGINACIÓN */}
+        {filteredUsers.length > 0 && (
+          <div className="au-pagination-controls">
+            <span className="au-count-info">
+              Mostrando {indexOfFirstItem + 1} -{" "}
+              {Math.min(indexOfLastItem, filteredUsers.length)} de{" "}
+              {filteredUsers.length} usuarios
+            </span>
+            <div className="au-filter-group">
+              <label>Mostrar:</label>
+              <select
+                className="items-per-page-select"
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+              >
+                <option value={10}>10 usuarios</option>
+                <option value={20}>20 usuarios</option>
+                <option value={50}>50 usuarios</option>
+              </select>
+            </div>
+          </div>
+        )}
+
         {/* TABLA DE USUARIOS */}
         <div className="au-table-container">
           <table className="au-table">
@@ -362,7 +425,7 @@ const AdminUsuarios = () => {
             </thead>
             <tbody>
               {filteredUsers.length > 0 ? (
-                filteredUsers.map((user) => (
+                currentUsers.map((user) => (
                   <tr
                     key={user.id}
                     className={
@@ -503,6 +566,37 @@ const AdminUsuarios = () => {
             </tbody>
           </table>
         </div>
+
+        {/* NAVEGACIÓN DE PÁGINAS INFERIOR */}
+        {totalPages > 1 && (
+          <div className="pagination-container">
+            <button
+              className="page-btn"
+              disabled={currentPage === 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+            >
+              <FaChevronLeft />
+            </button>
+
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i + 1}
+                className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+                onClick={() => handlePageChange(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              className="page-btn"
+              disabled={currentPage === totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+            >
+              <FaChevronRight />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

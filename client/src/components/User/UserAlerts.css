@@ -13,7 +13,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px; /* Reducido un poco para dar espacio a los controles de paginación */
   gap: 20px;
 }
 .alerts-title-area {
@@ -44,6 +44,7 @@
   cursor: pointer;
   transition: background-color 0.3s;
   font-family: "Nunito", sans-serif;
+  /* border-radius: 4px; */
 }
 .btn-create-alert:hover {
   background-color: #154e52;
@@ -52,6 +53,97 @@
   font-size: 18px;
   color: #2f3339;
   font-weight: 600;
+}
+
+/* =========================================
+   PAGINACIÓN Y CONTROLES (AÑADIDOS)
+   ========================================= */
+.alerts-pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.alerts-count-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.alerts-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 700;
+}
+
+.items-per-page-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #2f3339;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.items-per-page-select:focus {
+  border-color: #1c6a6e;
+  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.page-btn {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  border-radius: 6px;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #1c6a6e;
+  color: #1c6a6e;
+  background-color: #f0fdfa;
+}
+
+.page-btn.active {
+  background-color: #1c6a6e;
+  color: white;
+  border-color: #1c6a6e;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
 }
 
 /* =========================================
@@ -559,6 +651,7 @@
   cursor: pointer;
   transition: background-color 0.3s;
   font-family: "Nunito", sans-serif;
+  border-radius: 4px;
 }
 .btn-dark-submit:hover {
   background-color: #154e52;
@@ -601,6 +694,13 @@
   .btn-dark-submit {
     width: 100%;
   }
+
+  /* Paginación responsiva */
+  .alerts-pagination-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -610,5 +710,8 @@
   }
   .alerts-title {
     font-size: 28px;
+  }
+  .pagination-container {
+    flex-wrap: wrap;
   }
 }

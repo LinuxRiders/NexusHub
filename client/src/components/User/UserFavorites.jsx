@@ -4,6 +4,8 @@ import {
   FaExclamationTriangle,
   FaCheckCircle,
   FaTimesCircle, // Mantenido por si lo usas en el futuro
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 
 // IMAGEN IMPORTADA PARA REEMPLAZAR FaHeart
@@ -16,9 +18,21 @@ import api from "../../api/api";
 const UserFavorites = () => {
   const [properties, setProperties] = useState([]);
 
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6); // Por defecto 6 favoritos por página
+
   useEffect(() => {
     fetchFavorites();
   }, []);
+
+  // Efecto de seguridad: Si eliminamos favoritos y la página actual queda vacía, retrocedemos
+  useEffect(() => {
+    const maxPage = Math.ceil(properties.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [properties.length, itemsPerPage, currentPage]);
 
   const fetchFavorites = async () => {
     try {
@@ -78,6 +92,23 @@ const UserFavorites = () => {
     setModalConfig({ ...modalConfig, isOpen: false });
   };
 
+  // --- LÓGICA DE PAGINACIÓN MATEMÁTICA ---
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProperties = properties.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Hacemos scroll suave hacia arriba al cambiar de página
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Volver a la primera página al cambiar cantidad
+  };
+
   return (
     <div className="user-favorites-container">
       {/* --- MODAL DE SISTEMA (DISEÑO OFICIAL) --- */}
@@ -124,7 +155,6 @@ const UserFavorites = () => {
 
       {/* --- CABECERA --- */}
       <div className="favorites-header">
-        {/* REEMPLAZO DE FABELL POR LA IMAGEN */}
         <img
           src={favorito}
           alt="Mis favoritos"
@@ -133,21 +163,76 @@ const UserFavorites = () => {
         <h1 className="favorites-title">Mis favoritos</h1>
       </div>
 
-      {/* --- GRID DE PROPIEDADES --- */}
-      <div className="properties-container">
-        {properties.length > 0 ? (
-          properties.map((property) => (
-            <PropertyCard
-              key={property.id}
-              property={property}
-              onToggleFavorite={() => handleRemoveClick(property.id)}
-              disableAos={true}
-            />
-          ))
-        ) : (
-          <p className="no-favorites-text">No existen favoritos guardados.</p>
-        )}
-      </div>
+      {/* --- CONTENIDO --- */}
+      {properties.length > 0 ? (
+        <>
+          {/* CONTROLES DE PAGINACIÓN SUPERIORES */}
+          <div className="favorites-pagination-controls">
+            <span className="favorites-count-info">
+              Mostrando {indexOfFirstItem + 1} -{" "}
+              {Math.min(indexOfLastItem, properties.length)} de{" "}
+              {properties.length} inmuebles
+            </span>
+            <div className="favorites-filter-group">
+              <label>Mostrar:</label>
+              <select
+                className="items-per-page-select"
+                value={itemsPerPage}
+                onChange={handleItemsPerPageChange}
+              >
+                <option value={6}>6 inmuebles</option>
+                <option value={12}>12 inmuebles</option>
+                <option value={24}>24 inmuebles</option>
+              </select>
+            </div>
+          </div>
+
+          {/* GRID DE PROPIEDADES */}
+          <div className="properties-container">
+            {currentProperties.map((property) => (
+              <PropertyCard
+                key={property.id}
+                property={property}
+                onToggleFavorite={() => handleRemoveClick(property.id)}
+                disableAos={true}
+              />
+            ))}
+          </div>
+
+          {/* NAVEGACIÓN DE PÁGINAS INFERIOR */}
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              <button
+                className="page-btn"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <FaChevronLeft />
+              </button>
+
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i + 1}
+                  className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+                  onClick={() => handlePageChange(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                className="page-btn"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+          )}
+        </>
+      ) : (
+        <p className="no-favorites-text">No existen favoritos guardados.</p>
+      )}
     </div>
   );
 };

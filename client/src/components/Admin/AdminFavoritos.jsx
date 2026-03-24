@@ -7,12 +7,18 @@ import {
   FaChartBar,
   FaFilter,
   FaSortAmountDown,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import api from "../../api/api";
 import "./AdminFavoritos.css";
 
 const AdminFavoritos = () => {
   const [properties, setProperties] = useState([]);
+
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Por defecto 10 inmuebles por página
 
   useEffect(() => {
     const fetchTop = async () => {
@@ -62,6 +68,42 @@ const AdminFavoritos = () => {
       return Number(b.favoritesCount) - Number(a.favoritesCount);
     return Number(a.favoritesCount) - Number(b.favoritesCount);
   });
+
+  // Efecto de seguridad para la paginación al filtrar
+  useEffect(() => {
+    const maxPage = Math.ceil(displayData.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [displayData.length, itemsPerPage, currentPage]);
+
+  // ==========================================
+  // LÓGICA DE PAGINACIÓN MATEMÁTICA
+  // ==========================================
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentData = displayData.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(displayData.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterType(e.target.value);
+    setCurrentPage(1); // Reiniciar a la página 1 al cambiar filtros
+  };
+
+  const handleSortChange = (e) => {
+    setSortOrder(e.target.value);
+    setCurrentPage(1); // Reiniciar a la página 1 al cambiar orden
+  };
 
   return (
     <div className="af-container">
@@ -120,7 +162,7 @@ const AdminFavoritos = () => {
           <FaFilter className="af-toolbar-icon" />
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
+            onChange={handleFilterChange}
             className="af-select"
           >
             <option value="TODOS">Todas las operaciones</option>
@@ -133,7 +175,7 @@ const AdminFavoritos = () => {
           <FaSortAmountDown className="af-toolbar-icon" />
           <select
             value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            onChange={handleSortChange}
             className="af-select"
           >
             <option value="DESC">Mayor a Menor interés</option>
@@ -141,6 +183,30 @@ const AdminFavoritos = () => {
           </select>
         </div>
       </div>
+
+      {/* CONTROLES DE PAGINACIÓN */}
+      {displayData.length > 0 && (
+        <div className="af-pagination-controls">
+          <span className="af-count-info">
+            Mostrando {indexOfFirstItem + 1} -{" "}
+            {Math.min(indexOfLastItem, displayData.length)} de{" "}
+            {displayData.length} resultados
+          </span>
+          <div className="af-filter-group">
+            <label>Mostrar:</label>
+            <select
+              className="items-per-page-select"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+            >
+              <option value={5}>5 resultados</option>
+              <option value={10}>10 resultados</option>
+              <option value={20}>20 resultados</option>
+              <option value={50}>50 resultados</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       {/* TABLA DE RANKING */}
       <div className="af-table-container">
@@ -155,7 +221,10 @@ const AdminFavoritos = () => {
           </thead>
           <tbody>
             {displayData.length > 0 ? (
-              displayData.map((prop, index) => {
+              currentData.map((prop, index) => {
+                // Calcular el ranking real considerando la paginación
+                const absoluteIndex = indexOfFirstItem + index;
+
                 // Cálculo del ancho de la barra (porcentaje respecto al máximo)
                 const barWidth = Math.round(
                   (prop.favoritesCount / maxFavorites) * 100,
@@ -167,9 +236,9 @@ const AdminFavoritos = () => {
                   <tr key={prop.id}>
                     <td className="af-col-rank">
                       <div
-                        className={`af-rank-circle ${index === 0 && sortOrder === "DESC" ? "rank-first" : ""}`}
+                        className={`af-rank-circle ${absoluteIndex === 0 && sortOrder === "DESC" ? "rank-first" : ""}`}
                       >
-                        {index + 1}
+                        {absoluteIndex + 1}
                       </div>
                     </td>
                     <td>
@@ -236,6 +305,37 @@ const AdminFavoritos = () => {
           </tbody>
         </table>
       </div>
+
+      {/* NAVEGACIÓN DE PÁGINAS INFERIOR */}
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button
+            className="page-btn"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            <FaChevronLeft />
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i + 1}
+              className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+              onClick={() => handlePageChange(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            className="page-btn"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

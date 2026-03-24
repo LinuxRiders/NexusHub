@@ -1,5 +1,5 @@
 // src/components/Admin/AdminMensajes/AdminMensajes.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaEnvelope,
   FaEnvelopeOpen,
@@ -13,6 +13,8 @@ import {
   FaPhoneAlt,
   FaUser,
   FaCheck,
+  FaChevronLeft, // Añadido para paginación
+  FaChevronRight, // Añadido para paginación
 } from "react-icons/fa";
 import api from "../../api/api";
 import "./AdminMensajes.css";
@@ -21,6 +23,10 @@ const AdminMensajes = () => {
   const [messages, setMessages] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("TODOS");
+
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Por defecto 10 mensajes por página
 
   // Estado para el visor de mensajes
   const [selectedMessage, setSelectedMessage] = useState(null);
@@ -42,7 +48,7 @@ const AdminMensajes = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchMessages();
   }, []);
 
@@ -52,6 +58,16 @@ const AdminMensajes = () => {
   const totalMessages = messages.length;
   const unreadMessages = messages.filter((m) => m.status === "UNREAD").length;
   const repliedMessages = messages.filter((m) => m.status === "REPLIED").length;
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reiniciar paginación al buscar
+  };
+
+  const handleFilterChange = (e) => {
+    setFilterStatus(e.target.value);
+    setCurrentPage(1); // Reiniciar paginación al filtrar
+  };
 
   const filteredMessages = messages.filter((msg) => {
     const matchesSearch =
@@ -64,6 +80,14 @@ const AdminMensajes = () => {
       (filterStatus === "REPLIED" && msg.status === "REPLIED");
     return matchesSearch && matchesStatus;
   });
+
+  // Efecto de seguridad para la paginación
+  useEffect(() => {
+    const maxPage = Math.ceil(filteredMessages.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [filteredMessages.length, itemsPerPage, currentPage]);
 
   // ==========================================
   // LÓGICA DE MENSAJES Y RESPUESTAS
@@ -169,6 +193,27 @@ const AdminMensajes = () => {
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
 
+  // ==========================================
+  // LÓGICA DE PAGINACIÓN MATEMÁTICA
+  // ==========================================
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentMessages = filteredMessages.slice(
+    indexOfFirstItem,
+    indexOfLastItem,
+  );
+  const totalPages = Math.ceil(filteredMessages.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Volver a la primera página al cambiar cantidad
+  };
+
   return (
     <div className="am-container">
       {/* MODAL GLOBAL DEL SISTEMA */}
@@ -227,6 +272,7 @@ const AdminMensajes = () => {
               </button>
             </div>
 
+            {/* SECCIÓN SCROLLEABLE PARA CELULARES */}
             <div className="am-msg-body">
               {/* INFO DEL CLIENTE */}
               <div className="am-client-info">
@@ -291,6 +337,7 @@ const AdminMensajes = () => {
               )}
             </div>
 
+            {/* FOOTER FIJO */}
             <div className="am-msg-footer">
               <button className="am-btn-cancel" onClick={handleCloseMessage}>
                 Cerrar Visor
@@ -342,14 +389,14 @@ const AdminMensajes = () => {
             type="text"
             placeholder="Buscar por nombre, correo o asunto..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
           />
         </div>
         <div className="am-filter-bar">
           <FaFilter className="am-search-icon" />
           <select
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={handleFilterChange}
             className="am-filter-select"
           >
             <option value="TODOS">Todos los mensajes</option>
@@ -358,6 +405,29 @@ const AdminMensajes = () => {
           </select>
         </div>
       </div>
+
+      {/* CONTROLES DE PAGINACIÓN */}
+      {filteredMessages.length > 0 && (
+        <div className="am-pagination-controls">
+          <span className="am-count-info">
+            Mostrando {indexOfFirstItem + 1} -{" "}
+            {Math.min(indexOfLastItem, filteredMessages.length)} de{" "}
+            {filteredMessages.length} mensajes
+          </span>
+          <div className="am-filter-group">
+            <label>Mostrar:</label>
+            <select
+              className="items-per-page-select"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+            >
+              <option value={10}>10 mensajes</option>
+              <option value={20}>20 mensajes</option>
+              <option value={50}>50 mensajes</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       <div className="am-table-container">
         <table className="am-table">
@@ -372,7 +442,7 @@ const AdminMensajes = () => {
           </thead>
           <tbody>
             {filteredMessages.length > 0 ? (
-              filteredMessages.map((msg) => {
+              currentMessages.map((msg) => {
                 const isUnread = msg.status === "UNREAD";
 
                 return (
@@ -440,6 +510,37 @@ const AdminMensajes = () => {
           </tbody>
         </table>
       </div>
+
+      {/* NAVEGACIÓN DE PÁGINAS INFERIOR */}
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button
+            className="page-btn"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            <FaChevronLeft />
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i + 1}
+              className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+              onClick={() => handlePageChange(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            className="page-btn"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

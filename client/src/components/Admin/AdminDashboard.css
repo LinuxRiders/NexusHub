@@ -6,6 +6,7 @@
   position: relative;
   font-family: "Nunito", sans-serif;
   animation: fadeIn 0.6s ease;
+  box-sizing: border-box; /* Aseguramos que los paddings no sumen al ancho */
 }
 
 @keyframes fadeIn {
@@ -370,6 +371,7 @@
 }
 
 /* TAGS */
+/* CORRECCIÓN MOBILE: Añadido flex-wrap y flex: 1 para que fluyan */
 .tags-container {
   display: flex;
   flex-wrap: wrap;
@@ -387,6 +389,9 @@
   font-size: 12px;
   font-weight: 700;
   border: 1px solid #e5e7eb;
+  flex: 1 1 auto; /* Permite que los tags se adapten y bajen de línea */
+  text-align: center;
+  white-space: nowrap; /* Evita que el texto dentro del tag se rompa */
 }
 
 /* ACCIONES RÁPIDAS */
@@ -431,6 +436,97 @@
 }
 
 /* =========================================
+   MODALES
+   ========================================= */
+.custom-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(3px);
+  padding: 20px; /* Padding extra para que no toque los bordes en móviles */
+  box-sizing: border-box;
+}
+
+.custom-modal-box {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  width: 100%; /* Cambiado a 100% para fluidez */
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  font-family: "Nunito", sans-serif;
+  box-sizing: border-box;
+}
+
+.modal-icon-wrapper {
+  margin-bottom: 20px;
+}
+.modal-icon {
+  font-size: 50px;
+}
+.confirm-icon {
+  color: #2f3339;
+}
+.success-icon {
+  color: #1c6a6e;
+}
+
+.modal-title {
+  color: #1c6a6e;
+  font-size: 22px;
+  margin: 0 0 15px 0;
+  font-weight: 800;
+}
+
+.modal-message {
+  color: #666666;
+  font-size: 15px;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.btn-modal {
+  padding: 12px 25px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+  font-family: "Nunito", sans-serif;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+.btn-cancel:hover {
+  background-color: #d0d0d0;
+}
+
+.btn-accept {
+  background-color: #1c6a6e;
+  color: white;
+}
+.btn-accept:hover {
+  background-color: #154e52;
+}
+
+/* =========================================
    RESPONSIVE (COMPLETAMENTE ADAPTABLE)
    ========================================= */
 @media (max-width: 1200px) {
@@ -448,6 +544,7 @@
   }
   .admindash-right-col > div {
     flex: 1;
+    min-width: 0; /* IMPORTANTE: Evita que el contenedor crezca más allá de la pantalla */
   }
 }
 
@@ -471,5 +568,24 @@
   }
   .admindash-title {
     font-size: 26px;
+  }
+
+  /* Ajuste de los tags para pantallas muy pequeñas */
+  .dash-tag {
+    font-size: 11px;
+    padding: 6px 10px;
+  }
+
+  .custom-modal-box {
+    padding: 30px 20px;
+  }
+
+  .modal-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn-modal {
+    width: 100%;
   }
 }

@@ -1,11 +1,13 @@
 // src/components/User/UserAlerts/UserAlerts.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaTimes,
   FaEdit,
   FaTrashAlt,
   FaExclamationTriangle,
   FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
@@ -57,10 +59,22 @@ const UserAlerts = () => {
   const [locationsOptions, setLocationsOptions] = useState([]);
   const [showTypeSelector, setShowTypeSelector] = useState(false);
 
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(6); // Por defecto 6 alertas por página
+
   React.useEffect(() => {
     fetchAlerts();
     fetchLocations();
   }, []);
+
+  // Efecto de seguridad: Si eliminamos elementos y la página actual queda vacía, retrocedemos una página
+  useEffect(() => {
+    const maxPage = Math.ceil(alertsList.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [alertsList.length, itemsPerPage, currentPage]);
 
   const fetchLocations = async () => {
     try {
@@ -194,6 +208,23 @@ const UserAlerts = () => {
         message: "Ocurrió un error al eliminar la alerta.",
       });
     }
+  };
+
+  // --- LÓGICA DE PAGINACIÓN ---
+  const indexOfLastAlert = currentPage * itemsPerPage;
+  const indexOfFirstAlert = indexOfLastAlert - itemsPerPage;
+  const currentAlerts = alertsList.slice(indexOfFirstAlert, indexOfLastAlert);
+  const totalPages = Math.ceil(alertsList.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Opcional: hacer scroll suave hacia arriba al cambiar de página
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Volver a la primera página al cambiar cantidad
   };
 
   return (
@@ -525,7 +556,6 @@ const UserAlerts = () => {
       {/* --- PANEL PRINCIPAL --- */}
       <div className="alerts-header">
         <div className="alerts-title-area">
-          {/* CAMBIADO A LA IMAGEN DE ALERTA */}
           <img
             src={alerta}
             alt="Mis Alertas"
@@ -542,74 +572,127 @@ const UserAlerts = () => {
         {alertsList.length === 0 ? (
           <p className="no-alerts-text">No existen alertas</p>
         ) : (
-          <div className="alerts-grid">
-            {alertsList.map((alert) => (
-              <div key={alert.id} className="alert-card pro-design">
-                <div className="alert-card-header">
-                  <h3>{alert.title}</h3>
-                  <div className="alert-card-actions">
-                    <button
-                      className="btn-icon-action edit"
-                      onClick={() => openEditAlertModal(alert)}
-                    >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="btn-icon-action delete"
-                      onClick={() => handleDeleteClick(alert.id)}
-                    >
-                      <FaTrashAlt />
-                    </button>
-                  </div>
-                </div>
-
-                {/* DISEÑO PROFESIONAL PARA LOS DATOS DE LA ALERTA */}
-                <div className="alert-card-body">
-                  <div className="alert-detail-row">
-                    <span className="alert-label">Ubicación</span>
-                    <span className="alert-value">
-                      {alert.location || "Cualquiera"}
-                    </span>
-                  </div>
-
-                  <div className="alert-detail-row">
-                    <span className="alert-label">Operación</span>
-                    <span className="alert-value">
-                      {[alert.is_buy && "Compra", alert.is_rent && "Alquiler"]
-                        .filter(Boolean)
-                        .map((op, i) => (
-                          <span key={i} className="alert-badge highlight">
-                            {op}
-                          </span>
-                        ))}
-                      {!alert.is_buy && !alert.is_rent && "Cualquiera"}
-                    </span>
-                  </div>
-
-                  <div className="alert-detail-row">
-                    <span className="alert-label">Inmueble</span>
-                    <span className="alert-value">
-                      {alert.property_types && alert.property_types.length > 0
-                        ? alert.property_types.map((tag) => (
-                            <span key={tag} className="alert-badge">
-                              {tag}
-                            </span>
-                          ))
-                        : "Cualquiera"}
-                    </span>
-                  </div>
-
-                  <div className="alert-detail-row">
-                    <span className="alert-label">Precio</span>
-                    <span className="alert-value price">
-                      {alert.min_price || "0"} -{" "}
-                      {alert.max_price || "Sin límite"}
-                    </span>
-                  </div>
-                </div>
+          <>
+            {/* --- CONTROLES DE PAGINACIÓN Y FILTRO --- */}
+            <div className="alerts-pagination-controls">
+              <span className="alerts-count-info">
+                Mostrando {indexOfFirstAlert + 1} -{" "}
+                {Math.min(indexOfLastAlert, alertsList.length)} de{" "}
+                {alertsList.length} alertas
+              </span>
+              <div className="alerts-filter-group">
+                <label>Mostrar:</label>
+                <select
+                  className="items-per-page-select"
+                  value={itemsPerPage}
+                  onChange={handleItemsPerPageChange}
+                >
+                  <option value={6}>6 alertas</option>
+                  <option value={12}>12 alertas</option>
+                  <option value={24}>24 alertas</option>
+                </select>
               </div>
-            ))}
-          </div>
+            </div>
+
+            <div className="alerts-grid">
+              {currentAlerts.map((alert) => (
+                <div key={alert.id} className="alert-card pro-design">
+                  <div className="alert-card-header">
+                    <h3>{alert.title}</h3>
+                    <div className="alert-card-actions">
+                      <button
+                        className="btn-icon-action edit"
+                        onClick={() => openEditAlertModal(alert)}
+                      >
+                        <FaEdit />
+                      </button>
+                      <button
+                        className="btn-icon-action delete"
+                        onClick={() => handleDeleteClick(alert.id)}
+                      >
+                        <FaTrashAlt />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="alert-card-body">
+                    <div className="alert-detail-row">
+                      <span className="alert-label">Ubicación</span>
+                      <span className="alert-value">
+                        {alert.location || "Cualquiera"}
+                      </span>
+                    </div>
+
+                    <div className="alert-detail-row">
+                      <span className="alert-label">Operación</span>
+                      <span className="alert-value">
+                        {[alert.is_buy && "Compra", alert.is_rent && "Alquiler"]
+                          .filter(Boolean)
+                          .map((op, i) => (
+                            <span key={i} className="alert-badge highlight">
+                              {op}
+                            </span>
+                          ))}
+                        {!alert.is_buy && !alert.is_rent && "Cualquiera"}
+                      </span>
+                    </div>
+
+                    <div className="alert-detail-row">
+                      <span className="alert-label">Inmueble</span>
+                      <span className="alert-value">
+                        {alert.property_types && alert.property_types.length > 0
+                          ? alert.property_types.map((tag) => (
+                              <span key={tag} className="alert-badge">
+                                {tag}
+                              </span>
+                            ))
+                          : "Cualquiera"}
+                      </span>
+                    </div>
+
+                    <div className="alert-detail-row">
+                      <span className="alert-label">Precio</span>
+                      <span className="alert-value price">
+                        {alert.min_price || "0"} -{" "}
+                        {alert.max_price || "Sin límite"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* --- NAVEGACIÓN DE PÁGINAS --- */}
+            {totalPages > 1 && (
+              <div className="pagination-container">
+                <button
+                  className="page-btn"
+                  disabled={currentPage === 1}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                >
+                  <FaChevronLeft />
+                </button>
+
+                {[...Array(totalPages)].map((_, i) => (
+                  <button
+                    key={i + 1}
+                    className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+                    onClick={() => handlePageChange(i + 1)}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  className="page-btn"
+                  disabled={currentPage === totalPages}
+                  onClick={() => handlePageChange(currentPage + 1)}
+                >
+                  <FaChevronRight />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

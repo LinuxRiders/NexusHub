@@ -8,15 +8,21 @@ import {
   FaHome,
   FaTags,
   FaUser,
+  FaChevronLeft, // Añadido para paginación
+  FaChevronRight, // Añadido para paginación
 } from "react-icons/fa";
 import "./AdminAlertas.css";
-import api from "../../api/api"; // Added API
+import api from "../../api/api";
 
 const AdminAlertas = () => {
   const [alerts, setAlerts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterOperation, setFilterOperation] = useState("TODOS");
   const [filterType, setFilterType] = useState("TODOS");
+
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10); // Por defecto 10 alertas por página
 
   useEffect(() => {
     fetchAlerts();
@@ -47,42 +53,89 @@ const AdminAlertas = () => {
 
   // Calcular tipo de inmueble más buscado
   const typeCounts = alerts.reduce((acc, curr) => {
-    const typesStr = curr.property_types?.join(", ") || "N/A";
-    acc[typesStr] = (acc[typesStr] || 0) + 1;
+    if (curr.property_types && curr.property_types.length > 0) {
+      curr.property_types.forEach((type) => {
+        acc[type] = (acc[type] || 0) + 1;
+      });
+    }
     return acc;
   }, {});
+
   const topType =
-    totalAlerts > 0
+    Object.keys(typeCounts).length > 0
       ? Object.keys(typeCounts).reduce((a, b) =>
           typeCounts[a] > typeCounts[b] ? a : b,
         )
       : "N/A";
 
   // ==========================================
-  // FILTRADO
+  // FILTRADO Y BÚSQUEDA
   // ==========================================
-  const filteredAlerts = alerts.filter((alert) => {
-    const propertyTypeStr = alert.property_types?.join(", ") || "";
-    const operationStr = alert.is_buy
-      ? "COMPRA"
-      : alert.is_rent
-        ? "ALQUILER"
-        : "TODOS";
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reiniciar paginación al buscar
+  };
 
+  const handleFilterOperationChange = (e) => {
+    setFilterOperation(e.target.value);
+    setCurrentPage(1); // Reiniciar paginación al filtrar
+  };
+
+  const handleFilterTypeChange = (e) => {
+    setFilterType(e.target.value);
+    setCurrentPage(1); // Reiniciar paginación al filtrar
+  };
+
+  const filteredAlerts = alerts.filter((alert) => {
     const matchesSearch =
-      alert.user_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (alert.location &&
-        alert.location.toLowerCase().includes(searchTerm.toLowerCase()));
+      (alert.user_name || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (alert.user_email || "")
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      (alert.location || "").toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesOp =
-      filterOperation === "TODOS" || operationStr === filterOperation;
+      filterOperation === "TODOS" ||
+      (filterOperation === "COMPRA" && alert.is_buy) ||
+      (filterOperation === "ALQUILER" && alert.is_rent);
 
     const matchesType =
       filterType === "TODOS" ||
-      propertyTypeStr.toUpperCase().includes(filterType.toUpperCase());
+      (alert.property_types &&
+        alert.property_types.some(
+          (t) => t.toUpperCase() === filterType.toUpperCase(),
+        ));
 
     return matchesSearch && matchesOp && matchesType;
   });
+
+  // Efecto de seguridad para la paginación al filtrar
+  useEffect(() => {
+    const maxPage = Math.ceil(filteredAlerts.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [filteredAlerts.length, itemsPerPage, currentPage]);
+
+  // ==========================================
+  // LÓGICA DE PAGINACIÓN MATEMÁTICA
+  // ==========================================
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentAlerts = filteredAlerts.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredAlerts.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Volver a la primera página al cambiar cantidad
+  };
 
   return (
     <div className="aa-container">
@@ -91,7 +144,7 @@ const AdminAlertas = () => {
         <div className="aa-title-group">
           <h1 className="aa-title">Alertas e Intenciones de Búsqueda</h1>
           <h2 className="aa-subtitle">
-            Descubre qué propiedades están buscando tus clientes en tiempo real
+            Descubre qué propiedades están buscando los clientes en tiempo real
           </h2>
         </div>
       </div>
@@ -121,7 +174,9 @@ const AdminAlertas = () => {
           <span className="aa-stat-label">Inmueble más buscado</span>
           <div className="aa-stat-value-group">
             <FaHome className="aa-text-orange" />
-            <span className="aa-stat-value text-medium">{topType}s</span>
+            <span className="aa-stat-value text-medium">
+              {topType !== "N/A" ? `${topType}s` : topType}
+            </span>
           </div>
         </div>
       </div>
@@ -134,14 +189,14 @@ const AdminAlertas = () => {
             type="text"
             placeholder="Buscar por cliente o ubicación..."
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchChange}
           />
         </div>
         <div className="aa-filter-bar">
           <FaFilter className="aa-search-icon" />
           <select
             value={filterOperation}
-            onChange={(e) => setFilterOperation(e.target.value)}
+            onChange={handleFilterOperationChange}
             className="aa-filter-select"
           >
             <option value="TODOS">Todas las Operaciones</option>
@@ -153,17 +208,42 @@ const AdminAlertas = () => {
           <FaHome className="aa-search-icon" />
           <select
             value={filterType}
-            onChange={(e) => setFilterType(e.target.value)}
+            onChange={handleFilterTypeChange}
             className="aa-filter-select"
           >
             <option value="TODOS">Todos los Tipos</option>
             <option value="DEPARTAMENTO">Departamentos</option>
             <option value="CASA">Casas</option>
             <option value="OFICINA">Oficinas</option>
+            <option value="LOCAL COMERCIAL">Locales Comerciales</option>
             <option value="TERRENO">Terrenos</option>
+            <option value="ALMACÉN">Almacenes</option>
           </select>
         </div>
       </div>
+
+      {/* CONTROLES DE PAGINACIÓN */}
+      {filteredAlerts.length > 0 && (
+        <div className="aa-pagination-controls">
+          <span className="aa-count-info">
+            Mostrando {indexOfFirstItem + 1} -{" "}
+            {Math.min(indexOfLastItem, filteredAlerts.length)} de{" "}
+            {filteredAlerts.length} alertas
+          </span>
+          <div className="aa-filter-group">
+            <label>Mostrar:</label>
+            <select
+              className="items-per-page-select"
+              value={itemsPerPage}
+              onChange={handleItemsPerPageChange}
+            >
+              <option value={10}>10 alertas</option>
+              <option value={20}>20 alertas</option>
+              <option value={50}>50 alertas</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       {/* TABLA DE ALERTAS */}
       <div className="aa-table-container">
@@ -178,7 +258,7 @@ const AdminAlertas = () => {
           </thead>
           <tbody>
             {filteredAlerts.length > 0 ? (
-              filteredAlerts.map((alert) => (
+              currentAlerts.map((alert) => (
                 <tr key={alert.id}>
                   {/* CLIENTE */}
                   <td>
@@ -187,8 +267,10 @@ const AdminAlertas = () => {
                         <FaUser />
                       </div>
                       <div className="aa-client-info">
-                        <strong>{alert.user_name}</strong>
-                        <span>{alert.user_email}</span>
+                        <strong>
+                          {alert.user_name || "Usuario Desconocido"}
+                        </strong>
+                        <span>{alert.user_email || alert.user_phone}</span>
                       </div>
                     </div>
                   </td>
@@ -238,6 +320,37 @@ const AdminAlertas = () => {
           </tbody>
         </table>
       </div>
+
+      {/* NAVEGACIÓN DE PÁGINAS INFERIOR */}
+      {totalPages > 1 && (
+        <div className="pagination-container">
+          <button
+            className="page-btn"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            <FaChevronLeft />
+          </button>
+
+          {[...Array(totalPages)].map((_, i) => (
+            <button
+              key={i + 1}
+              className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+              onClick={() => handlePageChange(i + 1)}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            className="page-btn"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            <FaChevronRight />
+          </button>
+        </div>
+      )}
     </div>
   );
 };

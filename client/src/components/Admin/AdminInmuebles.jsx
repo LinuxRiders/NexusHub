@@ -12,11 +12,13 @@ import {
   FaTags,
   FaRulerCombined,
   FaImage,
-  FaTimes, // Added FaTimes
+  FaTimes,
+  FaChevronLeft, // Añadido para paginación
+  FaChevronRight, // Añadido para paginación
 } from "react-icons/fa";
 import { Autocomplete, TextField } from "@mui/material";
 import "./AdminInmuebles.css";
-import api from "../../api/api"; // Added API
+import api from "../../api/api";
 
 const AdminInmuebles = () => {
   const [properties, setProperties] = useState([]);
@@ -38,10 +40,22 @@ const AdminInmuebles = () => {
     status: "BORRADOR",
   });
 
+  // --- ESTADOS DE PAGINACIÓN ---
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5); // Por defecto 5 inmuebles por página
+
   useEffect(() => {
     fetchProperties();
     fetchLocations();
   }, []);
+
+  // Efecto de seguridad para la paginación al eliminar elementos
+  useEffect(() => {
+    const maxPage = Math.ceil(properties.length / itemsPerPage);
+    if (currentPage > maxPage && maxPage > 0) {
+      setCurrentPage(maxPage);
+    }
+  }, [properties.length, itemsPerPage, currentPage]);
 
   const fetchLocations = async () => {
     try {
@@ -55,7 +69,7 @@ const AdminInmuebles = () => {
   const fetchProperties = async () => {
     try {
       const res = await api.get("/properties/admin/all");
-      const propertiesData = res.data.data.map(prop => {
+      const propertiesData = res.data.data.map((prop) => {
         let parsedImages = [];
         if (Array.isArray(prop.images)) {
           parsedImages = prop.images;
@@ -79,7 +93,7 @@ const AdminInmuebles = () => {
   const [tempImageUrl, setTempImageUrl] = useState("");
 
   const handleAddImage = () => {
-    const urlPattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|svg))/i; // Relaxed end of string just in case there are query params for tokens
+    const urlPattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|svg))/i;
     if (!tempImageUrl.trim()) return;
     if (!urlPattern.test(tempImageUrl.trim())) {
       setFormErrors((prev) => ({
@@ -113,8 +127,6 @@ const AdminInmuebles = () => {
   // ==========================================
   // FORMATEO Y UTILIDADES
   // ==========================================
-
-  // Convierte el número (ej. 350000) a texto (ej. "S/ 350,000") automáticamente
   const formatPriceString = (num, type) => {
     if (!num) return "";
     const formattedNum = new Intl.NumberFormat("es-PE").format(num);
@@ -171,7 +183,6 @@ const AdminInmuebles = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Limpiamos el error de este campo mientras el usuario escribe
     if (formErrors[name]) {
       setFormErrors((prev) => ({ ...prev, [name]: "" }));
     }
@@ -199,7 +210,7 @@ const AdminInmuebles = () => {
       errors.bathrooms = "No puede ser negativo.";
 
     setFormErrors(errors);
-    return Object.keys(errors).length === 0; // Retorna true si no hay errores
+    return Object.keys(errors).length === 0;
   };
 
   // ==========================================
@@ -322,6 +333,25 @@ const AdminInmuebles = () => {
 
   const closeModal = () => setModalConfig({ ...modalConfig, isOpen: false });
 
+  // ==========================================
+  // LÓGICA DE PAGINACIÓN MATEMÁTICA
+  // ==========================================
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProperties = properties.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(properties.length / itemsPerPage);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+    // Hacemos scroll suave hacia arriba al cambiar de página
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleItemsPerPageChange = (e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1); // Volver a la primera página al cambiar cantidad
+  };
+
   return (
     <div className="admin-crud-container">
       {/* MODAL GLOBAL */}
@@ -386,6 +416,29 @@ const AdminInmuebles = () => {
             </button>
           </div>
 
+          {/* CONTROLES DE PAGINACIÓN */}
+          {properties.length > 0 && (
+            <div className="admin-pagination-controls">
+              <span className="admin-count-info">
+                Mostrando {indexOfFirstItem + 1} -{" "}
+                {Math.min(indexOfLastItem, properties.length)} de{" "}
+                {properties.length} inmuebles
+              </span>
+              <div className="admin-filter-group">
+                <label>Mostrar:</label>
+                <select
+                  className="items-per-page-select"
+                  value={itemsPerPage}
+                  onChange={handleItemsPerPageChange}
+                >
+                  <option value={5}>5 inmuebles</option>
+                  <option value={10}>10 inmuebles</option>
+                  <option value={20}>20 inmuebles</option>
+                </select>
+              </div>
+            </div>
+          )}
+
           <div className="crud-table-container">
             <table className="crud-table">
               <thead>
@@ -401,7 +454,7 @@ const AdminInmuebles = () => {
               </thead>
               <tbody>
                 {properties.length > 0 ? (
-                  properties.map((prop) => (
+                  currentProperties.map((prop) => (
                     <tr key={prop.id}>
                       <td className="col-id">#{prop.id}</td>
                       <td className="col-avenue">
@@ -461,8 +514,6 @@ const AdminInmuebles = () => {
                           <span className="toggle-text">{prop.status}</span>
                         </button>
                       </td>
-
-                      {/* CORRECCIÓN: Separando el td del flex de las acciones */}
                       <td className="th-center">
                         <div className="col-actions">
                           <button
@@ -485,7 +536,7 @@ const AdminInmuebles = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="no-data">
+                    <td colSpan="7" className="no-data">
                       No hay inmuebles registrados actualmente.
                     </td>
                   </tr>
@@ -493,6 +544,37 @@ const AdminInmuebles = () => {
               </tbody>
             </table>
           </div>
+
+          {/* NAVEGACIÓN DE PÁGINAS INFERIOR */}
+          {totalPages > 1 && (
+            <div className="pagination-container">
+              <button
+                className="page-btn"
+                disabled={currentPage === 1}
+                onClick={() => handlePageChange(currentPage - 1)}
+              >
+                <FaChevronLeft />
+              </button>
+
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i + 1}
+                  className={`page-btn ${currentPage === i + 1 ? "active" : ""}`}
+                  onClick={() => handlePageChange(i + 1)}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                className="page-btn"
+                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(currentPage + 1)}
+              >
+                <FaChevronRight />
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -569,8 +651,8 @@ const AdminInmuebles = () => {
                         sx={{
                           backgroundColor: "#f9fafb",
                           "& .MuiOutlinedInput-root": {
-                            padding: "0 9px", // Right spacing for chevron
-                            height: "45px", // Enforce exact height to match standard inputs
+                            padding: "0 9px",
+                            height: "45px",
                             fontFamily: '"Nunito", sans-serif',
                             fontSize: "15px",
                             fontWeight: 600,
@@ -587,7 +669,7 @@ const AdminInmuebles = () => {
                             border: "none !important",
                             backgroundColor: "transparent !important",
                             boxShadow: "none !important",
-                            padding: "0 6px !important", // Inner text padding
+                            padding: "0 6px !important",
                             height: "100%",
                           },
                         }}

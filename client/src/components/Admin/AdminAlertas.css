@@ -160,6 +160,95 @@
 }
 
 /* =========================================
+   PAGINACIÓN Y CONTROLES (NUEVOS)
+   ========================================= */
+.aa-pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+}
+
+.aa-count-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.aa-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 700;
+}
+
+.items-per-page-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #2f3339;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.items-per-page-select:focus {
+  border-color: #1c6a6e;
+  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 25px;
+  padding-top: 20px;
+}
+
+.page-btn {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  border-radius: 6px;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #1c6a6e;
+  color: #1c6a6e;
+  background-color: #f0fdfa;
+}
+
+.page-btn.active {
+  background-color: #1c6a6e;
+  color: white;
+  border-color: #1c6a6e;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+/* =========================================
    TABLA DE ALERTAS
    ========================================= */
 .aa-table-container {
@@ -291,44 +380,37 @@
   font-weight: 600;
 }
 
-/* Acciones */
-/* Acciones */
+/* Acciones (Corregido con márgenes en vez de flex gap para tabla) */
 .aa-col-actions {
   text-align: center;
   vertical-align: middle;
-  /* Eliminamos display: flex, gap y justify-content para mantener la celda intacta */
 }
-
 .aa-btn-icon {
   width: 34px;
   height: 34px;
   border: none;
   border-radius: 6px;
-  display: inline-flex; /* Cambiamos flex por inline-flex */
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   transition: all 0.2s;
   font-size: 14px;
-  margin: 0 4px; /* Reemplazamos el 'gap' del padre con márgenes laterales */
+  margin: 0 4px;
 }
-
 .aa-suggest {
   background-color: #e0f2fe;
   color: #0284c7;
 }
-
 .aa-suggest:hover {
   background-color: #bae6fd;
   color: #0369a1;
   transform: translateY(-2px);
 }
-
 .aa-delete {
   background-color: transparent;
   color: #9ca3af;
 }
-
 .aa-delete:hover {
   background-color: #fee2e2;
   color: #dc2626;
@@ -342,7 +424,7 @@
 }
 
 /* =========================================
-   MODAL DE SUGERENCIA (MATCH)
+   MODAL DE SUGERENCIA (MATCH) - SI APLICA FUTURO
    ========================================= */
 .aa-modal-form {
   display: flex;
@@ -417,5 +499,12 @@
   }
   .aa-client-avatar {
     display: none;
+  }
+
+  /* Paginación controles en móvil */
+  .aa-pagination-controls {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
   }
 }

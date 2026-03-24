@@ -1,4 +1,4 @@
-/* UserFavorites.css */
+/* src/components/User/UserFavorites/UserFavorites.css */
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
 
 .user-favorites-container {
@@ -6,16 +6,17 @@
   position: relative;
   /* FUENTE NUNITO APLICADA */
   font-family: "Nunito", sans-serif;
+  box-sizing: border-box;
 }
 
 /* Cabecera siguiendo el estilo de Mis Alertas / Cambiar Contraseña */
 .favorites-header {
   display: flex;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px; /* Reducido ligeramente para acomodar la barra de paginación */
 }
 
-/* NUEVOS ESTILOS PARA LA IMAGEN (Reemplaza .favorites-icon) */
+/* ESTILOS PARA LA IMAGEN */
 .favorites-title-icon-img {
   width: 50px;
   height: 50px;
@@ -34,14 +35,112 @@
   font-size: 18px;
   color: #2f3339;
   font-weight: 700;
+  padding: 20px 0;
 }
 
-/* No añadimos estilos estructurales para .properties-container ni PropertyCard 
-   porque el componente ya importa sus propios CSS que nos pasaste, 
-   solo nos aseguramos que fluya en responsive si no lo hacía.
-*/
+/* =========================================
+   PAGINACIÓN Y CONTROLES (NUEVOS)
+   ========================================= */
+.favorites-pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #e5e7eb;
+}
 
-/* --- DISEÑO DE MODALES (Copiado exactamente de tus files) --- */
+.favorites-count-info {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.favorites-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #4b5563;
+  font-weight: 700;
+}
+
+.items-per-page-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-family: "Nunito", sans-serif;
+  font-size: 14px;
+  color: #2f3339;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+  background-color: white;
+  transition: border-color 0.2s;
+}
+
+.items-per-page-select:focus {
+  border-color: #1c6a6e;
+  box-shadow: 0 0 0 3px rgba(28, 106, 110, 0.15);
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 35px;
+  padding-top: 25px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.page-btn {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  border-radius: 6px;
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #1c6a6e;
+  color: #1c6a6e;
+  background-color: #f0fdfa;
+}
+
+.page-btn.active {
+  background-color: #1c6a6e;
+  color: white;
+  border-color: #1c6a6e;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f9fafb;
+}
+
+/* =========================================
+   GRILLA DE PROPIEDADES
+   ========================================= */
+/* Aseguramos que la grilla fluya de forma excelente en pantallas de escritorio y móvil */
+.properties-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  width: 100%;
+}
+
+/* --- DISEÑO DE MODALES (Mantenido exactamente como pediste) --- */
 .custom-modal-overlay {
   position: fixed;
   top: 0;
@@ -138,7 +237,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
   }
 
   .favorites-title-icon-img {
@@ -151,12 +250,16 @@
     font-size: 30px;
   }
 
-  /* Aseguramos que el grid de propiedades no se rompa si el padre no era flex-wrap */
-  .properties-container {
-    display: flex;
+  /* Paginación controles en móvil */
+  .favorites-pagination-controls {
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  /* Ajuste de grilla para pantallas pequeñas */
+  .properties-container {
+    grid-template-columns: 1fr;
   }
 }
 

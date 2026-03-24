@@ -11,11 +11,13 @@ import {
   FaArrowUp,
   FaArrowDown,
   FaPlus,
-  FaFileContract,
   FaRegEye,
 } from "react-icons/fa";
 import "./AdminDashboard.css";
-import api from "../../api/api"; // Added API
+import api from "../../api/api";
+
+// IMPORTAMOS EL NUEVO GENERADOR DE REPORTES
+import { downloadProfessionalReport } from "../../utils/reportGenerator";
 
 const AdminDashboard = ({ setActiveTab }) => {
   const [stats, setStats] = useState(null);
@@ -32,8 +34,8 @@ const AdminDashboard = ({ setActiveTab }) => {
     try {
       const [statsRes, usersRes, activityRes] = await Promise.all([
         api.get("/properties/admin/dashboard"),
-        api.get("/users/stats?includeAdmins=false"), // Reutilizamos tu script optimizado
-        api.get("/system/activity?limit=10"), // Nuevo motor de eventos
+        api.get("/users/stats?includeAdmins=false"),
+        api.get("/system/activity?limit=10"),
       ]);
 
       setStats(statsRes.data.data);
@@ -71,66 +73,33 @@ const AdminDashboard = ({ setActiveTab }) => {
       isOpen: true,
       type: "confirm",
       message:
-        "¿Deseas generar y descargar el reporte de rendimiento en formato CSV?",
+        "¿Deseas generar y descargar el reporte de rendimiento gerencial (Excel)?",
     });
   };
 
   // ==========================================
-  // FUNCIÓN LISTA PARA CONECTAR AL BACKEND
+  // GENERACIÓN DEL REPORTE EXCEL PROFESIONAL
   // ==========================================
-  const downloadReportAPI = async () => {
-    // Aquí harás la llamada a tu API real en el futuro:
-    // const response = await api.get('/admin/export-report', { responseType: 'blob' });
-    // return response.data;
-
-    // --- SIMULACIÓN DE RESPUESTA DEL BACKEND (Generamos un CSV en memoria) ---
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        // Contenido del archivo CSV simulado
-        const csvContent = `Metrica,Valor\nUsuarios Totales,${stats.usuarios.total}\nInmuebles Activos,${stats.propiedades.total}\nNuevos mensajes,${stats.mensajes.total}\nOperaciones Cerradas,${stats.operaciones.total}\n\nActividad Reciente,Fecha\nNuevo usuario registrado: Juan Perez,Hoy\nLead entrante Av. Espana 123,Hoy\nOperacion Venta cerrada: Dpto. Victor Larco,Ayer`;
-
-        // Convertimos el texto a un objeto Blob (archivo)
-        const blob = new Blob([csvContent], {
-          type: "text/csv;charset=utf-8;",
-        });
-        resolve(blob);
-      }, 1500); // Simulamos 1.5 segundos de carga del servidor
-    });
-  };
-
   const confirmGenerateReport = async () => {
     setModalConfig({ ...modalConfig, isOpen: false });
     setIsGenerating(true);
 
     try {
-      // 1. Solicitamos el archivo (Blob) al "Backend"
-      const reportBlob = await downloadReportAPI();
+      // Llamamos a la función delegada enviándole la data real
+      await downloadProfessionalReport(stats, dbUsers, recentActivity);
 
-      // 2. Lógica estándar de React/JS para descargar un archivo Blob
-      const url = window.URL.createObjectURL(reportBlob);
-      const link = document.createElement("a");
-      link.href = url;
-
-      // Nombre del archivo dinámico con la fecha actual
-      const today = new Date().toISOString().split("T")[0];
-      link.setAttribute("download", `Reporte_NexusHub_${today}.csv`);
-
-      document.body.appendChild(link);
-      link.click();
-      link.parentNode.removeChild(link);
-
-      // 3. Mostramos éxito
       setModalConfig({
         isOpen: true,
         type: "success",
-        message: "El reporte CSV se ha descargado correctamente en tu equipo.",
+        message:
+          "El reporte Excel se ha descargado correctamente en tu equipo con todos los estilos aplicados.",
       });
     } catch (error) {
+      console.error("Error generating report:", error);
       setModalConfig({
         isOpen: true,
         type: "error",
-        message:
-          "Ocurrió un error al intentar generar el reporte desde el servidor.",
+        message: "Ocurrió un error al generar el documento Excel.",
       });
     } finally {
       setIsGenerating(false);
@@ -207,7 +176,7 @@ const AdminDashboard = ({ setActiveTab }) => {
           disabled={isGenerating}
         >
           <FaDownload className="btn-icon-small" />
-          {isGenerating ? "Generando..." : "Descargar Reporte"}
+          {isGenerating ? "Generando Excel..." : "Descargar Reporte"}
         </button>
       </div>
 
@@ -297,7 +266,6 @@ const AdminDashboard = ({ setActiveTab }) => {
                   let dotClass = "dot-corp";
                   let logText = "";
 
-                  // Formatear el texto basado en el actionType agnóstico de la BD
                   switch (log.action_type) {
                     case "USER_REGISTERED":
                       dotClass = "dot-blue";
@@ -336,10 +304,6 @@ const AdminDashboard = ({ setActiveTab }) => {
                       logText = <>{log.action_type}</>;
                   }
 
-                  // Calcular tiempo transcurrido (soporte multiplataforma e internacional)
-                  // Ya que la DB devuelve en UTC (con la Z), new Date() en JS lo convertirá
-                  // de forma transparente y automática a la hora local exacta del país donde
-                  // esté el navegador del usuario (sea Chile, Perú, España, etc).
                   const eventDate = new Date(log.created_at);
                   const mins = Math.floor((new Date() - eventDate) / 60000);
                   let timeLabel = "Hace un momento";

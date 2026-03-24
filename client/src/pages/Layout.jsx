@@ -31,19 +31,25 @@ const Layout = () => {
   useEffect(() => {
     AOS.init({
       duration: 1000,
+      // Opcional pero recomendado: Esto evita que AOS anime cosas
+      // si estás viendo la página en una pantalla muy pequeña o vieja
+      // once: true,
     });
   }, []);
 
   // 2. Creamos las reglas de cuándo ocultar las cosas
-  // Cambia "/perfil" por la ruta exacta que uses para tu página de usuario
   const hideFooter =
     location.pathname === "/login" ||
     location.pathname === "/perfil" ||
     location.pathname === "/admin";
 
   return (
-    <div style={{ boxSizing: "border-box" }}>
-      {/* 3. Renderizado condicional: Si NO debemos ocultar el NavBar, lo mostramos */}
+    // 🔥 AQUÍ ESTÁ LA MAGIA: width: "100%", overflowX: "hidden"
+    // Esto asegura que nada, ni AOS ni otra cosa, estire la página hacia los lados
+    <div
+      style={{ width: "100%", overflowX: "hidden", boxSizing: "border-box" }}
+    >
+      {/* 3. Renderizado condicional del NavBar */}
       <header>
         <NavBar
           barHeight="8dvh"
@@ -52,6 +58,7 @@ const Layout = () => {
         />
       </header>
 
+      {/* Al main también le aseguramos el ancho exacto */}
       <main style={{ width: "100%", boxSizing: "border-box" }}>
         <Outlet />
       </main>

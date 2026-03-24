@@ -17,6 +17,8 @@
     "@mui/styled-engine-sc": "^7.3.7",
     "aos": "^2.3.4",
     "axios": "^1.13.6",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
     "i18n-iso-countries": "^7.14.0",
     "jwt-decode": "^4.0.0",
     "react": "^19.2.0",
