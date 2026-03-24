@@ -16,18 +16,18 @@ import Admin from "./pages/Admin";
 function App() {
   return (
     <Routes>
-      {/* 
+      <Route path="/" element={<Layout />}>
+        {/* 
         #################################################################
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
 
-      {/* 
+        {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #
         ################################################################# 
       */}
-      <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/propiedades" element={<Propiedades />} />
@@ -38,30 +38,30 @@ function App() {
           <Route path="reset-password" element={<ResetPassword />} />
           <Route path="reset-mail" element={<ResetEmail />} />
         </Route>
-      </Route>
 
-      {/* 
+        {/* 
         #################################################################
         #                         ADMIN PANEL                           #
         ################################################################# 
-      */}
-      <Route
-        path="/admin"
-        element={<ProtectedRoute to="/login" roles={["dev", "admin"]} />}
-      >
-        <Route path="" element={<Admin />} />
-      </Route>
+        */}
+        <Route
+          path="/admin"
+          element={<ProtectedRoute to="/login" roles={["dev", "admin"]} />}
+        >
+          <Route path="" element={<Admin />} />
+        </Route>
 
-      {/* 
+        {/* 
         #################################################################
         #                         USER PROFILE                          #
         ################################################################# 
-      */}
-      <Route
-        path="/perfil"
-        element={<ProtectedRoute to="/login" roles={["user"]} />}
-      >
-        <Route path="" element={<Perfil />} />
+        */}
+        <Route
+          path="/perfil"
+          element={<ProtectedRoute to="/login" roles={["user"]} />}
+        >
+          <Route path="" element={<Perfil />} />
+        </Route>
       </Route>
     </Routes>
   );

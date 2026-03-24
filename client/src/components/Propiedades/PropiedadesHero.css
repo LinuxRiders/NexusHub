@@ -17,10 +17,9 @@
   text-align: center;
 
   font-family: "Nunito", sans-serif;
-
   overflow: hidden;
-
-  /* EFECTO TINTA ORIGINAL */
+  width: 100%;
+  max-width: 100vw;
   background-color: #1c4c4f;
   background-blend-mode: overlay;
 }

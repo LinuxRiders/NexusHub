@@ -183,7 +183,7 @@ const UserUnsubscribe = () => {
         <h2 className="section-question">¿Qué desea dar de baja?</h2>
 
         <div className="options-list">
-          <label className="custom-checkbox-container">
+          {/* <label className="custom-checkbox-container">
             <input
               type="checkbox"
               name="alertas"
@@ -203,7 +203,7 @@ const UserUnsubscribe = () => {
             />
             <span className="checkmark"></span>
             Borrar anuncios
-          </label>
+          </label> */}
 
           <label className="custom-checkbox-container">
             <input

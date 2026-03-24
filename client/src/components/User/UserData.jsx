@@ -292,7 +292,7 @@ const UserData = () => {
         </div>
       </div>
 
-      <div className="settings-section">
+      {/* <div className="settings-section">
         <h3 className="section-subtitle">Configuración de Avisos</h3>
 
         <label
@@ -312,7 +312,7 @@ const UserData = () => {
             Enviarme avisos de nuevos inmuebles similares a mis favoritos
           </span>
         </label>
-      </div>
+      </div> */}
 
       <button
         className={`btn-save ${!isEditing ? "disabled" : ""}`}

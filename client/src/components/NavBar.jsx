@@ -70,20 +70,26 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
 
   useEffect(() => {
     const hash = location.hash.replace("#", "");
-    if (!hash) return;
 
-    const element = document.getElementById(hash);
-    if (!element) return;
+    let targetPosition = 0;
+
+    if (hash) {
+      const element = document.getElementById(hash);
+      if (!element) return;
+
+      const offset = window.innerHeight * ((parseFloat(barHeight) || 8) / 100);
+      targetPosition =
+        element.getBoundingClientRect().top + window.scrollY - offset;
+    }
 
     let isScrolling = true;
     let animationFrameId;
 
-    const offset = window.innerHeight * 0.08; // 8vh
-    const targetPosition =
-      element.getBoundingClientRect().top + window.scrollY - offset;
-
     const start = window.scrollY;
     const distance = targetPosition - start;
+
+    if (Math.abs(distance) < 5) return;
+
     const duration = 1600;
     const startTime = performance.now();
 
@@ -138,21 +144,6 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
       setOpen(false);
     }
   };
-
-  // Handler para hacer scroll al inicio cuando se hace clic en "Inicio"
-  const handleInicioClick = (e, pageTo) => {
-    if (pageTo === "/" && location.pathname === "/") {
-      e.preventDefault();
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-      handleMenuClick();
-    } else {
-      handleMenuClick();
-    }
-  };
-
   return (
     <Box
       sx={{
@@ -206,7 +197,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
             }}
             onClick={(e) => {
               goTo("/");
-              handleInicioClick(e, "/");
+              handleMenuClick();
             }}
           />
         </Box>
@@ -231,7 +222,6 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
               disableRipple
               component={Link}
               to={page.to || ""}
-              onClick={(e) => handleInicioClick(e, page.to)}
               sx={{
                 textTransform: "capitalize",
                 fontSize: "1.1vw",
@@ -316,9 +306,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                 maxWidth: "110px",
               }}
             >
-              {isAuthenticated
-                ? user?.username || user?.nombres || "Perfil"
-                : "Login"}
+              {isAuthenticated ? user?.username : "Login"}
             </Typography>
           </Button>
         </Box>
@@ -422,7 +410,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                 component={Link}
                 to={page.to}
                 key={index}
-                onClick={(e) => handleInicioClick(e, page.to)}
+                onClick={(e) => handleMenuClick()}
                 sx={{
                   justifyContent: "flex-start",
                   padding: "1rem 1.5rem",
@@ -472,9 +460,7 @@ function NavBar({ barHeight = "8vh", sx = {}, pages = pages_base }) {
                   },
                 }}
               >
-                {isAuthenticated
-                  ? user?.username || user?.nombres || "Mi Perfil"
-                  : "Iniciar Sesión"}
+                {isAuthenticated ? user?.username : "Iniciar Sesión"}
               </Button>
             </Box>
           </Box>

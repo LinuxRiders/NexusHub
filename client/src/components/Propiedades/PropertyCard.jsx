@@ -40,9 +40,21 @@ const PropertyCard = ({ property, onToggleFavorite, disableAos = false }) => {
     isFavorite,
   } = property;
 
+  let parsedImages = [];
+  if (Array.isArray(images)) {
+    parsedImages = images;
+  } else if (typeof images === "string") {
+    try {
+      parsedImages = JSON.parse(images);
+      if (!Array.isArray(parsedImages)) parsedImages = [];
+    } catch (e) {
+      parsedImages = [];
+    }
+  }
+
   const displayImages =
-    images && images.length > 0
-      ? images
+    parsedImages.length > 0
+      ? parsedImages
       : image_url
         ? [image_url]
         : ["https://via.placeholder.com/400x300?text=Sin+Imagen"];

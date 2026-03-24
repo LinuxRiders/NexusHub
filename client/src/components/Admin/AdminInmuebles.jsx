@@ -55,7 +55,20 @@ const AdminInmuebles = () => {
   const fetchProperties = async () => {
     try {
       const res = await api.get("/properties/admin/all");
-      setProperties(res.data.data);
+      const propertiesData = res.data.data.map(prop => {
+        let parsedImages = [];
+        if (Array.isArray(prop.images)) {
+          parsedImages = prop.images;
+        } else if (typeof prop.images === "string") {
+          try {
+            parsedImages = JSON.parse(prop.images);
+          } catch (e) {
+            console.error("Error parsing images for property:", prop.id);
+          }
+        }
+        return { ...prop, images: parsedImages };
+      });
+      setProperties(propertiesData);
     } catch (error) {
       console.error("Error fetching properties", error);
     }

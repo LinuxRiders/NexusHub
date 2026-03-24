@@ -38,7 +38,19 @@ const AdminDashboard = ({ setActiveTab }) => {
 
       setStats(statsRes.data.data);
       setDbUsers(usersRes.data.data);
-      setRecentActivity(activityRes.data.data || []);
+
+      const parsedActivities = (activityRes.data.data || []).map((log) => {
+        let parsedMeta = log.metadata;
+        if (typeof log.metadata === "string") {
+          try {
+            parsedMeta = JSON.parse(log.metadata);
+          } catch (e) {
+            console.error("Error parsing metadata for activity:", log.id);
+          }
+        }
+        return { ...log, metadata: parsedMeta };
+      });
+      setRecentActivity(parsedActivities);
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     } finally {
@@ -246,15 +258,18 @@ const AdminDashboard = ({ setActiveTab }) => {
           <div className="stat-card-top">
             <div className="stat-info">
               <span className="stat-label">Nuevos mensajes</span>
-              <span className="stat-value">0</span>
+              <span className="stat-value">{stats.mensajes.total}</span>
             </div>
             <div className="stat-icon-wrapper bg-orange">
               <FaEnvelope />
             </div>
           </div>
           <div className="stat-card-bottom">
-            <span className="stat-trend trend-down">
-              <FaArrowDown /> 0%
+            <span
+              className={`stat-trend ${stats.mensajes.isUp ? "trend-up" : "trend-down"}`}
+            >
+              {stats.mensajes.isUp ? <FaArrowUp /> : <FaArrowDown />}{" "}
+              {stats.mensajes.trend}
             </span>
             <span className="stat-period">esta semana</span>
           </div>

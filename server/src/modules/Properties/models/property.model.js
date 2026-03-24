@@ -196,13 +196,35 @@ export const Property = {
       const [[{ saleCount }]] = await connection.query(`SELECT COUNT(*) as saleCount FROM properties WHERE operation_type = 'COMPRA'`);
       const [[{ rentCount }]] = await connection.query(`SELECT COUNT(*) as rentCount FROM properties WHERE operation_type = 'ALQUILER'`);
       
-      // Alertas (Mensajes/Intenciones)
-      const [[{ alertCount }]] = await connection.query(`SELECT COUNT(*) as alertCount FROM user_alerts`);
+      // Mensajes (Contactos No Respondidos)
+      const [[{ unreadMessageCount }]] = await connection.query(`SELECT COUNT(*) as unreadMessageCount FROM contact_messages WHERE status = 'UNREAD'`);
+
+      // Alertas (Mensajes/Intenciones) faltaban
+      // Función auxiliar para calcular tendencia
+      const calcTrend = (current, previous) => {
+        if (previous === 0) return { trend: current > 0 ? '+100%' : '+0%', isUp: true };
+        const diff = current - previous;
+        const percentage = Math.round((diff / previous) * 100);
+        return {
+          trend: `${percentage > 0 ? '+' : ''}${percentage}%`,
+          isUp: percentage >= 0
+        };
+      };
+
+      // Propiedades Creadas Este Mes y Mes Pasado
+      const [[{ propThisMonth }]] = await connection.query(`SELECT COUNT(*) as propThisMonth FROM properties WHERE created_at >= DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01')`);
+      const [[{ propLastMonth }]] = await connection.query(`SELECT COUNT(*) as propLastMonth FROM properties WHERE created_at >= DATE_FORMAT(UTC_TIMESTAMP() - INTERVAL 1 MONTH, '%Y-%m-01') AND created_at < DATE_FORMAT(UTC_TIMESTAMP(), '%Y-%m-01')`);
+      const propTrend = calcTrend(propThisMonth, propLastMonth);
+
+      // Mensajes Recibidos Esta Semana y Semana Pasada (Últimos 7 días vs previos 7 días)
+      const [[{ msgThisWeek }]] = await connection.query(`SELECT COUNT(*) as msgThisWeek FROM contact_messages WHERE created_at >= UTC_TIMESTAMP() - INTERVAL 7 DAY`);
+      const [[{ msgLastWeek }]] = await connection.query(`SELECT COUNT(*) as msgLastWeek FROM contact_messages WHERE created_at >= UTC_TIMESTAMP() - INTERVAL 14 DAY AND created_at < UTC_TIMESTAMP() - INTERVAL 7 DAY`);
+      const msgTrend = calcTrend(msgThisWeek, msgLastWeek);
 
       return {
-        usuarios: { total: userCount, trend: '+0%', isUp: true },
-        propiedades: { total: propertyCount, trend: '+0%', isUp: true },
-        mensajes: { total: alertCount, trend: '+0%', isUp: true },
+        usuarios: { total: userCount },
+        propiedades: { total: propertyCount, trend: propTrend.trend, isUp: propTrend.isUp },
+        mensajes: { total: unreadMessageCount, trend: msgTrend.trend, isUp: msgTrend.isUp },
         operaciones: { total: saleCount + rentCount, trend: '+0%', isUp: true },
         portfolio: {
           ventas: saleCount,
