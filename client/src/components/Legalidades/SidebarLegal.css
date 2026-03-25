@@ -1,0 +1,164 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+.legal-sidebar-unique-container {
+  width: 300px;
+  flex-shrink: 0;
+  position: relative;
+  font-family: "Nunito", sans-serif;
+}
+
+/* Línea divisoria derecha que ocupa todo el largo */
+.legal-sidebar-unique-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #d1d5db;
+  z-index: 1;
+}
+
+/* 🔥 ESTA ES LA MAGIA DEL MENÚ QUE TE PERSIGUE 🔥 */
+.legal-sidebar-unique-sticky {
+  position: -webkit-sticky; /* Para navegadores Safari */
+  position: sticky;
+  top: 120px; /* Distancia desde el techo de la pantalla al hacer scroll */
+  z-index: 10;
+}
+
+.legal-mobile-toggle-btn {
+  display: none;
+}
+
+.legal-sidebar-unique-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.legal-sidebar-unique-item {
+  display: flex;
+  align-items: center;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Líneas separadoras entre botones */
+.legal-sidebar-unique-item::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: calc(100% - 15px);
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.legal-sidebar-unique-item:last-child::after {
+  display: none;
+}
+
+/* Estilos de los iconos */
+.legal-sidebar-unique-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-right: 15px;
+  color: #1c6a6e;
+  transition: color 0.3s ease;
+}
+
+/* Estilos del texto */
+.legal-sidebar-unique-text {
+  font-size: 16px;
+  color: #2f3339;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+/* Hover y Activo */
+.legal-sidebar-unique-item:hover,
+.legal-sidebar-unique-item.active {
+  background-color: #1c6a6e;
+}
+
+.legal-sidebar-unique-item:hover .legal-sidebar-unique-icon,
+.legal-sidebar-unique-item.active .legal-sidebar-unique-icon,
+.legal-sidebar-unique-item:hover .legal-sidebar-unique-text,
+.legal-sidebar-unique-item.active .legal-sidebar-unique-text {
+  color: #ffffff;
+}
+
+/* MÓVIL */
+@media (max-width: 850px) {
+  .legal-sidebar-unique-container {
+    width: 100%;
+    z-index: 100;
+  }
+
+  .legal-sidebar-unique-container::before {
+    display: none;
+  }
+
+  /* Desactivamos el sticky en celular */
+  .legal-sidebar-unique-sticky {
+    position: relative;
+    top: 0;
+  }
+
+  .legal-mobile-toggle-btn {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 16px 20px;
+    background-color: #1c6a6e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Nunito", sans-serif;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .legal-sidebar-unique-list {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    overflow: hidden;
+  }
+
+  .legal-sidebar-unique-list.open {
+    display: flex;
+    animation: fadeInDown 0.3s ease;
+  }
+
+  .legal-sidebar-unique-item::after {
+    width: 100%;
+  }
+
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

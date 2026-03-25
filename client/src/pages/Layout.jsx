@@ -65,7 +65,7 @@ const Layout = () => {
 
       {/* 4. Renderizado condicional para el Footer */}
       {!hideFooter && (
-        <footer id="footer" style={{ position: "relative" }}>
+        <footer id="contacto" style={{ position: "relative" }}>
           <Footer />
         </footer>
       )}

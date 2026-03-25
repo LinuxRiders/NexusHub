@@ -11,6 +11,8 @@ import VerifyAccount from "./components/Login/VerifyAccount";
 import ResetPassword from "./components/Login/ResetPassword";
 import ResetEmail from "./components/Login/ResetEmail";
 
+import Legalidades from "./pages/Legalidades";
+
 import Admin from "./pages/Admin";
 
 function App() {
@@ -22,7 +24,7 @@ function App() {
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
-
+        <Route path="/legalidades" element={<Legalidades />} />
         {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #

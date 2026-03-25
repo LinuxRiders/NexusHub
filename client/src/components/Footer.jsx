@@ -87,14 +87,25 @@ const Footer = () => {
               <Link to="/propiedades">Propiedades</Link>
             </div>
 
+            {/* // En tu componente Footer.jsx (Asegúrate de tener importado Link de react-router-dom) */}
+
             <div className="footer-column">
               <h3>Enlaces</h3>
-
-              <Link to="/contacto">Contacto</Link>
-              <Link to="/faq">Preguntas Frecuentes</Link>
-              <Link to="/privacidad">Política de Privacidad</Link>
-              <Link to="/terminos">Términos y Condiciones</Link>
-              <Link to="/cookies">Política de Cookies</Link>
+              <Link to="/#contacto" state={{ tab: "contacto" }}>
+                Contacto
+              </Link>
+              <Link to="/legalidades" state={{ tab: "faq" }}>
+                Preguntas Frecuentes
+              </Link>
+              <Link to="/legalidades" state={{ tab: "privacidad" }}>
+                Política de Privacidad
+              </Link>
+              <Link to="/legalidades" state={{ tab: "terminos" }}>
+                Términos y Condiciones
+              </Link>
+              <Link to="/legalidades" state={{ tab: "cook" }}>
+                Política de Cookies
+              </Link>
             </div>
           </div>
         </div>

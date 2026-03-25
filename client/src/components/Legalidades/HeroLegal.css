@@ -1,0 +1,140 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap");
+
+.legal-hero {
+  min-height: 75vh;
+
+  background-size: cover;
+  background-position: center;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 140px 20px 80px;
+
+  text-align: center;
+
+  font-family: "Nunito", sans-serif;
+
+  overflow: hidden;
+
+  /* EFECTO TINTA */
+  background-color: #1c4c4f;
+  background-blend-mode: overlay;
+}
+
+/* DEGRADADO SUPERIOR */
+
+.legal-hero::before {
+  content: "";
+  position: absolute;
+
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(31, 106, 110, 0.95) 0%,
+    rgba(31, 106, 110, 0.8) 30%,
+    rgba(31, 106, 110, 0.5) 60%,
+    rgba(31, 106, 110, 0.2) 85%,
+    rgba(31, 106, 110, 0.05) 100%
+  );
+
+  z-index: 1;
+}
+
+/* CONTENIDO */
+
+.legal-hero-content {
+  position: relative;
+  z-index: 2;
+
+  color: white;
+
+  max-width: 900px;
+}
+
+/* TITULO */
+
+.legal-hero h1 {
+  font-size: 64px;
+
+  font-weight: 900;
+
+  margin-bottom: 12px;
+
+  letter-spacing: 2px;
+}
+
+/* LINEA */
+
+.legal-line {
+  width: 60px;
+  height: 3px;
+
+  background: white;
+
+  margin: 14px auto 24px;
+}
+
+/* TEXTO */
+
+.legal-hero p {
+  font-size: 18px;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1200px) {
+  .legal-hero h1 {
+    font-size: 54px;
+  }
+}
+
+@media (max-width: 900px) {
+  .legal-hero {
+    min-height: 65vh;
+    padding: 120px 30px 70px;
+  }
+
+  .legal-hero h1 {
+    font-size: 42px;
+  }
+
+  .legal-hero p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .legal-hero {
+    min-height: 60vh;
+    padding: 110px 25px 60px;
+  }
+
+  .legal-hero h1 {
+    font-size: 34px;
+  }
+
+  .legal-line {
+    width: 50px;
+  }
+
+  .legal-hero p {
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 400px) {
+  .legal-hero h1 {
+    font-size: 28px;
+  }
+}
