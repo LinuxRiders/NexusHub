@@ -25,16 +25,19 @@ function App() {
         #                      DEVELOPMENT ROUTES                       #
         ################################################################# 
       */}
-        <Route path="/legalidades" element={<Legalidades />} />
-        <Route path="/faq" element={<Faq />} />
         {/* 
         #################################################################
         #                        PUBLIC ROUTES                          #
         ################################################################# 
-      */}
+        */}
         <Route path="/" element={<Home />} />
         <Route path="/nosotros" element={<Nosotros />} />
         <Route path="/propiedades" element={<Propiedades />} />
+
+        <Route path="/faq" element={<Faq />} />
+        <Route path="/legalidades" element={<Legalidades />}>
+          <Route path=":tab" element={<Legalidades />} />
+        </Route>
 
         <Route path="/" element={<LoginPage />}>
           <Route path="login" element={<Login />} />

@@ -16,6 +16,35 @@ import AdminFAQ from "../components/Admin/AdminFAQ";
 import marcaAgua from "../assets/img/MarcaAgua2.png";
 
 import "./Admin.css";
+import {
+  FaBell,
+  FaBuilding,
+  FaChartPie,
+  FaEnvelope,
+  FaHeart,
+  FaQuestionCircle,
+  FaSignOutAlt,
+  FaUsers,
+} from "react-icons/fa";
+
+const menuOptions = [
+  { id: "dashboard", label: "Dashboard", icon: <FaChartPie size={22} /> },
+  {
+    id: "inmuebles",
+    label: "Gestión de Inmuebles",
+    icon: <FaBuilding size={22} />,
+  },
+  {
+    id: "usuarios",
+    label: "Gestión de Usuarios",
+    icon: <FaUsers size={22} />,
+  },
+  { id: "favoritos", label: "Favoritos", icon: <FaHeart size={22} /> },
+  { id: "mensajes", label: "Mensajes", icon: <FaEnvelope size={22} /> },
+  { id: "alertas", label: "Alertas", icon: <FaBell size={22} /> },
+  // { id: "faq", label: "FAQ", icon: <FaQuestionCircle size={22} /> },
+  { id: "salir", label: "Salir", icon: <FaSignOutAlt size={22} /> },
+];
 
 // --- Componentes temporales para el resto de opciones ---
 
@@ -59,7 +88,11 @@ const Admin = () => {
 
         <div className="admin-content-wrapper">
           {/* El menú lateral ya usa setActiveTab */}
-          <AdminSidebarMenu activeTab={activeTab} setActiveTab={setActiveTab} />
+          <AdminSidebarMenu
+            menuOptions={menuOptions}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+          />
 
           <div className="admin-dynamic-panel">{renderContent()}</div>
         </div>

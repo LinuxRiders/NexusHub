@@ -15,7 +15,11 @@ const Faq = () => {
       </header>
 
       {/*----------------------------------------------   Propiedades  ------------------------------------------*/}
-      <div id="FAQ" className="FAQ">
+      <div
+        id="FAQ"
+        className="FAQ"
+        style={{ marginTop: "110px", marginBottom: "100px" }}
+      >
         <div>
           <FAQ />
         </div>

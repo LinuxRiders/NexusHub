@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom"; // 🔥 IMPORTANTE: Importar useLocation
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom"; // 🔥 IMPORTANTE: Importar hooks de ruta
 
 import HeroLegal from "../components/Legalidades/HeroLegal";
 import SidebarLegal from "../components/Legalidades/SidebarLegal";
@@ -9,31 +9,39 @@ import TerminosCondiciones from "../components/Legalidades/TerminosCondiciones";
 import PoliticaCook from "../components/Legalidades/PoliticaCook";
 import marcaAgua from "../assets/img/MarcaAgua.png";
 import "./Legalidades.css";
+import { FaCookieBite, FaFileContract, FaShieldAlt } from "react-icons/fa";
+
+const menuOptions = [
+  {
+    id: "privacidad",
+    label: "Política de Privacidad",
+    icon: <FaShieldAlt />,
+  },
+  {
+    id: "terminos",
+    label: "Términos y Condiciones",
+    icon: <FaFileContract />,
+  },
+  {
+    id: "cookies",
+    label: "Política de Cookies",
+    icon: <FaCookieBite />,
+  },
+];
 
 const Legalidades = () => {
-  const location = useLocation(); // 🔥 Obtenemos la información de la ruta
+  const { tab } = useParams(); // 🔥 Obtenemos la información de la ruta
 
-  // Inicializamos la pestaña con lo que venga del Footer, o "faq" por defecto
-  const [activeTab, setActiveTab] = useState(location.state?.tab || "faq");
-
-  // Este useEffect "escucha" si cambia el estado desde el Footer mientras ya estás en la página
-  useEffect(() => {
-    if (location.state?.tab) {
-      setActiveTab(location.state.tab);
-      // Opcional y muy recomendado: hacer que la pantalla suba al inicio al cambiar de pestaña
-      window.scrollTo(0, 0);
-    }
-  }, [location.state]); // Se ejecuta cada vez que el state del Link cambia
+  // La pestaña activa es el parámetro de la URL, o "privacidad" por defecto
+  const activeTab = tab || "privacidad";
 
   const renderContent = () => {
     switch (activeTab) {
-      // case "faq":
-      //   return <FAQ />;
       case "privacidad":
         return <PoliticaPrivacidad />;
       case "terminos":
         return <TerminosCondiciones />;
-      case "cook":
+      case "cookies":
         return <PoliticaCook />;
       default:
         return <PoliticaPrivacidad />;
@@ -53,7 +61,7 @@ const Legalidades = () => {
         </div>
 
         <div className="legal-content-wrapper">
-          <SidebarLegal activeTab={activeTab} setActiveTab={setActiveTab} />
+          <SidebarLegal menuOptions={menuOptions} activeTab={activeTab} />
           <div className="legal-dynamic-panel">{renderContent()}</div>
         </div>
       </div>

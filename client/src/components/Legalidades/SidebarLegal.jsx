@@ -1,43 +1,15 @@
 import React, { useState } from "react";
-import {
-  FaChevronDown,
-  FaChevronUp,
-  FaQuestionCircle,
-  FaShieldAlt,
-  FaFileContract,
-  FaCookieBite,
-} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import "./SidebarLegal.css";
 
-const SidebarLegal = ({ activeTab, setActiveTab }) => {
+const SidebarLegal = ({ menuOptions, activeTab }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const menuOptions = [
-    // {
-    //   id: "faq",
-    //   label: "Preguntas Frecuentes",
-    //   icon: <FaQuestionCircle />,
-    // },
-    {
-      id: "privacidad",
-      label: "Política de Privacidad",
-      icon: <FaShieldAlt />,
-    },
-    {
-      id: "terminos",
-      label: "Términos y Condiciones",
-      icon: <FaFileContract />,
-    },
-    {
-      id: "cook",
-      label: "Política de Cookies",
-      icon: <FaCookieBite />,
-    },
-  ];
+  const navigate = useNavigate();
 
   const handleMenuClick = (id) => {
-    setActiveTab(id);
+    navigate(`/legalidades/${id}`);
     setIsMobileMenuOpen(false);
   };
 

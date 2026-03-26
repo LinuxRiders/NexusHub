@@ -2,45 +2,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthProvider";
-import {
-  FaChevronDown,
-  FaChevronUp,
-  FaChartPie,
-  FaBuilding,
-  FaUsers,
-  FaHeart,
-  FaEnvelope,
-  FaBell,
-  FaSignOutAlt,
-  FaQuestionCircle,
-} from "react-icons/fa";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 import "./AdminSidebarMenu.css";
 
-const AdminSidebarMenu = ({ activeTab, setActiveTab }) => {
+const AdminSidebarMenu = ({ menuOptions, activeTab, setActiveTab }) => {
   const navigate = useNavigate();
   const { logout } = useAuth();
   // Nuevo estado para controlar si el menú está abierto en móviles
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const menuOptions = [
-    { id: "dashboard", label: "Dashboard", icon: <FaChartPie size={22} /> },
-    {
-      id: "inmuebles",
-      label: "Gestión de Inmuebles",
-      icon: <FaBuilding size={22} />,
-    },
-    {
-      id: "usuarios",
-      label: "Gestión de Usuarios",
-      icon: <FaUsers size={22} />,
-    },
-    { id: "favoritos", label: "Favoritos", icon: <FaHeart size={22} /> },
-    { id: "mensajes", label: "Mensajes", icon: <FaEnvelope size={22} /> },
-    { id: "alertas", label: "Alertas", icon: <FaBell size={22} /> },
-    { id: "faq", label: "FAQ", icon: <FaQuestionCircle size={22} /> },
-    { id: "salir", label: "Salir", icon: <FaSignOutAlt size={22} /> },
-  ];
 
   const handleMenuClick = async (id) => {
     if (id === "salir") {

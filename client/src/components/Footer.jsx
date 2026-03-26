@@ -97,13 +97,13 @@ const Footer = () => {
               <Link to="/faq" state={{ tab: "faq" }}>
                 Preguntas Frecuentes
               </Link>
-              <Link to="/legalidades" state={{ tab: "privacidad" }}>
+              <Link to="/legalidades/privacidad" state={{ tab: "privacidad" }}>
                 Política de Privacidad
               </Link>
-              <Link to="/legalidades" state={{ tab: "terminos" }}>
+              <Link to="/legalidades/terminos" state={{ tab: "terminos" }}>
                 Términos y Condiciones
               </Link>
-              <Link to="/legalidades" state={{ tab: "cook" }}>
+              <Link to="/legalidades/cookies" state={{ tab: "cookies" }}>
                 Política de Cookies
               </Link>
             </div>

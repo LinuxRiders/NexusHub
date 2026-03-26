@@ -20,7 +20,7 @@ const UnPaso = () => {
       <div className="unpaso-options">
         {/* TELEFONO */}
         <a
-          href="tel:+51900000000"
+          href="tel:+51902326443"
           className="unpaso-item"
           data-aos="fade-up"
           data-aos-delay="200"
@@ -34,14 +34,14 @@ const UnPaso = () => {
           </div>
 
           <h3>Llámanos</h3>
-          <span>000 000 000</span>
+          <span>902 326 443</span>
         </a>
 
         <div className="line"></div>
 
         {/* MAPS */}
         <a
-          href="https://maps.google.com/?q=Trujillo,Peru"
+          href="https://maps.app.goo.gl/fUiaEfknv9PQG7at8"
           target="_blank"
           rel="noopener noreferrer"
           className="unpaso-item"
@@ -57,14 +57,18 @@ const UnPaso = () => {
           </div>
 
           <h3>Encuéntranos</h3>
-          <span>Dirección, Trujillo Perú</span>
+          <span>
+            Avenida Husares de Junin 1188 <br />
+            Oficina 101 Urbanización La merced III etapa <br />
+            Trujillo
+          </span>
         </a>
 
         <div className="line"></div>
 
         {/* EMAIL */}
         <a
-          href="mailto:correo@nexus.pe"
+          href="mailto:nexushubcorporationrs@gmail.com"
           className="unpaso-item"
           data-aos="fade-up"
           data-aos-delay="600"
@@ -78,7 +82,7 @@ const UnPaso = () => {
           </div>
 
           <h3>Envía un Email</h3>
-          <span>correo@nexus.pe</span>
+          <span>nexushubcorporationrs@gmail.com</span>
         </a>
       </div>
     </section>

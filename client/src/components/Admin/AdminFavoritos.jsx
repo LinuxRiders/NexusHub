@@ -24,7 +24,26 @@ const AdminFavoritos = () => {
     const fetchTop = async () => {
       try {
         const res = await api.get("/favorites/top");
-        setProperties(res.data.data || []);
+        const rawData = res.data.data || [];
+
+        // Parseamos las imágenes que vienen como string JSON
+        const parsedData = rawData.map((prop) => {
+          let images = prop.images;
+          if (typeof images === "string") {
+            try {
+              images = JSON.parse(images);
+            } catch (e) {
+              console.error("Error parsing images for property:", prop.id, e);
+              images = [];
+            }
+          }
+          return {
+            ...prop,
+            images: Array.isArray(images) ? images : [],
+          };
+        });
+
+        setProperties(parsedData);
       } catch (err) {
         console.error("Error fetching top favorites:", err);
       }
