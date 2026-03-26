@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom"; // 🔥 IMPORTANTE: Importar use
 
 import HeroLegal from "../components/Legalidades/HeroLegal";
 import SidebarLegal from "../components/Legalidades/SidebarLegal";
-import FAQ from "../components/Legalidades/FAQ";
+// import FAQ from "../components/Legalidades/FAQ";
 import PoliticaPrivacidad from "../components/Legalidades/PoliticaPrivacidad";
 import TerminosCondiciones from "../components/Legalidades/TerminosCondiciones";
 import PoliticaCook from "../components/Legalidades/PoliticaCook";
@@ -27,8 +27,8 @@ const Legalidades = () => {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "faq":
-        return <FAQ />;
+      // case "faq":
+      //   return <FAQ />;
       case "privacidad":
         return <PoliticaPrivacidad />;
       case "terminos":
@@ -36,7 +36,7 @@ const Legalidades = () => {
       case "cook":
         return <PoliticaCook />;
       default:
-        return <FAQ />;
+        return <PoliticaPrivacidad />;
     }
   };
 

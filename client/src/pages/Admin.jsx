@@ -10,6 +10,7 @@ import AdminUsuarios from "../components/Admin/AdminUsuarios";
 import AdminFavoritos from "../components/Admin/AdminFavoritos";
 import AdminMensajes from "../components/Admin/AdminMensajes";
 import AdminAlertas from "../components/Admin/AdminAlertas";
+import AdminFAQ from "../components/Admin/AdminFAQ";
 
 // Importamos la imagen de la marca de agua
 import marcaAgua from "../assets/img/MarcaAgua2.png";
@@ -36,6 +37,8 @@ const Admin = () => {
         return <AdminMensajes />;
       case "alertas":
         return <AdminAlertas />;
+      case "faq":
+        return <AdminFAQ />;
       default:
         // En caso de error, siempre mostramos el dashboard y le pasamos la prop
         return <AdminDashboard setActiveTab={setActiveTab} />;

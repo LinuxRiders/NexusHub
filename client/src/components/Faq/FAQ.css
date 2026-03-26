@@ -1,0 +1,207 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.faq-global-wrapper {
+  width: 100%;
+  max-width: 1250px;
+  margin: 0 auto;
+  padding: 50px 20px;
+  font-family: "Nunito", sans-serif;
+  box-sizing: border-box;
+}
+
+.faq-cards-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 45px;
+  box-sizing: border-box;
+}
+
+/* --- ENVOLTORIO DE CADA CARD --- */
+.faq-card-wrapper {
+  width: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* --- CONTENEDOR SOLO DE LA PREGUNTA --- */
+.faq-question-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 30px;
+  cursor: pointer;
+  position: relative;
+  background-color: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  z-index: 2;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  box-sizing: border-box;
+}
+
+.faq-question-bar:hover {
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(-2px);
+}
+
+/* La franja de color lateral gruesa */
+.faq-question-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 100%;
+  background-color: #1c6a6e;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  transition: border-radius 0.3s ease;
+}
+
+.faq-question-text {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1c6a6e;
+  margin: 0;
+  user-select: none;
+  padding-left: 10px;
+}
+
+/* Imagen de la flecha personalizada */
+.faq-icon-img {
+  width: 18px;
+  height: auto;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  margin-left: 15px;
+}
+
+.faq-icon-img.rotated {
+  transform: rotate(180deg);
+}
+
+/* --- CONTENEDOR DE LA RESPUESTA --- */
+.faq-answer-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: -20px;
+  transition:
+    grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s ease,
+    margin-top 0.4s ease;
+  z-index: 1;
+}
+
+.faq-answer-panel.expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: -10px;
+}
+
+.faq-answer-inner {
+  overflow: hidden;
+}
+
+.faq-answer-content {
+  background-color: #f0f0f0;
+  padding: 55px 80px 40px 80px;
+  border-bottom-left-radius: 18px;
+  border-bottom-right-radius: 18px;
+  box-sizing: border-box;
+}
+
+/* ==================================================
+   🔥 ESTILOS DE TEXTO ENRIQUECIDO (RICH TEXT) 🔥
+   ================================================== */
+.faq-answer-rich-text {
+  font-size: 16px;
+  font-weight: 400;
+  color: #8a8a8a;
+  line-height: 1.7;
+  text-align: justify;
+}
+
+/* Párrafos dentro de la respuesta */
+.faq-answer-rich-text p {
+  margin: 0 0 15px 0;
+}
+.faq-answer-rich-text p:last-child {
+  margin-bottom: 0;
+}
+
+/* Negritas */
+.faq-answer-rich-text strong {
+  font-weight: 600;
+  color: #5c626b;
+}
+
+/* Enlaces */
+.faq-answer-rich-text a {
+  color: #1c6a6e;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+.faq-answer-rich-text a:hover {
+  color: #145255;
+}
+
+/* Listas y viñetas */
+.faq-answer-rich-text ul,
+.faq-answer-rich-text ol {
+  margin: 10px 0 15px 0;
+  padding-left: 25px; /* Importante para que los puntos se vean */
+}
+.faq-answer-rich-text li {
+  margin-bottom: 8px;
+}
+
+/* Subtítulos (si usas headers en el editor) */
+.faq-answer-rich-text h1,
+.faq-answer-rich-text h2,
+.faq-answer-rich-text h3 {
+  color: #1c6a6e;
+  margin: 20px 0 10px 0;
+  font-weight: 700;
+}
+.faq-answer-rich-text h3 {
+  font-size: 1.1em;
+}
+.faq-answer-rich-text h2 {
+  font-size: 1.25em;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .faq-global-wrapper {
+    padding: 30px 15px;
+  }
+  .faq-cards-list {
+    gap: 30px;
+  }
+  .faq-question-bar {
+    padding: 20px 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  }
+  .faq-question-bar::before {
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+  }
+  .faq-question-text {
+    font-size: 16px;
+    padding-left: 5px;
+  }
+  .faq-answer-content {
+    padding: 35px 25px 25px 25px;
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+  }
+  .faq-answer-rich-text {
+    font-size: 15px;
+  }
+}

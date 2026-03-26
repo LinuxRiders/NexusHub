@@ -14,11 +14,11 @@ const SidebarLegal = ({ activeTab, setActiveTab }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuOptions = [
-    {
-      id: "faq",
-      label: "Preguntas Frecuentes",
-      icon: <FaQuestionCircle />,
-    },
+    // {
+    //   id: "faq",
+    //   label: "Preguntas Frecuentes",
+    //   icon: <FaQuestionCircle />,
+    // },
     {
       id: "privacidad",
       label: "Política de Privacidad",

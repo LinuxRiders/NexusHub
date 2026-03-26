@@ -12,6 +12,7 @@ import {
   FaEnvelope,
   FaBell,
   FaSignOutAlt,
+  FaQuestionCircle,
 } from "react-icons/fa";
 
 import "./AdminSidebarMenu.css";
@@ -37,6 +38,7 @@ const AdminSidebarMenu = ({ activeTab, setActiveTab }) => {
     { id: "favoritos", label: "Favoritos", icon: <FaHeart size={22} /> },
     { id: "mensajes", label: "Mensajes", icon: <FaEnvelope size={22} /> },
     { id: "alertas", label: "Alertas", icon: <FaBell size={22} /> },
+    { id: "faq", label: "FAQ", icon: <FaQuestionCircle size={22} /> },
     { id: "salir", label: "Salir", icon: <FaSignOutAlt size={22} /> },
   ];
 

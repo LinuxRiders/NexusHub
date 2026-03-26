@@ -94,7 +94,7 @@ const Footer = () => {
               <Link to="/#contacto" state={{ tab: "contacto" }}>
                 Contacto
               </Link>
-              <Link to="/legalidades" state={{ tab: "faq" }}>
+              <Link to="/faq" state={{ tab: "faq" }}>
                 Preguntas Frecuentes
               </Link>
               <Link to="/legalidades" state={{ tab: "privacidad" }}>
