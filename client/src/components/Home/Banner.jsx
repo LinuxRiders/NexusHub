@@ -80,7 +80,6 @@ const Banner = ({ sx = {} }) => {
       <Box className="hero-container" sx={sx}>
         {/* TEXTO IZQUIERDA */}
         <div className="hero-left">
-          {/* CAMBIO AQUÍ: Imagen en lugar del texto */}
           <h1 className="hero-title" data-aos="fade-right">
             <img src={logo} alt="NEXUS HUB" className="hero-logo-img" />
           </h1>

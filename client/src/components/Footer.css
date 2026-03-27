@@ -93,6 +93,9 @@
   width: 360px;
   padding: 35px;
 
+  /* CORRECCIÓN: Esto evita que el padding expanda el width y cause desbordes */
+  box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
   position: relative;
@@ -123,6 +126,7 @@
   border: none;
   margin-top: 4px;
   font-family: "Nunito", sans-serif;
+  box-sizing: border-box; /* Previene desbordes en inputs */
 }
 
 .footer-form textarea {
@@ -132,6 +136,7 @@
   height: 80px;
   border: none;
   font-family: "Nunito", sans-serif;
+  box-sizing: border-box; /* Previene desbordes en textareas */
 }
 
 .footer-form button {
@@ -209,6 +214,13 @@
     justify-content: center;
   }
 
+  /* CORRECCIÓN: Nos aseguramos de que el wrapper abarque el 100% y centre el form */
+  .footer-form-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
   .footer-form-border {
     display: none;
   }
@@ -221,7 +233,8 @@
   }
 
   .footer-form {
-    width: 90%;
+    width: 92%; /* Con box-sizing ajustado, esto encajará perfecto en el centro */
+    padding: 30px 25px; /* Un poco menos de padding en celulares para ganar espacio */
   }
 
   .footer-brand img {

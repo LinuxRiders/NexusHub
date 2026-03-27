@@ -87,8 +87,6 @@ const Footer = () => {
               <Link to="/propiedades">Propiedades</Link>
             </div>
 
-            {/* // En tu componente Footer.jsx (Asegúrate de tener importado Link de react-router-dom) */}
-
             <div className="footer-column">
               <h3>Enlaces</h3>
               <Link to="/#contacto" state={{ tab: "contacto" }}>

@@ -2,7 +2,7 @@
 
 .hero {
   width: 100%;
-    height: 100dvh;
+  height: 100dvh;
   background-size: cover;
   background-position: center;
   position: relative;
@@ -31,14 +31,12 @@
 .hero-container {
   width: 100%;
   height: 100%;
-  /* max-width: 1100px; */
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 100px;
   position: relative;
   z-index: 2;
-  /* padding: 0 20px; */
 }
 
 /* TEXTO IZQUIERDA */
@@ -52,21 +50,22 @@
   line-height: 1.05;
 }
 
-/* CLASE AÑADIDA PARA SIMULAR EL TAMAÑO DE LA LETRA */
+/* CAMBIO 1: Reducción del tamaño del Logo/Título */
 .hero-logo-img {
-  height: clamp(42px, 3.9vw, 56px); /* Equivalente al font-size original */
+  height: clamp(34px, 3.2vw, 48px); /* Reducido ligeramente */
   width: auto;
   object-fit: contain;
 }
 
+/* CAMBIO 2: Reducción del subtítulo */
 .hero-subtitle {
   font-style: italic;
   margin-bottom: 12px;
   line-height: 1.1;
-  font-size: clamp(16px, 1.4vw, 20px);
+  font-size: clamp(14px, 1.2vw, 18px); /* Reducido ligeramente */
 }
 
-/* LISTA SERVICIOS */
+/* CAMBIO 3: Reducción del tamaño de la lista de servicios */
 .hero-list {
   list-style: none;
   padding: 0;
@@ -77,7 +76,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
-  font-size: clamp(15px, 1.25vw, 18px);
+  font-size: clamp(13px, 1.1vw, 16px); /* Reducido ligeramente */
   line-height: 1.2;
 }
 
@@ -89,24 +88,27 @@
 /* FORMULARIO */
 .hero-form-wrapper {
   position: relative;
+  /* CAMBIO 4: Margen superior para bajar el formulario un poco */
+  margin-top: 40px;
 }
 
 .hero-form-border {
   position: absolute;
-  top: -25px;
-  right: -25px;
+  top: -20px; /* Ajustado el borde para que acompañe el nuevo tamaño */
+  right: -20px;
   width: 100%;
   height: 100%;
   border: 5px solid white;
   z-index: 1;
 }
 
+/* CAMBIO 5: Reducción del ancho y padding del formulario */
 .hero-form {
   position: relative;
   z-index: 2;
   background: #2f3338;
-  padding: 40px;
-  width: 370px;
+  padding: 32px; /* Reducido el espacio interno */
+  width: 340px; /* Reducido el ancho total */
   color: white;
   display: flex;
   flex-direction: column;
@@ -129,7 +131,7 @@
 /* INPUTS */
 .hero-form label {
   font-size: clamp(12px, 0.9vw, 13px);
-  margin-top: 15px;
+  margin-top: 12px; /* Reducido el espacio entre inputs */
   font-weight: 600;
 }
 
@@ -144,6 +146,7 @@
   font-family: "Nunito", sans-serif;
 }
 
+/* CAMBIO 6: Reducción de altura del textarea para ahorrar espacio vertical */
 .hero-form textarea {
   width: 100%;
   padding: 9px;
@@ -151,7 +154,7 @@
   border: none;
   background: #ffffff;
   resize: none;
-  height: 90px;
+  height: 80px; /* Reducido de 90 a 80 */
   box-sizing: border-box;
   font-family: "Nunito", sans-serif;
 }
@@ -184,6 +187,25 @@
    RESPONSIVE
    ========================================== */
 
+/* CAMBIO 7: NUEVA MEDIA QUERY PARA LAPTOPS NORMALES/PEQUEÑAS (Pantallas hasta 1366px) */
+@media (max-width: 1366px) {
+  .hero-container {
+    gap: 50px; /* Acercamos los elementos */
+  }
+  .hero-form {
+    width: 315px; /* Formulario un poquito más angosto */
+    padding: 28px;
+  }
+  .hero-form-wrapper {
+    margin-top: 25px; /* No lo bajamos tanto en laptops para que no choque abajo */
+  }
+  .hero-form-border {
+    top: -15px;
+    right: -15px;
+  }
+}
+
+/* Tablets / iPad */
 @media (max-width: 1024px) {
   .hero {
     height: auto;
@@ -205,9 +227,10 @@
   }
 }
 
+/* Celulares */
 @media (max-width: 600px) {
   .hero-logo-img {
-    height: 42px; /* Equivalente al font-size: 42px original en móvil */
+    height: 38px;
   }
   .hero-form {
     width: 100%;
@@ -219,5 +242,6 @@
   }
   .hero-form-wrapper {
     width: 90%;
+    margin-top: 0; /* En celulares no necesitamos el margen top para bajarlo */
   }
 }
