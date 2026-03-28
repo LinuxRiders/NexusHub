@@ -50,7 +50,8 @@ const FAQ = () => {
         },
         {
           id: 2,
-          question: "Soy propietario, ¿cómo me ayudan a vender o alquilar mi inmueble?",
+          question:
+            "Soy propietario, ¿cómo me ayudan a vender o alquilar mi inmueble?",
           answer:
             "<p>Si eres propietario de una casa, departamento, terreno u otra propiedad en Trujillo, Nexus Hub te ofrece un servicio integral para vender o alquilar tu inmueble. Esto incluye una tasación profesional para determinar el mejor precio de mercado, la promoción de tu propiedad en nuestros canales (web, redes y cartera de clientes), la pre-selección de interesados y la organización de visitas. Negociamos en tu nombre para conseguir las mejores ofertas y te asesoramos en los aspectos legales y contractuales de la transacción. En el caso de alquileres, también podemos gestionar contratos, depósitos de garantía y verificar a los potenciales inquilinos. Nuestro objetivo es que vendas o arriendes tu propiedad de forma rápida, segura y al mejor valor.</p>",
         },
@@ -62,15 +63,17 @@ const FAQ = () => {
         },
         {
           id: 4,
-          question: "¿En qué consiste el servicio de saneamiento de propiedades?",
+          question:
+            "¿En qué consiste el servicio de saneamiento de propiedades?",
           answer:
             "<p>El saneamiento de propiedades es el proceso de regularizar la situación legal de un inmueble. Nuestro servicio de saneamiento físico-legal está diseñado para propietarios que necesitan poner en regla sus propiedades en cuanto a títulos, registros y documentación. Por ejemplo, te ayudamos en casos de herencias y sucesiones intestadas, subdivisiones o unificaciones de predios, inscripción de propiedades que nunca fueron registradas, rectificación de áreas y linderos, o cualquier otro trámite ante los Registros Públicos. Contamos con expertos legales en derecho inmobiliario que analizarán tu caso y gestionarán los trámites necesarios ante las entidades correspondientes, asegurando que tu propiedad quede totalmente saneada y libre de problemas legales. Esto te brinda la tranquilidad de tener un inmueble con papeles en orden, indispensable para vender, hipotecar o transmitir la propiedad sin inconvenientes.</p>",
         },
         {
           id: 5,
-          question: "¿Cómo funcionan las comisiones o costos por sus servicios?",
+          question:
+            "¿Cómo funcionan las comisiones o costos por sus servicios?",
           answer:
-            "<p>Nuestras comisiones se manejan de forma transparente y acorde al estándar del mercado inmobiliario. En operaciones de compraventa, usualmente trabajamos con una comisión porcentual sobre el precio de venta final, la cual será acordada previamente contigo mediante contrato de corretaje. En el caso de alquileres, comúnmente cobramos al propietario una comisión equivalente a un mes de renta (por alquileres de un año) o un porcentaje del monto de renta, según lo que se estile en el mercado local. Importante: Todos estos detalles de honorarios se conversarán y pactarán antes de empezar a trabajar juntos, de modo que no haya sorpresas. Además, la asesoría inicial y publicación de tu propiedad pueden ser sin costo, cobrando solo si la operación se concreta – lo discutiremos en detalle según el servicio que requieras. Nuestro objetivo es que percibas el valor de nuestro trabajo y te sientas cómodo con los términos desde el inicio.</p>",
+            "<p>Nuestras comisiones se manejan de forma transparente y acorde al estándar del mercado inmobiliario. En operaciones de compraventa, usualmente trabajamos con una comisión porcentual sobre el precio de venta final, la cual será acordada previamente contigo mediante contrato de corretaje. En el caso de alquileres, comúnmente cobramos al propietario una comisión equivalente a un mes de renta (por alquileres de un año) o un porcentaje del monto de renta, según lo que se estile en el mercado local. Importante: Todos estos detalles de honorarios se conversarán y pactarán antes de empezar a trabajar juntos, de modo que no haya sorpresas. Además, la asesoría inicial y publicación de tu propiedad pueden ser sin costo, cobrando solo si la operación se concreta lo discutiremos en detalle según el servicio que requieras. Nuestro objetivo es que percibas el valor de nuestro trabajo y te sientas cómodo con los términos desde el inicio.</p>",
         },
         {
           id: 6,
@@ -80,7 +83,8 @@ const FAQ = () => {
         },
         {
           id: 7,
-          question: "¿Qué puedo hacer si tengo otra pregunta o necesito más información?",
+          question:
+            "¿Qué puedo hacer si tengo otra pregunta o necesito más información?",
           answer:
             "<p>Si tus dudas no han sido resueltas en esta sección de Preguntas Frecuentes, no te preocupes. Puedes contactarnos directamente a través de nuestros canales de comunicación (formulario, WhatsApp, email o teléfono) y con gusto atenderemos todas tus consultas adicionales. En Nexus Hub valoramos que estés bien informado: ninguna pregunta es demasiado simple o compleja, queremos que te sientas seguro en todo el proceso. Estamos aquí para ayudarte en lo que necesites, así que no dudes en escribirnos o llamarnos. ¡Estaremos encantados de asistirte!</p>",
         },

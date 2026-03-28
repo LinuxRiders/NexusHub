@@ -2,7 +2,7 @@ import { Message } from '../models/message.model.js';
 import { User } from '../../Users-Auth/models/user.model.js';
 import { mailer } from '../../../config/mailer.js';
 import logger from '../../../utils/logger.js';
-import activityEvents from '../../System-Activity/events/activity.events.js';
+import eventBus, { EVENTS } from '../../../config/eventBus.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -114,7 +114,7 @@ export const replyMessage = async (req, res) => {
 
         // 2. Si el mensaje pende de un usuario de sistema, mandarle Notificación vía Eventos (Decoupled)
         if (msg.user_id) {
-            activityEvents.emit('SEND_USER_NOTIFICATION', {
+            eventBus.emit(EVENTS.NOTIFICATION.SEND, {
                 user_id: msg.user_id,
                 title: 'Respuesta de Soporte',
                 message: 'Hemos respondido a tu formulario de contacto. Revisa tu bandeja de entrada de correo.',
@@ -126,7 +126,7 @@ export const replyMessage = async (req, res) => {
         await Message.updateStatus(id, 'REPLIED');
 
         // Optional: Loggear Actividad
-        activityEvents.emit('ALERT_MATCH_EMAIL_SENT', { // Podemos reusar o crear un evento genérico de email disparado
+        eventBus.emit(EVENTS.EMAIL.ALERT_MATCH_SENT, { // Podemos reusar o crear un evento genérico de email disparado
             alert_id: id,
             user_id: msg.user_id,
             property_id: null,

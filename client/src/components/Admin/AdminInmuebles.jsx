@@ -1,5 +1,5 @@
 // src/components/Admin/AdminInmuebles/AdminInmuebles.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaEdit,
   FaTrashAlt,
@@ -13,6 +13,7 @@ import {
   FaRulerCombined,
   FaImage,
   FaTimes,
+  FaCloudUploadAlt,
   FaChevronLeft, // Añadido para paginación
   FaChevronRight, // Añadido para paginación
 } from "react-icons/fa";
@@ -25,6 +26,8 @@ const AdminInmuebles = () => {
   const [locations, setLocations] = useState([]);
   const [view, setView] = useState("list");
   const [currentId, setCurrentId] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
     avenue: "",
@@ -115,6 +118,54 @@ const AdminInmuebles = () => {
       ...prev,
       images: prev.images.filter((_, idx) => idx !== indexToRemove),
     }));
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // Validación básica de tipo
+    if (!file.type.startsWith("image/")) {
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "El archivo seleccionado debe ser una imagen.",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+
+    try {
+      const res = await api.post("/storage/upload/static", uploadData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const uploadedUrl = res.data.data.url;
+
+      setFormData((prev) => ({
+        ...prev,
+        images: [...(prev.images || []), uploadedUrl],
+      }));
+
+      // Feedback de éxito silencioso o log
+      console.log("Imagen subida con éxito:", uploadedUrl);
+    } catch (error) {
+           console.error("Error uploading image:", error);
+      setModalConfig({
+        isOpen: true,
+        type: "error",
+        message: "Error al subir la imagen al servidor. Inténtalo de nuevo.",
+      });
+    } finally {
+      setIsUploading(false);
+      // Limpiar el input para permitir subir el mismo archivo si se desea
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    }
   };
 
   const [modalConfig, setModalConfig] = useState({
@@ -826,41 +877,87 @@ const AdminInmuebles = () => {
                 <div
                   className={`admin-input-box full-width ${formErrors.imageUrl ? "has-error" : ""}`}
                 >
-                  <label>Añadir Nueva URL de Imagen</label>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <input
-                      type="text"
-                      placeholder="Ej. https://miservidor.com/foto.jpg"
-                      value={tempImageUrl}
-                      onChange={(e) => {
-                        setTempImageUrl(e.target.value);
-                        if (formErrors.imageUrl)
-                          setFormErrors((prev) => ({ ...prev, imageUrl: "" }));
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          handleAddImage();
-                        }
-                      }}
-                      style={{ flex: 1 }}
-                    />
-                    <button
-                      type="button"
-                      onClick={handleAddImage}
-                      style={{
-                        padding: "0 20px",
-                        backgroundColor: "#1c6a6e",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "6px",
-                        cursor: "pointer",
-                        fontWeight: "600",
-                        fontFamily: '"Nunito", sans-serif',
-                      }}
-                    >
-                      Añadir a Galería
-                    </button>
+                  <label>Añadir Imágenes (Upload o URL)</label>
+                  <div style={{ display: "flex", gap: "12px", alignItems: "center", flexWrap: "wrap" }}>
+                    
+                    {/* Botón de Subida */}
+                    <div className="upload-btn-wrapper">
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        style={{ display: "none" }}
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                      />
+                      <button
+                        type="button"
+                        className="btn-upload"
+                        disabled={isUploading}
+                        onClick={() => fileInputRef.current.click()}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          padding: "0 18px",
+                          height: "45px",
+                          backgroundColor: isUploading ? "#9ca3af" : "#f3f4f6",
+                          color: isUploading ? "#fff" : "#374151",
+                          border: "2px dashed #d1d5db",
+                          borderRadius: "8px",
+                          cursor: isUploading ? "not-allowed" : "pointer",
+                          fontWeight: "600",
+                          transition: "all 0.2s ease"
+                        }}
+                      >
+                        {isUploading ? (
+                          <div className="spinner-small"></div>
+                        ) : (
+                          <FaCloudUploadAlt size={18} />
+                        )}
+                        {isUploading ? "Subiendo..." : "Subir Archivo"}
+                      </button>
+                    </div>
+
+                    <span style={{ color: "#9ca3af", fontWeight: "bold" }}>Ó</span>
+
+                    {/* Input manual de URL */}
+                    <div style={{ flex: 1, display: "flex", gap: "8px", minWidth: "250px" }}>
+                      <input
+                        type="text"
+                        placeholder="Pegar URL de imagen externa..."
+                        value={tempImageUrl}
+                        onChange={(e) => {
+                          setTempImageUrl(e.target.value);
+                          if (formErrors.imageUrl)
+                            setFormErrors((prev) => ({ ...prev, imageUrl: "" }));
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddImage();
+                          }
+                        }}
+                        className="admin-input-modern"
+                        style={{ flex: 1, height: "45px" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={handleAddImage}
+                        className="btn-add-url"
+                        style={{
+                          padding: "0 15px",
+                          backgroundColor: "#1c6a6e",
+                          color: "white",
+                          border: "none",
+                          borderRadius: "6px",
+                          cursor: "pointer",
+                          fontWeight: "600",
+                          height: "45px"
+                        }}
+                      >
+                        <FaPlus />
+                      </button>
+                    </div>
                   </div>
                   {formErrors.imageUrl && (
                     <span className="error-text">{formErrors.imageUrl}</span>

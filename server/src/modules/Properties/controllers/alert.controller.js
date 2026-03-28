@@ -1,6 +1,6 @@
 import { Alert } from "../models/alert.model.js";
 import logger from "../../../utils/logger.js";
-import activityEvents from "../../System-Activity/events/activity.events.js";
+import eventBus, { EVENTS } from "../../../config/eventBus.js";
 // import mailer from "../../../config/mailer.js";
 
 export const createAlert = async (req, res, next) => {
@@ -112,7 +112,7 @@ export const suggestPropertyToUser = async (req, res, next) => {
     */
 
     // Emitir el evento de sistema de manera asíncrona
-    activityEvents.emit('ALERT_MATCH_EMAIL_SENT', {
+    eventBus.emit(EVENTS.EMAIL.ALERT_MATCH_SENT, {
       alert_id: alert.id,
       user_id: alert.user_id,
       property_id: null, // Si propertyLink fuera un ID se pasaría aquí

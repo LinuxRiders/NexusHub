@@ -8,7 +8,7 @@ import pool from '../../../config/db.js';
 import dotenv from 'dotenv';
 import { UserRole } from '../models/rolepermission.model.js';
 import { mailer } from '../../../config/mailer.js';
-import activityEvents from '../../System-Activity/events/activity.events.js';
+import eventBus, { EVENTS } from '../../../config/eventBus.js';
 
 dotenv.config();
 
@@ -165,7 +165,7 @@ export const register = async (req, res, next) => {
         logger.info(`AuthController:register User created id=${userId}, email=${email}`);
 
         // [Activity Logging (Desacoplado)] Reportamos que ha ingresado un nuevo usuario a un hilo de segundo plano.
-        activityEvents.emit('USER_REGISTERED', { 
+        eventBus.emit(EVENTS.AUTH.REGISTERED, { 
             user_id: userId, 
             username, 
             email 

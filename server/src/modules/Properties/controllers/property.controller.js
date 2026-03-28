@@ -1,7 +1,7 @@
 import { Property } from "../models/property.model.js";
 import { Alert } from "../models/alert.model.js";
 import logger from "../../../utils/logger.js";
-import propertyEvents from "../events/property.events.js";
+import eventBus, { EVENTS } from '../../../config/eventBus.js';
 
 export const createProperty = async (req, res, next) => {
   try {
@@ -15,7 +15,7 @@ export const createProperty = async (req, res, next) => {
     // Si se crea directamente como publicado, disparar evento
     if (propertyData.status === 'PUBLICADO') {
       const newProp = await Property.findById(insertId);
-      propertyEvents.emit('propertyPublished', newProp);
+      eventBus.emit(EVENTS.PROPERTY.PUBLISHED, newProp);
     }
 
     res.status(201).json({ message: "Inmueble creado con éxito", id: insertId });
@@ -44,7 +44,7 @@ export const updateProperty = async (req, res, next) => {
 
     // Si cambió de BORRADOR a PUBLICADO
     if (oldProp.status !== 'PUBLICADO' && newProp.status === 'PUBLICADO') {
-      propertyEvents.emit('propertyPublished', newProp);
+      eventBus.emit(EVENTS.PROPERTY.PUBLISHED, newProp);
     }
 
     logger.info(`PropertyController:updateProperty User ${userId} updated property ${id}`);
@@ -59,12 +59,31 @@ export const deleteProperty = async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    const affectedRows = await Property.delete(id);
-    if (!affectedRows) {
+    const property = await Property.findById(id);
+    if (!property) {
       return res.status(404).json({ error: "Inmueble no encontrado" });
     }
 
-    logger.info(`PropertyController:deleteProperty Property ${id} deleted`);
+    const affectedRows = await Property.delete(id);
+    if (affectedRows) {
+      logger.info(`PropertyController:deleteProperty Property ${id} deleted record`);
+
+      // Limpieza de archivos del almacenamiento (Asíncrono)
+      if (property.images) {
+        let imagesArray = [];
+        try {
+          imagesArray = typeof property.images === 'string' ? JSON.parse(property.images) : property.images;
+        } catch (e) {
+          logger.warn(`PropertyController:deleteProperty Could not parse images for ${id}`);
+        }
+
+        if (Array.isArray(imagesArray) && imagesArray.length > 0) {
+          logger.info(`PropertyController:deleteProperty Emitting deletion request for ${imagesArray.length} items`);
+          eventBus.emit(EVENTS.STORAGE.DELETE, { files: imagesArray, zone: 'static' });
+        }
+      }
+    }
+
     res.json({ message: "Inmueble eliminado con éxito" });
   } catch (error) {
     logger.error(`PropertyController:deleteProperty Error: ${error.message}`);

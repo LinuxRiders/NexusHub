@@ -5,8 +5,7 @@ import 'dotenv/config';
 import { createServer } from "http"; // Importar para crear el servidor HTTP
 import routes from './src/routes/routes.js';
 import { errorHandler } from "./src/middlewares/errorHandler.js";
-import { registerActivityListeners } from "./src/modules/System-Activity/events/activity.listener.js";
-import { registerNotificationListeners } from "./src/modules/Properties/events/notification.listener.js";
+import { initializeListeners } from "./src/config/eventLoader.js";
 
 const PORT = process.env.PORT || 4000;
 
@@ -38,6 +37,10 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ limit: '10mb', extended: true }));
 app.use(cookieParser()); // Permitir req.cookies
 
+// Servir archivos estáticos (Imágenes Públicas)
+// http://localhost:4000/uploads/static/nombre-archivo.jpg
+app.use('/uploads', express.static('uploads/static'));
+
 // Usa el router en el prefijo /api
 app.use('/api/', (req, res, next) => {
     next();
@@ -46,9 +49,8 @@ app.use('/api/', (req, res, next) => {
 // Middleware de manejo de errores
 app.use(errorHandler);
 
-// Inicializar módulos Background / Event Workers
-registerActivityListeners();
-registerNotificationListeners();
+// Inicializar módulos Background / Event Workers (Pub/Sub) Profesional
+initializeListeners();
 
 // Usar server.listen en lugar de app.listen
 server.listen(PORT, () => {

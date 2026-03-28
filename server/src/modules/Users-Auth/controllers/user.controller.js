@@ -5,7 +5,7 @@ import { VerificationToken } from '../models/verification.model.js';
 import { generateResetToken, hashTokenToBuffer } from '../../../utils/token.js';
 import { comparePassword, hashPassword } from '../../../utils/password.js';
 import { mailer } from '../../../config/mailer.js';
-import activityEvents from '../../System-Activity/events/activity.events.js';
+import eventBus, { EVENTS } from '../../../config/eventBus.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -493,7 +493,7 @@ export const sendUserEmail = async (req, res, next) => {
 
     // 3. Crear las notificaciones internas de manera desacoplada vía Eventos
     users.forEach(user => {
-      activityEvents.emit('SEND_USER_NOTIFICATION', {
+      eventBus.emit(EVENTS.NOTIFICATION.SEND, {
         user_id: user.user_id,
         title: subject || 'Notificación del Sistema',
         message: message ? message.substring(0, 200) : 'Tienes una nueva notificación de un administrador.',

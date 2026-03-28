@@ -1,4 +1,4 @@
-import activityEvents from './activity.events.js';
+import eventBus, { EVENTS } from '../../../config/eventBus.js';
 import { ActivityLog } from '../models/activity.model.js';
 import logger from '../../../utils/logger.js';
 
@@ -9,7 +9,7 @@ import logger from '../../../utils/logger.js';
 export const registerActivityListeners = () => {
     
     // Al registrar un nuevo usuario en la app
-    activityEvents.on('USER_REGISTERED', async ({ user_id, username, email }) => {
+    eventBus.on(EVENTS.AUTH.REGISTERED, async ({ user_id, username, email }) => {
         try {
             await ActivityLog.create({
                 user_id: user_id, // Fue el propio usuario quien lo disparó
@@ -28,7 +28,7 @@ export const registerActivityListeners = () => {
     });
 
     // Alguien marcó como Favorito una propiedad
-    activityEvents.on('PROPERTY_FAVORITED', async ({ user_id, user_name, property_id, property_address }) => {
+    eventBus.on(EVENTS.PROPERTY.FAVORITED, async ({ user_id, user_name, property_id, property_address }) => {
         try {
             await ActivityLog.create({
                 user_id: user_id,
@@ -47,7 +47,7 @@ export const registerActivityListeners = () => {
     });
 
     // El servidor disparó autométicamente un correo de "nueva propiedad match alertas" 
-    activityEvents.on('ALERT_MATCH_EMAIL_SENT', async ({ alert_id, user_id, property_id, match_details }) => {
+    eventBus.on(EVENTS.EMAIL.ALERT_MATCH_SENT, async ({ alert_id, user_id, property_id, match_details }) => {
         try {
             await ActivityLog.create({
                 user_id: null, // Acción originada por la Computadora/Cronjob, no intervinó un humano

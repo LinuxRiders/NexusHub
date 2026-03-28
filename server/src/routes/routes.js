@@ -2,6 +2,8 @@ import { Router } from "express";
 
 import authRoutes from "../modules/Users-Auth/routes/auth.routes.js";
 import userRoutes from "../modules/Users-Auth/routes/user.routes.js";
+import storageRoutes from "../modules/Storage/routes/storage.routes.js";
+
 import propertyRoutes from "../modules/Properties/routes/property.routes.js";
 import favoriteRoutes from "../modules/Properties/routes/favorite.routes.js";
 import alertRoutes from "../modules/Properties/routes/alert.routes.js";
@@ -14,6 +16,9 @@ const router = Router();
 // ============== Montar rutas de Users & Auth ==============
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
+
+// ============== Montar rutas de Storage ==============
+router.use("/storage", storageRoutes);
 
 // ============== Montar rutas de Properties ==============
 router.use("/properties", propertyRoutes);

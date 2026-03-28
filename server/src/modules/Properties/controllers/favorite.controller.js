@@ -1,7 +1,7 @@
 import { Favorite } from "../models/favorite.model.js";
 import { User } from "../../Users-Auth/models/user.model.js";
 import logger from "../../../utils/logger.js";
-import activityEvents from "../../System-Activity/events/activity.events.js";
+import eventBus, { EVENTS } from "../../../config/eventBus.js";
 
 export const toggleFavorite = async (req, res, next) => {
   try {
@@ -16,7 +16,7 @@ export const toggleFavorite = async (req, res, next) => {
       const fullUser = await User.findById({id:userId});
       const userName = fullUser ? fullUser.username : 'Usuario';
       
-      activityEvents.emit('PROPERTY_FAVORITED', { 
+      eventBus.emit(EVENTS.PROPERTY.FAVORITED, { 
         user_id: userId, 
         user_name: userName, 
         property_id: propertyId, 

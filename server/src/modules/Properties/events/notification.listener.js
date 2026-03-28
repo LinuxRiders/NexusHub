@@ -1,9 +1,9 @@
-import activityEvents from '../../System-Activity/events/activity.events.js';
+import eventBus, { EVENTS } from '../../../config/eventBus.js';
 import { Notification } from '../models/notification.model.js';
 import logger from '../../../utils/logger.js';
 
 export const registerNotificationListeners = () => {
-    activityEvents.on('SEND_USER_NOTIFICATION', async (data) => {
+    eventBus.on(EVENTS.NOTIFICATION.SEND, async (data) => {
         try {
             await Notification.create({
                 userId: data.user_id,
