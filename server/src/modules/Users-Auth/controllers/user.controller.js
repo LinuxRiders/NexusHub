@@ -1,5 +1,6 @@
 import { User } from "../models/user.model.js";
 import logger from "../../../utils/logger.js";
+import pool from "../../../config/db.js";
 import { UserRole } from "../models/rolepermission.model.js";
 import { VerificationToken } from '../models/verification.model.js';
 import { generateResetToken, hashTokenToBuffer } from '../../../utils/token.js';

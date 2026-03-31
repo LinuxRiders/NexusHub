@@ -59,6 +59,10 @@ const ResetPassword = () => {
   const validate = () => {
     if (!password || password.length < 8)
       return "La contraseña debe tener al menos 8 caracteres.";
+    if (!/[A-Z]/.test(password))
+      return "La contraseña debe tener al menos una letra mayúscula.";
+    if (!/\d/.test(password))
+      return "La contraseña debe tener al menos un número.";
     if (password !== confirmPassword) return "Las contraseñas no coinciden.";
     if (!token) return "Token inválido. Solicita un nuevo enlace.";
     return null;

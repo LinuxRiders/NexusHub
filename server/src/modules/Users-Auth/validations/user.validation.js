@@ -20,7 +20,7 @@ export const updateProfileValidation = [
         .optional()
         .trim()
         .isEmail().withMessage('Debes ingresar un correo electrónico válido.')
-        .normalizeEmail(),
+        .normalizeEmail({ gmail_remove_dots: false }),
     body('telefono')
         .optional()
         .trim()

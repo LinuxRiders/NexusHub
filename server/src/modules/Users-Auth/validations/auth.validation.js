@@ -15,7 +15,7 @@ export const registerValidation = [
     body('email')
         .trim()
         .isEmail().withMessage('Debe ser un email válido')
-        .normalizeEmail(),
+        .normalizeEmail({ gmail_remove_dots: false }),
     body('password')
         .isLength({ min: 8 }).withMessage('La contraseña debe tener al menos 8 caracteres')
         .matches(/\d/).withMessage('Debe contener un número') // Descomentar para más seguridad
@@ -39,12 +39,12 @@ export const resendValidation = [
     body('email')
         .trim()
         .isEmail().withMessage('Email inválido')
-        .normalizeEmail()
+        .normalizeEmail({ gmail_remove_dots: false })
 ];
 
 
 export const forgotPasswordValidation = [
-    body('email').trim().isEmail().withMessage('Email inválido').normalizeEmail()
+    body('email').trim().isEmail().withMessage('Email inválido').normalizeEmail({ gmail_remove_dots: false })
 ];
 
 export const resetPasswordValidation = [
@@ -55,5 +55,4 @@ export const resetPasswordValidation = [
         .matches(/[A-Z]/).withMessage('La contraseña debe contener al menos una letra mayúscula')
         .matches(/[a-z]/).withMessage('La contraseña debe contener al menos una letra minúscula')
         .matches(/\d/).withMessage('La contraseña debe contener al menos un número')
-        .matches(/[\W_]/).withMessage('La contraseña debe contener al menos un carácter especial')
 ];

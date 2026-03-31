@@ -96,21 +96,25 @@ const AdminInmuebles = () => {
   const [tempImageUrl, setTempImageUrl] = useState("");
 
   const handleAddImage = () => {
-    const urlPattern = /^(https?:\/\/.*\.(?:png|jpg|jpeg|gif|webp|svg))/i;
-    if (!tempImageUrl.trim()) return;
-    if (!urlPattern.test(tempImageUrl.trim())) {
+    const url = tempImageUrl.trim();
+    if (!url) return;
+    
+    const img = new Image();
+    img.onload = () => {
+      setFormData((prev) => ({
+        ...prev,
+        images: [...(prev.images || []), url],
+      }));
+      setTempImageUrl("");
+      setFormErrors((prev) => ({ ...prev, imageUrl: "" }));
+    };
+    img.onerror = () => {
       setFormErrors((prev) => ({
         ...prev,
-        imageUrl: "Ingresa una URL válida de imagen.",
+        imageUrl: "No se pudo cargar la imagen desde esa URL.",
       }));
-      return;
-    }
-    setFormData((prev) => ({
-      ...prev,
-      images: [...(prev.images || []), tempImageUrl.trim()],
-    }));
-    setTempImageUrl("");
-    setFormErrors((prev) => ({ ...prev, imageUrl: "" }));
+    };
+    img.src = url;
   };
 
   const handleRemoveImage = (indexToRemove) => {

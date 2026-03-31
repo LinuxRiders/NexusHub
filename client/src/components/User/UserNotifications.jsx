@@ -146,6 +146,17 @@ const UserNotifications = () => {
                   <div className="notification-details">
                     <h3>{n.title}</h3>
                     <p>{n.message}</p>
+                    {n.action_url && (
+                      <a 
+                        href={n.action_url} 
+                        className="btn-action-view" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        style={{ display: 'inline-block', marginTop: '8px', padding: '6px 14px', backgroundColor: '#1c6a6e', color: '#fff', textDecoration: 'none', borderRadius: '4px', fontSize: '13px', fontWeight: 'bold' }}
+                      >
+                        Ver Propiedad
+                      </a>
+                    )}
                     <span className="notification-date">
                       {new Date(n.created_at).toLocaleString([], {
                         year: "numeric",

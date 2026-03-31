@@ -70,7 +70,7 @@ export const createChildUserValidation = [
         .notEmpty().withMessage('El correo electrónico es obligatorio')
         .isEmail().withMessage('Debe proporcionar un correo electrónico válido')
         .isLength({ max: 100 }).withMessage('El correo electrónico no debe superar los 100 caracteres')
-        .normalizeEmail(),
+        .normalizeEmail({ gmail_remove_dots: false }),
 
     body('password')
         .notEmpty().withMessage('La contraseña es obligatoria')
